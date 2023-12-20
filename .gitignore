@@ -1,0 +1,7 @@
+tools/
+target/
+project/project/
+project/target/
+output/
+
+*.json
