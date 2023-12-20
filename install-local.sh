@@ -1,6 +1,7 @@
 SBT_VERSION="1.8.0"
 FIRTOOL_VERSION="1.58.0"
 GTKWAVE_VERSION="3.3.117"
+VERILATOR_VERSION="4.216"
 
 mkdir tools/
 cd tools/
@@ -18,5 +19,14 @@ wget https://gtkwave.sourceforge.net/gtkwave-${GTKWAVE_VERSION}.tar.gz
 tar -xvzf gtkwave-${GTKWAVE_VERSION}.tar.gz
 mv gtkwave-${GTKWAVE_VERSION} gtkwave
 rm -f gtkwave-${GTKWAVE_VERSION}.tar.gz
+
+git clone https://github.com/verilator/verilator
+unset VERILATOR_ROOT
+cd verilator
+git pull         
+git checkout v${VERILATOR_VERSION}
+autoconf         
+./configure      
+make -j `nproc`
 
 cd .. 
