@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 04:07:21 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2023-12-20 04:50:11 pm                                       *
+ * Last Modified: 2023-12-21 07:27:53 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2023 HerdWare                                                 *
+ * Copyright (c) 2023 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */

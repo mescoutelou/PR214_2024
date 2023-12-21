@@ -1,24 +1,9 @@
-/*
- * File: build.sbt                                                             *
- * Created Date: 2023-02-25 01:11:34 pm                                        *
- * Author: Mathieu Escouteloup                                                 *
- * -----                                                                       *
- * Last Modified: 2023-12-20 04:12:04 pm                                       *
- * Modified By: Mathieu Escouteloup                                            *
- * -----                                                                       *
- * License: See LICENSE.md                                                     *
- * Copyright (c) 2023 HerdWare                                                 *
- * -----                                                                       *
- * Description:                                                                *
- */
-
-
 // ******************************
 //           PARAMETERS
 // ******************************
 ThisBuild / scalaVersion     := "2.13.10"
 ThisBuild / version          := "0.1.0"
-ThisBuild / organization     := "herdware"
+ThisBuild / organization     := "ENSEIRB-MATMECA"
 val chiselVersion = "5.0.0"
 
 val libDep = Seq(
