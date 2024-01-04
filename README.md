@@ -118,3 +118,9 @@ La note finale sera donc obtenue une fois la soutenance finale effectuée.
   7. Chaque nom de signal utilisé pour l'initialisation au reset d'un registre est défini par le préfixe *init_*.
   9. Chaque nom de module (`Module()`) commence par le préfixe *m_*.
 - Commenter le code de manière pertinente (une phrase explicative pour plusieurs lignes réalisant une tâche précise, ou une ligne avec une fonction particulière *etc.*).
+
+## Documents
+
+Les documents de base pour la bonne réalisation de ce projet sont disponibles dans le répertoire *docs/*:
+- *chisel-book.pdf*: livre en version PDF (le répertoire de base est accessible [ici](https://github.com/schoeberl/chisel-book)) sur la conception en Chisel. Un certain nombre de ressources accessibles en ligne sont également listées dans l'introduction.
+- *riscv-spec-1.pdf*: spécification de l'ISA RISC-V non privilégiée. Le document original est également accessible [en ligne](https://github.com/riscv/riscv-isa-manual/releases/tag/riscv-isa-release-056b6ff-2023-10-02).
