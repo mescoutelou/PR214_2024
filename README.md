@@ -22,7 +22,7 @@ code .
 
 Visualisez le script *install-local.sh*
 Ce script permet d'installer localement tous les outils nécessaires pour le projet dans le répertoire *tools/*.
-Dans le cas d'une machine personnel, si un des outils est déjà installé, commentez les lignes correspondantes puis lancez la commande:
+Dans le cas d'une machine personnel, si un des outils est déjà (ou pas) installé, (dé)commentez les lignes correspondantes puis lancez la commande:
 
 ```
 source install-local.sh
@@ -36,10 +36,11 @@ source setup.sh
 ```
 
 Cette commande est à renouveler à chaque fois qu'un nouveau terminal est ouvert.
+Dans le cas d'une machine personnel, pensez à adapter si nécessaire le chemin vers les outils installés différemment qu'avec *install-local.sh*.
 
 ## Développement et simulation
 
-Des commandes sépcifiques sont nécessaires pour compiler, générer le Verilog et simuler une description RTL effectuée en Chisel.
+Des commandes spécifiques sont nécessaires pour compiler le Chisel, générer le Verilog et simuler une description RTL effectuée en Chisel.
 Voici ci-dessous les principales d'entre elles.
 
 Dans le fichier [src/main/scala/example/example.scala](https://github.com/mescoutelou/PR214_2024/blob/main/src/main/scala/example/example.scala), un module d'exemple **Example** est défini.
