@@ -1,5 +1,7 @@
 # PR214_2024
 
+![Core with a decoupled FPU](docs/core-fpu.png)
+
 Ce répertoire sert de dépôt pour le projet de S8 [PR214](https://ccc.bordeaux-inp.fr/syllabus/index.php?annee=2023&mode=consultation&chemin=74491_76432_74444_74416_74370_74369&langue=1) de 2024 à l'ENSEIRB-MATMECA.
 Le sujet est la conception d'un processeur RISC-V 32 bits et de son unité découplée pour les calculs de nombres à virgule flottante (extension F).
 Les étudiants seront aidés tout le long du projet par deux encadrants.
