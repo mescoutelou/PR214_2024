@@ -1,4 +1,4 @@
-# PR214_2024
+# PR214_2024: Conception d'un processeur RISC-V avec une FPU découplée
 
 ![Core with a decoupled FPU](docs/core-fpu.png)
 
@@ -90,17 +90,54 @@ Chacun illustre des possibilités offertes par le langage.
 Il est prévu que le projet débute le 22/01/2024 jusqu'au 07/05/2024 (durée de 15 semaines).
 Ce projet est organisé en 6 grandes étapes, dont 5 seront le sujet d'une évaluation.
 A la fin de chacune de ces étapes, un bilan sera effectué (brève présentation avec ou sans diapos + démo).
-La note finale sera donc obtenue une fois la soutenance finale effectuée.
+La note sur le travail rendu correspondra à l'avancement et aux résultats obtenus sur chacune de ces étapes.
+La note finale pour le projet sera donc obtenue une fois la soutenance finale effectuée.
 
-| Tâche                                                   | Durée (semaines) | Fin prévue | Fin réelle | Points |
-| :------------------------------------------------------ | :--------------- | :--------- | :--------- | :----- |
-| Début                                                   | 0                | 22/01/2024 | 22/01/2024 | 0      |
-| Installation / Prise en main / Théorie                  | 3                | 12/02/2024 | XX/XX/2024 | 0      |
-| Première version testée de chaque composant             | 4                | 11/03/2024 | XX/XX/2024 | 4      |
-| Système global testé                                    | 2                | 25/03/2024 | XX/XX/2024 | 3      |
-| Ajout d'une instruction par composant et test           | 2                | 08/04/2024 | XX/XX/2024 | 3      |
-| Support de l'ensemble des instructions attendues        | 4                | 06/05/2024 | XX/XX/2024 | 5      |
-| Soutenance                                              | X                | 07/05/2024 | 07/05/2024 | 4      |
+| Tâche                                                   | Durée (semaines) | Fin prévue | Fin réelle | Points (/20) |
+| :------------------------------------------------------ | :--------------- | :--------- | :--------- | :----------- |
+| Début                                                   | 0                | 22/01/2024 | 22/01/2024 | X            |
+| Installation / Prise en main / Théorie                  | 3                | 12/02/2024 | XX/XX/2024 | 2            |
+| Première version testée de chaque composant             | 4                | 11/03/2024 | XX/XX/2024 | 4            |
+| Système global testé                                    | 2                | 25/03/2024 | XX/XX/2024 | 5            |
+| Ajout d'une instruction par composant et test           | 2                | 08/04/2024 | XX/XX/2024 | 4            |
+| Support de l'ensemble des instructions attendues        | 4                | 06/05/2024 | XX/XX/2024 | 5            |
+| Rapport                                                 | X                | 07/05/2024 | 07/05/2024 | X            |
+| Soutenance                                              | X                | 07/05/2024 | 07/05/2024 | X            |
+
+Une liste détaillées des différentes étapes du projet est disponible ci-dessous:
+
+- [x] Début
+- [ ] Installation / Prise en main / Théorie
+  - [ ] Installation des outils
+  - [ ] Chisel: tutoriel / livre
+  - [ ] Chisel: mise en pratique (composants simples *e.g.* ALU)
+  - [ ] Nombres flottants: théorie, addition en binaire, soustraction en binaire
+  - [ ] RISC-V: étude de la spécification RISC-V
+- [ ] Première version testée de chaque composant (instruction d'addition)
+  - [ ] Echanges entre groupes pour interconnexions
+  - [ ] Conception + test du premier étage
+  - [ ] Conception + test du deuxième étage
+  - [ ] Conception + test du troisième étage
+  - [ ] Conception + test unité complète
+- [ ] Système global testé
+  - [ ] Création du système global
+  - [ ] Connexion et adaptation des modules
+  - [ ] Test des modules
+  - [ ] Exécution d'instructions en langage d'assemblage RISC-V
+- [ ] Ajout d'une instruction par composant et test (instruction de soustraction)
+  - [ ] Modification des composants
+  - [ ] Tests individuels des modules
+  - [ ] Test du système complet
+  - [ ] Exécution d'instructions en langage d'assemblage RISC-V
+- [ ] Support de l'ensemble des instructions attendues
+  - [ ] Instructions arithmétiques et logiques
+  - [ ] Instructions d'accès mémoire
+  - [ ] Instructions de saut
+  - [ ] Instructions de branchement
+  - [ ] Instructions d'échanges entiers/flottants
+  - [ ] Cas particuliers
+- [ ] Rapport
+- [ ] Soutenance
 
 ## Règles de conception
 
