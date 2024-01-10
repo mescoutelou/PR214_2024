@@ -96,11 +96,11 @@ La note finale pour le projet sera donc obtenue une fois la soutenance finale ef
 | Tâche                                                   | Durée (semaines) | Fin prévue | Fin réelle | Points (/20) |
 | :------------------------------------------------------ | :--------------- | :--------- | :--------- | :----------- |
 | Début                                                   | 0                | 22/01/2024 | 22/01/2024 | X            |
-| Installation / Prise en main / Théorie                  | 3                | 12/02/2024 | XX/XX/2024 | 2            |
-| Première version testée de chaque composant             | 4                | 11/03/2024 | XX/XX/2024 | 4            |
-| Système global testé                                    | 2                | 25/03/2024 | XX/XX/2024 | 5            |
-| Ajout d'une instruction par composant et test           | 2                | 08/04/2024 | XX/XX/2024 | 4            |
-| Support de l'ensemble des instructions attendues        | 4                | 06/05/2024 | XX/XX/2024 | 5            |
+| Installation / Prise en main / Théorie                  | 3                | 12/02/2024 | XX/XX/2024 | X            |
+| Première version testée de chaque composant             | 4                | 11/03/2024 | XX/XX/2024 | X            |
+| Système global testé                                    | 2                | 25/03/2024 | XX/XX/2024 | X            |
+| Ajout d'une instruction par composant et test           | 2                | 08/04/2024 | XX/XX/2024 | X            |
+| Support de l'ensemble des instructions attendues        | 4                | 06/05/2024 | XX/XX/2024 | X            |
 | Rapport                                                 | X                | 07/05/2024 | 07/05/2024 | X            |
 | Soutenance                                              | X                | 07/05/2024 | 07/05/2024 | X            |
 
