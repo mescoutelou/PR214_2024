@@ -1,3 +1,4 @@
+PROJECT_PATH=`pwd`
 SBT_VERSION="1.8.0"
 FIRTOOL_VERSION="1.58.0"
 GTKWAVE_VERSION="3.3.117"
@@ -33,5 +34,12 @@ autoconf
 ./configure      
 make -j `nproc`
 cd .. 
+
+# INSTALL RISC-V TOOLCHAIN
+# git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
+# cd riscv-gnu-toolchain
+# ./configure --prefix=${PROJECT_PATH}/tools/riscv --with-arch=rv32imf --with-abi=ilp32f
+# make
+# cd ..
 
 cd .. 

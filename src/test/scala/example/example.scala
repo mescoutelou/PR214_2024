@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 04:07:21 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2023-12-21 07:27:53 am                                       *
+ * Last Modified: 2024-01-04 10:48:03 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -45,7 +45,7 @@ class ExampleTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 
-  "Example test 3" should "pass" in {
+  "Example test 3" should "fail" in {
     // test case body here
     test(new Example(32)).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
       // test body here
