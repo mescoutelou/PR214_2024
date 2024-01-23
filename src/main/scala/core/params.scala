@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 12:24:46 pm                                       *
+ * Last Modified: 2024-01-23 02:31:06 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -14,7 +14,7 @@
  */
 
 
-package prj.fpu
+package prj.core
 
 import chisel3._
 import chisel3.util._
@@ -22,21 +22,20 @@ import chisel3.util._
 import prj.common.mbus._
 
 
-trait FloatParams {
-	def isSim: Boolean
-
-	def nDataBit: Int = 32
-	def nDataByte: Int = (nDataBit / 8).toInt
-
-	def nExponentBit: Int = 8
-	def nMantissaBit: Int = 23
-}
-
-trait FpuParams extends FloatParams {
+trait CoreParams {
 	def isSim: Boolean
 
 	def nAddrBit: Int
-	def nBypass: Int = 2
+	def nDataBit: Int = 32
+	def nDataByte: Int = (nDataBit / 8).toInt
+
+  def pIBus: MBusParams = new MBusConfig (
+    isSim = isSim,
+
+    readOnly = true,
+    nAddrBit = nAddrBit,
+    nDataByte = nDataByte
+  )
 
   def pDBus: MBusParams = new MBusConfig (
     isSim = isSim,
@@ -47,8 +46,8 @@ trait FpuParams extends FloatParams {
   )
 }
 
-case class FpuConfig (
+case class CoreConfig (
 	isSim: Boolean, 
 	
 	nAddrBit: Int
-) extends FpuParams
+) extends CoreParams

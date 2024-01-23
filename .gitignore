@@ -4,5 +4,6 @@ project/project/
 project/target/
 output/
 test_run_dir/
+sim/
 
 *.json

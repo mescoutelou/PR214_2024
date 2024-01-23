@@ -1,9 +1,9 @@
 /*
- * File: params.scala                                                          *
+ * File: bus.scala                                                             *
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 12:24:46 pm                                       *
+ * Last Modified: 2024-01-23 01:37:41 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -14,41 +14,16 @@
  */
 
 
-package prj.fpu
+package prj.top
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.mbus._
 
-
-trait FloatParams {
-	def isSim: Boolean
-
-	def nDataBit: Int = 32
-	def nDataByte: Int = (nDataBit / 8).toInt
-
-	def nExponentBit: Int = 8
-	def nMantissaBit: Int = 23
+// ******************************
+//             DEBUG            
+// ******************************
+class TopSimBus extends Bundle {
+	val gpr = Vec(32, UInt(32.W))
+	val fpr = Vec(32, UInt(32.W))
 }
-
-trait FpuParams extends FloatParams {
-	def isSim: Boolean
-
-	def nAddrBit: Int
-	def nBypass: Int = 2
-
-  def pDBus: MBusParams = new MBusConfig (
-    isSim = isSim,
-
-    readOnly = false,
-    nAddrBit = nAddrBit,
-    nDataByte = nDataByte
-  )
-}
-
-case class FpuConfig (
-	isSim: Boolean, 
-	
-	nAddrBit: Int
-) extends FpuParams
