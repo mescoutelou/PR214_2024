@@ -1,9 +1,9 @@
 /*
- * File: example.scala                                                         *
+ * File: configs.scala                                                         *
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2023-12-21 07:27:31 am                                       *
+ * Last Modified: 2024-01-23 08:13:28 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
