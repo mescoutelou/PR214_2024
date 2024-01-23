@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:31:26 pm                                       *
+ * Last Modified: 2024-01-23 02:44:55 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -45,7 +45,7 @@ class Top(p: TopParams) extends Module {
   m_cross.io.b_s(1) <> m_dmem.io.b_port(0)  
 
   // ******************************
-  //             DEBUG            
+  //           SIMULATION
   // ******************************
   if (p.isSim) {
     io.o_sim.get.gpr := m_core.io.o_sim.get

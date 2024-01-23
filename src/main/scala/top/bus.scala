@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 01:37:41 pm                                       *
+ * Last Modified: 2024-01-23 02:45:19 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -21,7 +21,7 @@ import chisel3.util._
 
 
 // ******************************
-//             DEBUG            
+//           SIMULATION
 // ******************************
 class TopSimBus extends Bundle {
 	val gpr = Vec(32, UInt(32.W))

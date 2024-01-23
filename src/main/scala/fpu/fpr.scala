@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 08:51:25 am                                       *
+ * Last Modified: 2024-01-23 02:44:50 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -25,6 +25,8 @@ class Fpr(p: FpuParams) extends Module {
     val b_read = Vec(3, new FprReadIO(p))
     val i_byp = Input(Vec(p.nBypass, new BypassBus(p)))
     val b_write = new FprWriteIO(p)
+
+	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
   })  
 
   val r_fpr = Reg(Vec(32, new FloatBus(p)))
@@ -55,10 +57,13 @@ class Fpr(p: FpuParams) extends Module {
   }
 
   // ******************************
-  //             DEBUG            
+  //           SIMULATION
   // ******************************
   if (p.isSim) {
-
+    for (f <- 0 until 32) {
+      io.o_sim.get(f) := r_fpr(f).toUInt()
+    }
+    dontTouch(io.o_sim.get)
   }  
 }
 

@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 01:59:07 pm                                       *
+ * Last Modified: 2024-01-23 02:44:45 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -29,14 +29,16 @@ class Fpu(p: FpuParams) extends Module {
 	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
   })  
 
+  val m_fpr = Module(new Fpr(p))
+
   io.b_mem := DontCare
+  m_fpr.io := DontCare
 
   // ******************************
-  //             DEBUG            
+  //           SIMULATION
   // ******************************
   if (p.isSim) {
-    io.o_sim.get := DontCare
-    dontTouch(io.o_sim.get)
+    io.o_sim.get := m_fpr.io.o_sim.get
   }  
 }
 

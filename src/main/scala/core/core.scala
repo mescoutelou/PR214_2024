@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:28:50 pm                                       *
+ * Last Modified: 2024-01-23 02:45:01 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -34,7 +34,7 @@ class Core(p: CoreParams) extends Module {
   io.b_dmem := DontCare
 
   // ******************************
-  //             DEBUG            
+  //           SIMULATION
   // ******************************
   if (p.isSim) {
     io.o_sim.get := DontCare
