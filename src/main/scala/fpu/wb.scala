@@ -1,5 +1,5 @@
 /*
- * File: fpu.scala                                                             *
+ * File: shift.scala                                                           *
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
@@ -23,46 +23,29 @@ import prj.common.gen._
 import prj.common.mbus._
 
 
-class Fpu(p: FpuParams) extends Module {
+class WbStage(p: FpuParams) extends Module {
   val io = IO(new Bundle {
-    val b_pipe = new FpuIO(p, p.nDataBit)
+    val b_in = Flipped(new GenRVIO(p, new WbCtrlBus(p), new ResultBus(p)))
 
-    val b_mem = new MBusIO(p.pDBus)
-
-	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
+    val b_pipe = new FpuAckIO(p, p.nDataBit)
+    val b_rd = Flipped(new FprWriteIO(p))
   })  
 
-  val m_rr = Module(new RrStage(p))
-  val m_shift = Module(new ShiftStage(p))
-  val m_ex = Module(new ExStage(p))
-  val m_wb = Module(new WbStage(p))
-  val m_fpr = Module(new Fpr(p))
-
-  m_rr.io.b_pipe <> io.b_pipe.req
-  m_rr.io.b_rs <> m_fpr.io.b_read
-
-  m_shift.io.b_in <> m_rr.io.b_out
-
-  m_ex.io.b_in <> m_shift.io.b_out
-
-  m_wb.io.b_in <> m_ex.io.b_out
-  m_wb.io.b_pipe <> io.b_pipe.ack
-
-  m_fpr.io.b_write <> m_wb.io.b_rd
-
-  io.b_mem := DontCare
+  io.b_in := DontCare
+  io.b_pipe := DontCare
+  io.b_rd := DontCare
 
   // ******************************
   //           SIMULATION
   // ******************************
   if (p.isSim) {
-    io.o_sim.get := m_fpr.io.o_sim.get
+
   }  
 }
 
-object Fpu extends App {
+object WbStage extends App {
   _root_.circt.stage.ChiselStage.emitSystemVerilog(
-    new Fpu(FpuConfigBase),
+    new WbStage(FpuConfigBase),
     firtoolOpts = Array.concat(
       Array(
         "--disable-all-randomization",

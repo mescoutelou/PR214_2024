@@ -36,7 +36,9 @@ trait TopParams {
 
 	def pFpu: FpuParams = new FpuConfig (
 		isSim = isSim,
-		nAddrBit = nAddrBit
+		nAddrBit = nAddrBit,
+		useShiftStage = true,
+		useExStage = true
 	)
 
   def pBPort: Array[MBusParams] = {

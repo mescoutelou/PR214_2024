@@ -24,10 +24,11 @@ import chisel3.util._
 //            DECODING
 // ******************************
 object CODE {
-  def NBIT    = 5
+  def NBIT    = 3
 
 	def X				= 0.U(NBIT.W)
 	def ADD			= 1.U(NBIT.W)
+	def SUB			= 2.U(NBIT.W)
 }
 
 object OP {
@@ -107,4 +108,15 @@ object NAN {
 		}
 		return nan
 	}
+}
+
+// ******************************
+//            MICRO-OP            
+// ******************************
+object UOP {
+	def NBIT 	= 2
+	def X			= 0.U(NBIT.W)
+
+	def ADD		= 1.U(NBIT.W)
+	def SUB		= 2.U(NBIT.W)
 }

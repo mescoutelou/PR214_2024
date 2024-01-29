@@ -19,6 +19,7 @@ package prj.fpu
 import chisel3._
 import chisel3.util._
 
+import prj.common.gen._
 import prj.common.mbus._
 
 
@@ -32,11 +33,15 @@ trait FloatParams {
 	def nMantissaBit: Int = 23
 }
 
-trait FpuParams extends FloatParams {
+trait FpuParams extends GenParams
+									with FloatParams {
 	def isSim: Boolean
 
 	def nAddrBit: Int
-	def nBypass: Int = 2
+
+	def useShiftStage: Boolean
+	def useExStage: Boolean
+	def nBypass: Int = 0
 
   def pDBus: MBusParams = new MBusConfig (
     isSim = isSim,
@@ -50,5 +55,8 @@ trait FpuParams extends FloatParams {
 case class FpuConfig (
 	isSim: Boolean, 
 	
-	nAddrBit: Int
+	nAddrBit: Int,
+
+	useShiftStage: Boolean,
+	useExStage: Boolean
 ) extends FpuParams

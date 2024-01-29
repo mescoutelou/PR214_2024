@@ -19,22 +19,31 @@ package prj.fpu
 import chisel3._
 import chisel3.util._
 
+import prj.common.gen._
+
 
 // ******************************
 //              PORT            
 // ******************************
 class FpuReqCtrlBus extends Bundle {
 	val code = UInt(CODE.NBIT.W)
-	val op1 = UInt(OP.NBIT.W)
-	val op2 = UInt(OP.NBIT.W)
-	val op3 = UInt(OP.NBIT.W)
+	val op = Vec(3, UInt(OP.NBIT.W))
+	val rs = Vec(3, UInt(5.W))
+	val rd = UInt(5.W)
 	val wb = Bool()
 }
 
 class FpuReqDataBus(nDataBit: Int) extends Bundle {
-	val s1 = UInt(nDataBit.W)
-	val s2 = UInt(nDataBit.W)
-	val s3 = UInt(nDataBit.W)
+	val src = Vec(3, UInt(nDataBit.W))
+}
+
+class FpuReqIO(p: GenParams, nDataBit: Int) extends GenRVIO(p, new FpuReqCtrlBus(), new FpuReqDataBus(nDataBit))
+
+class FpuAckIO(p: GenParams, nDataBit: Int) extends GenRVIO(p, UInt(0.W), UInt(nDataBit.W))
+
+class FpuIO(p: GenParams, nDataBit: Int) extends Bundle {
+	val req = Flipped(new FpuReqIO(p, nDataBit))
+	val ack = new FpuAckIO(p, nDataBit)
 }
 
 // ******************************
@@ -77,4 +86,54 @@ class BypassBus(p: FpuParams) extends Bundle {
 	val ready = Bool()
 	val addr = UInt(5.W)
 	val data = new FloatBus(p)
+}
+
+// ******************************
+//          CONTROL BUS            
+// ******************************
+class InfoBus(p: FpuParams) extends Bundle {
+	val wb = Bool()
+}
+
+class ExBus(p: FpuParams) extends Bundle {
+	val uop = UInt(UOP.NBIT.W)
+}
+
+class FprBus(p: FpuParams) extends Bundle {
+	val en = Bool()
+	val addr = UInt(5.W)
+}
+
+// ******************************
+//       STAGE CONTROL BUS            
+// ******************************
+class ShiftCtrlBus(p: FpuParams) extends Bundle {
+	val info = new InfoBus(p)
+
+	val ex = new ExBus(p)
+	val fpr = new FprBus(p)
+}
+
+class ExCtrlBus(p: FpuParams) extends Bundle {
+	val info = new InfoBus(p)
+
+	val ex = new ExBus(p)
+	val fpr = new FprBus(p)
+}
+
+class WbCtrlBus(p: FpuParams) extends Bundle {
+	val info = new InfoBus(p)
+
+	val fpr = new FprBus(p)
+}
+
+// ******************************
+//            DATA BUS            
+// ******************************
+class DataBus(p: FpuParams) extends Bundle {
+	val src = Vec(3, new FloatBus(p))
+}
+
+class ResultBus(p: FpuParams) extends Bundle {
+	val res = new FloatBus(p)
 }
