@@ -24,11 +24,14 @@ import chisel3.util._
 //            DECODING
 // ******************************
 object CODE {
-  def NBIT    = 3
+  def NBIT    = 4
 
 	def X				= 0.U(NBIT.W)
 	def ADD			= 1.U(NBIT.W)
 	def SUB			= 2.U(NBIT.W)
+	def MVWX		= 3.U(NBIT.W)
+
+	def FCVTSW	= 10.U(NBIT.W)
 }
 
 object OP {
@@ -43,6 +46,25 @@ object OP {
 //            NUMBERS            
 // ******************************
 object NAN {
+	def PZERO(p: FloatParams): FloatBus = {
+		val nan = Wire(new FloatBus(p))
+
+		nan.sign := 0.B
+		nan.exponent := 0.U
+		nan.mantissa := 0.U
+
+		return nan
+	}
+	def NZERO(p: FloatParams): FloatBus = {
+		val nan = Wire(new FloatBus(p))
+
+		nan.sign := 1.B
+		nan.exponent := 0.U
+		nan.mantissa := 0.U
+
+		return nan
+	}
+
 	def INFP(p: FloatParams): FloatBus = {
 		val nan = Wire(new FloatBus(p))
 
@@ -117,6 +139,7 @@ object UOP {
 	def NBIT 	= 2
 	def X			= 0.U(NBIT.W)
 
-	def ADD		= 1.U(NBIT.W)
-	def SUB		= 2.U(NBIT.W)
+	def MV		= 1.U(NBIT.W)
+	def ADD		= 2.U(NBIT.W)
+	def SUB		= 3.U(NBIT.W)
 }

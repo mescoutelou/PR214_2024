@@ -41,7 +41,14 @@ trait FpuParams extends GenParams
 
 	def useShiftStage: Boolean
 	def useExStage: Boolean
-	def nBypass: Int = 0
+	def nBypass: Int = {
+		var nbyp: Int = 1
+
+		if (useShiftStage) nbyp = nbyp + 1
+		if (useExStage) nbyp = nbyp + 1
+
+		return nbyp
+	}
 
   def pDBus: MBusParams = new MBusConfig (
     isSim = isSim,

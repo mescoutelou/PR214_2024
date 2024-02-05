@@ -27,6 +27,7 @@ object TABLECODE {
   //                                     |       |       |
   val default: List[UInt] = List[UInt]( 0.B,  UOP.X,    0.B)
   val table: Array[(BitPat, List[UInt])] = Array[(BitPat, List[UInt])] (
+    BitPat(CODE.MVWX)         -> List(  1.B,  UOP.MV,   1.B),
     BitPat(CODE.ADD)          -> List(  1.B,  UOP.ADD,  1.B),
     BitPat(CODE.SUB)          -> List(  1.B,  UOP.SUB,  1.B)
   )

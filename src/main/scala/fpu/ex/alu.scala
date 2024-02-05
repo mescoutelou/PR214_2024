@@ -1,5 +1,5 @@
 /*
- * File: fpu.scala                                                             *
+ * File: ex.scala                                                              *
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
@@ -23,58 +23,58 @@ import prj.common.gen._
 import prj.common.mbus._
 
 
-class Fpu(p: FpuParams) extends Module {
+class Alu(p: FpuParams) extends Module {
   val io = IO(new Bundle {
-    val b_pipe = new FpuIO(p, p.nDataBit)
+    val b_req = Flipped(new GenRVIO(p, UInt(UOP.NBIT.W), new DataBus(p)))
 
-    val b_mem = new MBusIO(p.pDBus)
-
-	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
+    val b_ack = new GenRVIO(p, UInt(0.W), new FloatBus(p))
   })  
 
-  val m_rr = Module(new RrStage(p))
-  val m_shift = Module(new ShiftStage(p))
-  val m_ex = Module(new ExStage(p))
-  val m_wb = Module(new WbStage(p))
-  val m_fpr = Module(new Fpr(p))
+  val w_src = Wire(Vec(3, new FloatBus(p)))
+  val w_res = Wire(new FloatBus(p))
 
-  m_rr.io.b_pipe <> io.b_pipe.req
-  m_rr.io.b_rs <> m_fpr.io.b_read
-
-  m_shift.io.b_in <> m_rr.io.b_out
-
-  m_ex.io.b_in <> m_shift.io.b_out
-
-  m_wb.io.b_in <> m_ex.io.b_out
-  m_wb.io.b_pipe <> io.b_pipe.ack
-
-  var v_nbyp: Int = 0
-  m_fpr.io.i_byp(v_nbyp) := m_wb.io.o_byp
-  v_nbyp = v_nbyp + 1
-  if (p.useExStage) {
-    m_fpr.io.i_byp(v_nbyp) := m_ex.io.o_byp
-    v_nbyp = v_nbyp + 1
+  for (s <- 0 until 3) {
+    w_src(s) := io.b_req.data.get.src(s)
   }
-  if (p.useShiftStage) {
-    m_fpr.io.i_byp(v_nbyp) := m_shift.io.o_byp
-    v_nbyp = v_nbyp + 1
-  }
-  
-  m_fpr.io.b_write <> m_wb.io.b_rd
 
-  io.b_mem := DontCare
+  // ******************************
+  //              ALU
+  // ******************************
+  w_res := NAN.PZERO(p)
+
+  switch (io.b_req.ctrl.get) {
+    is (UOP.MV) {
+      w_res := w_src(0)
+    }
+    is (UOP.ADD) {
+      when ((w_src(0).exponent > w_src(1).exponent) | ((w_src(0).exponent === w_src(1).exponent) & (w_src(0).mantissa > w_src(1).mantissa))) {
+        w_res.sign := w_src(0).sign
+      }.otherwise {
+        w_res.sign := w_src(1).sign
+      }
+      w_res.exponent := w_src(0).exponent
+      w_res.mantissa := w_src(0).mantissa + w_src(1).mantissa
+    }
+  }
+
+  // ******************************
+  //             OUTPUT
+  // ******************************
+  io.b_req.ready := io.b_ack.ready
+  io.b_ack.valid := io.b_req.valid
+  io.b_ack.data.get := w_res
 
   // ******************************
   //           SIMULATION
   // ******************************
   if (p.isSim) {
-    io.o_sim.get := m_fpr.io.o_sim.get
+
   }  
 }
 
-object Fpu extends App {
+object Alu extends App {
   _root_.circt.stage.ChiselStage.emitSystemVerilog(
-    new Fpu(FpuConfigBase),
+    new Alu(FpuConfigBase),
     firtoolOpts = Array.concat(
       Array(
         "--disable-all-randomization",

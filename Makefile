@@ -14,5 +14,6 @@ clean:
 	rm -rf sim/obj/
 	rm -rf sim/src/
 	rm -rf sim/*.vcd
+	rm -rf test_run_dir
 	rm -rf *.json
 	sbt clean cleanFiles

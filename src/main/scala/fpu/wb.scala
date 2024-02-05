@@ -27,13 +27,37 @@ class WbStage(p: FpuParams) extends Module {
   val io = IO(new Bundle {
     val b_in = Flipped(new GenRVIO(p, new WbCtrlBus(p), new ResultBus(p)))
 
+    val o_byp = Output(new BypassBus(p))
+
     val b_pipe = new FpuAckIO(p, p.nDataBit)
     val b_rd = Flipped(new FprWriteIO(p))
   })  
 
   io.b_in := DontCare
   io.b_pipe := DontCare
-  io.b_rd := DontCare
+
+  // ******************************
+  //              FPR
+  // ******************************
+  io.b_rd.valid := io.b_in.valid & io.b_in.ctrl.get.fpr.en & io.b_pipe.ready
+  io.b_rd.addr := io.b_in.ctrl.get.fpr.addr
+  io.b_rd.data := io.b_in.data.get.res
+
+  // ******************************
+  //             BYPASS
+  // ******************************
+  io.o_byp.valid := io.b_in.valid & io.b_in.ctrl.get.fpr.en
+  io.o_byp.ready := false.B
+  io.o_byp.addr := io.b_in.ctrl.get.fpr.addr
+  io.o_byp.data := DontCare
+
+  // ******************************
+  //             OUTPUT
+  // ******************************
+  io.b_in.ready := io.b_pipe.ready
+
+  io.b_pipe.valid := io.b_in.ctrl.get.info.wb
+  io.b_pipe.data.get := io.b_in.data.get.res.toUInt()
 
   // ******************************
   //           SIMULATION
