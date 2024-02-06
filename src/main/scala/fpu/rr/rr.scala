@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:44:45 pm                                       *
+ * Last Modified: 2024-02-06 02:53:59 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -23,14 +23,14 @@ import prj.common.gen._
 import prj.common.mbus._
 
 
-class SlctOp(p: FloatParams) extends Module {
+class SlctOp(p: FpuParams) extends Module {
   val io = IO(new Bundle {
     val i_op = Input(UInt(OP.NBIT.W))
 
     val i_int = Input(UInt(p.nDataBit.W))
-    val i_float = Input(new FloatBus(p))
+    val i_float = Input(new FloatBus(p.nExponentBit, p.nMantissaBit))
 
-    val o_val = Output(new FloatBus(p))
+    val o_val = Output(new FloatBus(p.nExponentBit, p.nMantissaBit))
   })  
 
   io.o_val := 0.U.asTypeOf(io.o_val)
@@ -48,14 +48,14 @@ class RrStage(p: FpuParams) extends Module {
 
     val b_rs = Vec(3, Flipped(new FprReadIO(p)))
 
-    val b_out = new GenRVIO(p, new ShiftCtrlBus(p), new DataBus(p))
+    val b_out = new GenRVIO(p, new ShiftCtrlBus(p), new SourceBus(p))
   })  
 
-  val m_reg = Module(new GenReg(p, new ShiftCtrlBus(p), new DataBus(p), true))
+  val m_reg = Module(new GenReg(p, new ShiftCtrlBus(p), new SourceBus(p), true))
 
   val w_lock = Wire(Bool())
   val w_wait_rs = Wire(Vec(3, Bool()))
-  val w_src = Wire(Vec(3, new FloatBus(p)))
+  val w_src = Wire(Vec(3, new FloatBus(p.nExponentBit, p.nMantissaBit)))
 
   // ******************************
   //            DECODER
@@ -84,8 +84,9 @@ class RrStage(p: FpuParams) extends Module {
   io.b_pipe.ready := ~w_lock & ~w_wait_rs.asUInt.orR
 
   w_lock := ~m_reg.io.b_in.ready
-  m_reg.io.b_in.valid := io.b_pipe.valid
+  m_reg.io.b_in.valid := io.b_pipe.valid & ~w_wait_rs.asUInt.orR
   m_reg.io.b_in.ctrl.get.info.wb := io.b_pipe.ctrl.get.wb
+  m_reg.io.b_in.ctrl.get.ex := DontCare
   m_reg.io.b_in.ctrl.get.ex.uop := w_decoder(1)
   m_reg.io.b_in.ctrl.get.fpr.en := w_decoder(2)
   m_reg.io.b_in.ctrl.get.fpr.addr := io.b_pipe.ctrl.get.rd

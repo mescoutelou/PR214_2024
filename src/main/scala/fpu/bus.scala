@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 08:48:21 am                                       *
+ * Last Modified: 2024-02-06 03:47:07 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -49,19 +49,19 @@ class FpuIO(p: GenParams, nDataBit: Int) extends Bundle {
 // ******************************
 //             FLOAT            
 // ******************************
-class FloatBus(p: FloatParams) extends Bundle {
+class FloatBus(nExponentBit: Int, nMantissaBit: Int) extends Bundle {
 	val sign = Bool()
-	val exponent = UInt(p.nExponentBit.W)
-	val mantissa = UInt(p.nMantissaBit.W)
+	val expo = UInt(nExponentBit.W)
+	val mant = UInt(nMantissaBit.W)
 
 	def toUInt(): UInt = {
-		return Cat(sign, exponent, mantissa)
+		return Cat(sign, expo, mant)
 	}
 
 	def fromUInt(uint: UInt): Unit = {
-		sign := uint(p.nExponentBit + p.nMantissaBit)
-		exponent := uint(p.nMantissaBit + p.nExponentBit - 1, p.nMantissaBit)
-		mantissa := uint(p.nMantissaBit - 1, 0)
+		sign := uint(nExponentBit + nMantissaBit)
+		expo := uint(nMantissaBit + nExponentBit - 1, nMantissaBit)
+		mant := uint(nMantissaBit - 1, 0)
 	}
 }
 
@@ -71,13 +71,13 @@ class FloatBus(p: FloatParams) extends Bundle {
 class FprReadIO(p: FpuParams) extends Bundle {
 	val addr = Input(UInt(5.W))
 	val ready = Output(Bool())
-	val data = Output(new FloatBus(p))
+	val data = Output(new FloatBus(p.nExponentBit, p.nMantissaBit))
 }
 
 class FprWriteIO(p: FpuParams) extends Bundle {
 	val valid = Input(Bool())
 	val addr = Input(UInt(5.W))
-	val data = Input(new FloatBus(p))
+	val data = Input(new FloatBus(p.nExponentBit, p.nMantissaBit))
 	val ready = Output(Bool())
 }
 
@@ -85,7 +85,7 @@ class BypassBus(p: FpuParams) extends Bundle {
 	val valid = Bool()
 	val ready = Bool()
 	val addr = UInt(5.W)
-	val data = new FloatBus(p)
+	val data = new FloatBus(p.nExponentBit, p.nMantissaBit)
 }
 
 // ******************************
@@ -97,6 +97,10 @@ class InfoBus(p: FpuParams) extends Bundle {
 
 class ExBus(p: FpuParams) extends Bundle {
 	val uop = UInt(UOP.NBIT.W)
+	val equ = Vec(3, Bool())
+	val agreat = Bool()
+	val sgreat = Bool()
+	val neg = Vec(3, Bool())
 }
 
 class FprBus(p: FpuParams) extends Bundle {
@@ -130,10 +134,14 @@ class WbCtrlBus(p: FpuParams) extends Bundle {
 // ******************************
 //            DATA BUS            
 // ******************************
-class DataBus(p: FpuParams) extends Bundle {
-	val src = Vec(3, new FloatBus(p))
+class SourceBus(p: FpuParams) extends Bundle {
+	val src = Vec(3, new FloatBus(p.nExponentBit, p.nMantissaBit))
+}
+
+class OperandBus(p: FpuParams) extends Bundle {
+	val src = Vec(3, new FloatBus(p.nExponentBit, p.nMantissaBit + 1))
 }
 
 class ResultBus(p: FpuParams) extends Bundle {
-	val res = new FloatBus(p)
+	val res = new FloatBus(p.nExponentBit, p.nMantissaBit * 2)
 }

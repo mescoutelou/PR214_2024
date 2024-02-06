@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:44:50 pm                                       *
+ * Last Modified: 2024-02-06 10:52:04 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -29,7 +29,7 @@ class Fpr(p: FpuParams) extends Module {
 	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
   })  
 
-  val r_fpr = Reg(Vec(32, new FloatBus(p)))
+  val r_fpr = Reg(Vec(32, new FloatBus(p.nExponentBit, p.nMantissaBit)))
 
   // ******************************
   //              READ            

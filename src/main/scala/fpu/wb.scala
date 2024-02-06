@@ -1,9 +1,9 @@
 /*
- * File: shift.scala                                                           *
+ * File: wb.scala                                                              *
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:44:45 pm                                       *
+ * Last Modified: 2024-02-06 03:35:24 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -33,15 +33,43 @@ class WbStage(p: FpuParams) extends Module {
     val b_rd = Flipped(new FprWriteIO(p))
   })  
 
-  io.b_in := DontCare
   io.b_pipe := DontCare
+
+  // ******************************
+  //           NORMALIZE
+  // ******************************
+  val w_norm = Wire(new FloatBus(p.nExponentBit, p.nMantissaBit))
+  val w_zero = Wire(Bool())
+  val w_high = Wire(UInt(p.nMantissaBit.W))
+  val w_hzero = Wire(Bool())
+  val w_hlone = Wire(UInt(log2Ceil(p.nMantissaBit).W))
+  val w_low = Wire(UInt(p.nMantissaBit.W))
+  val w_lzero = Wire(Bool())
+  val w_llone = Wire(UInt(log2Ceil(p.nMantissaBit).W))
+
+  w_zero := ~io.b_in.data.get.res.mant.orR
+  w_high := io.b_in.data.get.res.mant(p.nMantissaBit * 2 - 1, p.nMantissaBit)
+  w_hzero := ~w_high.orR
+  w_hlone := PriorityEncoder(Reverse(w_high))
+  w_low := io.b_in.data.get.res.mant(p.nMantissaBit - 1, 0)
+  w_lzero := ~w_low.orR
+  w_llone := PriorityEncoder(Reverse(w_low))
+
+  w_norm := io.b_in.data.get.res
+  when (~w_hzero) {
+    w_norm.expo := io.b_in.data.get.res.expo + ((p.nMantissaBit - 1).U - w_hlone)
+    w_norm.mant := (io.b_in.data.get.res.mant >> ((p.nMantissaBit - 1).U - w_hlone))
+  }.otherwise {
+    w_norm.expo := io.b_in.data.get.res.expo - (w_llone + 1.U)
+    w_norm.mant := (io.b_in.data.get.res.mant << (w_llone + 1.U))
+  }
 
   // ******************************
   //              FPR
   // ******************************
   io.b_rd.valid := io.b_in.valid & io.b_in.ctrl.get.fpr.en & io.b_pipe.ready
   io.b_rd.addr := io.b_in.ctrl.get.fpr.addr
-  io.b_rd.data := io.b_in.data.get.res
+  io.b_rd.data := w_norm
 
   // ******************************
   //             BYPASS
@@ -57,7 +85,7 @@ class WbStage(p: FpuParams) extends Module {
   io.b_in.ready := io.b_pipe.ready
 
   io.b_pipe.valid := io.b_in.ctrl.get.info.wb
-  io.b_pipe.data.get := io.b_in.data.get.res.toUInt()
+  io.b_pipe.data.get := w_norm.toUInt()
 
   // ******************************
   //           SIMULATION

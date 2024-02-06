@@ -1,0 +1,88 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue Feb  6 14:04:17 2024
+[*]
+[dumpfile] "/home/mescoutelou/Cours/PR214_2024/test_run_dir/Fpu_test_should_pass/Fpu.vcd"
+[dumpfile_mtime] "Tue Feb  6 13:59:59 2024"
+[dumpfile_size] 62197
+[savefile] "/home/mescoutelou/Cours/PR214_2024/fpu.gtkw"
+[timestart] 0
+[size] 1335 784
+[pos] -1 -1
+*-6.548399 206 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] Fpu.
+[treeopen] Fpu.m_ex.
+[sst_width] 314
+[signals_width] 262
+[sst_expanded] 1
+[sst_vpaned_height] 216
+@28
+Fpu.m_shift.clock
+@800201
+-FPR
+@23
+Fpu.m_fpr.r_fpr_0_expo[7:0]
+Fpu.m_fpr.r_fpr_0_mant[22:0]
+@29
+Fpu.m_fpr.r_fpr_0_sign
+@23
+Fpu.m_fpr.r_fpr_1_expo[7:0]
+Fpu.m_fpr.r_fpr_1_mant[22:0]
+@29
+Fpu.m_fpr.r_fpr_1_sign
+@23
+Fpu.m_fpr.r_fpr_2_expo[7:0]
+Fpu.m_fpr.r_fpr_2_mant[22:0]
+@29
+Fpu.m_fpr.r_fpr_2_sign
+@23
+Fpu.m_fpr.r_fpr_3_expo[7:0]
+Fpu.m_fpr.r_fpr_3_mant[22:0]
+@29
+Fpu.m_fpr.r_fpr_3_sign
+@23
+Fpu.m_fpr.r_fpr_4_expo[7:0]
+Fpu.m_fpr.r_fpr_4_mant[22:0]
+@29
+Fpu.m_fpr.r_fpr_4_sign
+@1000201
+-FPR
+@800200
+-Shift
+@28
+Fpu.m_shift.io_b_in_valid
+Fpu.m_shift.io_b_in_data_src_0_sign
+@24
+Fpu.m_shift.io_b_in_data_src_0_expo[7:0]
+@22
+Fpu.m_shift.io_b_in_data_src_0_mant[22:0]
+@28
+Fpu.m_shift.io_b_in_data_src_1_sign
+@24
+Fpu.m_shift.io_b_in_data_src_1_expo[7:0]
+@22
+Fpu.m_shift.io_b_in_data_src_1_mant[22:0]
+@1000200
+-Shift
+@c00200
+-ALU
+@24
+Fpu.m_ex.m_alu.io_b_req_ctrl_uop[2:0]
+@28
+Fpu.m_ex.m_alu.io_b_req_ctrl_neg_0
+Fpu.m_ex.m_alu.io_b_req_data_src_0_sign
+@24
+Fpu.m_ex.m_alu.io_b_req_data_src_0_expo[7:0]
+@22
+Fpu.m_ex.m_alu.io_b_req_data_src_0_mant[23:0]
+@28
+Fpu.m_ex.m_alu.io_b_req_ctrl_neg_1
+Fpu.m_ex.m_alu.io_b_req_data_src_1_sign
+@24
+Fpu.m_ex.m_alu.io_b_req_data_src_1_expo[7:0]
+@22
+Fpu.m_ex.m_alu.io_b_req_data_src_1_mant[23:0]
+@1401200
+-ALU
+[pattern_trace] 1
+[pattern_trace] 0

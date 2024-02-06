@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 08:12:37 am                                       *
+ * Last Modified: 2024-02-06 12:09:39 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2023 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -29,7 +29,9 @@ object CODE {
 	def X				= 0.U(NBIT.W)
 	def ADD			= 1.U(NBIT.W)
 	def SUB			= 2.U(NBIT.W)
-	def MVWX		= 3.U(NBIT.W)
+	def MIN			= 3.U(NBIT.W)
+	def MAX			= 4.U(NBIT.W)
+	def MVWX		= 5.U(NBIT.W)
 
 	def FCVTSW	= 10.U(NBIT.W)
 }
@@ -46,68 +48,68 @@ object OP {
 //            NUMBERS            
 // ******************************
 object NAN {
-	def PZERO(p: FloatParams): FloatBus = {
-		val nan = Wire(new FloatBus(p))
+	def PZERO(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
-		nan.exponent := 0.U
-		nan.mantissa := 0.U
+		nan.expo := 0.U
+		nan.mant := 0.U
 
 		return nan
 	}
-	def NZERO(p: FloatParams): FloatBus = {
-		val nan = Wire(new FloatBus(p))
+	def NZERO(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 1.B
-		nan.exponent := 0.U
-		nan.mantissa := 0.U
+		nan.expo := 0.U
+		nan.mant := 0.U
 
 		return nan
 	}
 
-	def INFP(p: FloatParams): FloatBus = {
-		val nan = Wire(new FloatBus(p))
+	def INFP(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
-		nan.exponent := Cat(Fill(8, 1.B))
-		nan.mantissa := Cat(Fill(23, 0.B))
+		nan.expo := Cat(Fill(nExponentBit, 1.B))
+		nan.mant := Cat(Fill(nMantissaBit, 0.B))
 
 		return nan
 	}
-	def INFN(p: FloatParams): FloatBus = {
-		val nan = Wire(new FloatBus(p))
+	def INFN(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 1.B
-		nan.exponent := Cat(Fill(8, 1.B))
-		nan.mantissa := Cat(Fill(23, 0.B))
+		nan.expo := Cat(Fill(nExponentBit, 1.B))
+		nan.mant := Cat(Fill(nMantissaBit, 0.B))
 
 		return nan
 	}
-	def NANF(p: FloatParams): FloatBus = {
-		val nan = Wire(new FloatBus(p))
+	def NANF(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
-		nan.exponent := Cat(Fill(8, 1.B))
-		nan.mantissa := Cat(Fill(22, 0.B), 1.B)
+		nan.expo := Cat(Fill(nExponentBit, 1.B))
+		nan.mant := Cat(Fill(nMantissaBit - 1, 0.B), 1.B)
 
 		return nan
 	}
-	def NANQ(p: FloatParams): FloatBus = {
-		val nan = Wire(new FloatBus(p))
+	def NANQ(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
-		nan.exponent := Cat(Fill(8, 1.B))
-		nan.mantissa := Cat(1.B, Fill(22, 0.B))
+		nan.expo := Cat(Fill(nExponentBit, 1.B))
+		nan.mant := Cat(1.B, Fill(nMantissaBit - 1, 0.B))
 
 		return nan
 	}
-	def NANC(p: FloatParams): FloatBus = NANQ(p)
+	def NANC(nExponentBit: Int, nMantissaBit: Int): FloatBus = NANQ(nExponentBit, nMantissaBit)
 
-	def isInf(p: FloatParams, value: FloatBus): Bool = {
+	def isInf(nExponentBit: Int, nMantissaBit: Int, value: FloatBus): Bool = {
 		val nan = Wire(Bool())
-		when (value === INFP(p)) {
+		when (value === INFP(nExponentBit, nMantissaBit)) {
 			nan := true.B
-		}.elsewhen (value === INFN(p)) {
+		}.elsewhen (value === INFN(nExponentBit, nMantissaBit)) {
 			nan := true.B
 		}.otherwise {
 			nan := false.B
@@ -115,15 +117,15 @@ object NAN {
 		return nan
 	}
 
-	def isNaN(p: FloatParams, value: FloatBus): Bool = {
+	def isNaN(nExponentBit: Int, nMantissaBit: Int, value: FloatBus): Bool = {
 		val nan = Wire(Bool())
-		when (value === INFP(p)) {
+		when (value === INFP(nExponentBit, nMantissaBit)) {
 			nan := true.B
-		}.elsewhen (value === INFN(p)) {
+		}.elsewhen (value === INFN(nExponentBit, nMantissaBit)) {
 			nan := true.B
-		}.elsewhen (value === NANF(p)) {
+		}.elsewhen (value === NANF(nExponentBit, nMantissaBit)) {
 			nan := true.B
-		}.elsewhen (value === NANQ(p)) {
+		}.elsewhen (value === NANQ(nExponentBit, nMantissaBit)) {
 			nan := true.B
 		}.otherwise {
 			nan := false.B
@@ -136,10 +138,12 @@ object NAN {
 //            MICRO-OP            
 // ******************************
 object UOP {
-	def NBIT 	= 2
+	def NBIT 	= 3
 	def X			= 0.U(NBIT.W)
 
 	def MV		= 1.U(NBIT.W)
 	def ADD		= 2.U(NBIT.W)
 	def SUB		= 3.U(NBIT.W)
+	def MIN		= 4.U(NBIT.W)
+	def MAX		= 5.U(NBIT.W)
 }

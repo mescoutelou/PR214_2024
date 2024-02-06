@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:44:45 pm                                       *
+ * Last Modified: 2024-02-06 01:49:55 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -25,7 +25,7 @@ import prj.common.mbus._
 
 class ExStage(p: FpuParams) extends Module {
   val io = IO(new Bundle {
-    val b_in = Flipped(new GenRVIO(p, new ExCtrlBus(p), new DataBus(p)))
+    val b_in = Flipped(new GenRVIO(p, new ExCtrlBus(p), new OperandBus(p)))
 
     val o_byp = Output(new BypassBus(p))
 
@@ -35,13 +35,13 @@ class ExStage(p: FpuParams) extends Module {
   val m_alu = Module(new Alu(p))
   val m_reg = if (p.useExStage) Some(Module(new GenReg(p, new WbCtrlBus(p), new ResultBus(p), true))) else None
 
-  val w_res = Wire(new FloatBus(p))
+  val w_res = Wire(new FloatBus(p.nExponentBit, p.nMantissaBit * 2))
 
   // ******************************
   //              ALU
   // ******************************
   m_alu.io.b_req.valid := io.b_in.valid
-  m_alu.io.b_req.ctrl.get := io.b_in.ctrl.get.ex.uop
+  m_alu.io.b_req.ctrl.get := io.b_in.ctrl.get.ex
   m_alu.io.b_req.data.get := io.b_in.data.get
 
   w_res := m_alu.io.b_ack.data.get

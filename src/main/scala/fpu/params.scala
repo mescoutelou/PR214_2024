@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 12:24:46 pm                                       *
+ * Last Modified: 2024-02-06 10:43:08 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -23,21 +23,14 @@ import prj.common.gen._
 import prj.common.mbus._
 
 
-trait FloatParams {
-	def isSim: Boolean
-
-	def nDataBit: Int = 32
-	def nDataByte: Int = (nDataBit / 8).toInt
-
-	def nExponentBit: Int = 8
-	def nMantissaBit: Int = 23
-}
-
-trait FpuParams extends GenParams
-									with FloatParams {
+trait FpuParams extends GenParams {
 	def isSim: Boolean
 
 	def nAddrBit: Int
+	def nDataBit: Int = 32
+	def nDataByte: Int = (nDataBit / 8).toInt
+	def nExponentBit: Int = 8
+	def nMantissaBit: Int = 23
 
 	def useShiftStage: Boolean
 	def useExStage: Boolean
