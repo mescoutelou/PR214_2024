@@ -42,7 +42,7 @@ class Alu(p: FpuParams) extends Module {
   // ******************************
   //              ALU
   // ******************************
-  w_res := NAN.PZERO(p.nExponentBit, p.nMantissaBit * 2)
+  w_res := NAN.ZEROP(p.nExponentBit, p.nMantissaBit * 2)
 
   switch (io.b_req.ctrl.get.uop) {
     is (UOP.MV) {
@@ -70,6 +70,43 @@ class Alu(p: FpuParams) extends Module {
       }.otherwise {
         w_res := w_src(1)
       }
+    }
+    is (UOP.EQ) {
+      when (io.b_req.ctrl.get.equ.asUInt.andR) {
+        w_res := 1.U.asTypeOf(w_res)
+      }.otherwise {
+        w_res := 0.U.asTypeOf(w_res)
+      }
+    }
+    is (UOP.LT) {
+      when (~io.b_req.ctrl.get.sgreat & ~io.b_req.ctrl.get.equ.asUInt.andR) {
+        w_res := 1.U.asTypeOf(w_res)
+      }.otherwise {
+        w_res := 0.U.asTypeOf(w_res)
+      }
+    }
+    is (UOP.LE) {
+      when (~io.b_req.ctrl.get.sgreat | io.b_req.ctrl.get.equ.asUInt.andR) {
+        w_res := 1.U.asTypeOf(w_res)
+      }.otherwise {
+        w_res := 0.U.asTypeOf(w_res)
+      }
+    }
+    is (UOP.CLASS) {
+      val w_bit = Wire(Vec(10, Bool()))
+      
+      w_bit(0) := (w_src(0) === NAN.INFN(p.nExponentBit, p.nMantissaBit * 2))
+      w_bit(1) := w_src(0).sign
+      w_bit(2) := false.B
+      w_bit(3) := (w_src(0) === NAN.ZERON(p.nExponentBit, p.nMantissaBit * 2))
+      w_bit(4) := (w_src(0) === NAN.ZEROP(p.nExponentBit, p.nMantissaBit * 2))
+      w_bit(5) := false.B
+      w_bit(6) := ~w_src(0).sign
+      w_bit(7) := (w_src(0) === NAN.INFP(p.nExponentBit, p.nMantissaBit * 2))
+      w_bit(8) := (w_src(0) === NAN.NANF(p.nExponentBit, p.nMantissaBit * 2))
+      w_bit(9) := (w_src(0) === NAN.NANQ(p.nExponentBit, p.nMantissaBit * 2))
+
+      w_res := w_bit.asUInt.asTypeOf(w_res) 
     }
   }
 

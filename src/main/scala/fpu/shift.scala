@@ -60,9 +60,9 @@ class ShiftStage(p: FpuParams) extends Module {
   }
 
   when (w_equ(0)) {
-    w_sgreat := ~(io.b_in.data.get.src(0).sign ^ w_agreat)
+    w_sgreat := (io.b_in.data.get.src(0).sign ^ w_agreat)
   }.otherwise {
-    w_sgreat := ~io.b_in.data.get.src(0).sign
+    w_sgreat := io.b_in.data.get.src(0).sign
   }
 
   // ******************************

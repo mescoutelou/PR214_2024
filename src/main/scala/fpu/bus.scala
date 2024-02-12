@@ -93,6 +93,7 @@ class BypassBus(p: FpuParams) extends Bundle {
 // ******************************
 class InfoBus(p: FpuParams) extends Bundle {
 	val wb = Bool()
+	val int = Bool()
 }
 
 class ExBus(p: FpuParams) extends Bundle {

@@ -33,7 +33,12 @@ object CODE {
 	def MAX			= 4.U(NBIT.W)
 	def MVWX		= 5.U(NBIT.W)
 
-	def FCVTSW	= 10.U(NBIT.W)
+	def EQ 			= 8.U(NBIT.W)
+	def LT 			= 9.U(NBIT.W)
+	def LE 			= 10.U(NBIT.W)
+	def CLASS 	= 11.U(NBIT.W)
+
+	def FCVTSW	= 15.U(NBIT.W)
 }
 
 object OP {
@@ -48,7 +53,7 @@ object OP {
 //            NUMBERS            
 // ******************************
 object NAN {
-	def PZERO(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	def ZEROP(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
@@ -57,7 +62,7 @@ object NAN {
 
 		return nan
 	}
-	def NZERO(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	def ZERON(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 1.B
@@ -138,7 +143,7 @@ object NAN {
 //            MICRO-OP            
 // ******************************
 object UOP {
-	def NBIT 	= 3
+	def NBIT 	= 4
 	def X			= 0.U(NBIT.W)
 
 	def MV		= 1.U(NBIT.W)
@@ -146,4 +151,8 @@ object UOP {
 	def SUB		= 3.U(NBIT.W)
 	def MIN		= 4.U(NBIT.W)
 	def MAX		= 5.U(NBIT.W)
+	def EQ		= 6.U(NBIT.W)
+	def LT		= 7.U(NBIT.W)
+	def LE		= 8.U(NBIT.W)
+	def CLASS = 9.U(NBIT.W)
 }

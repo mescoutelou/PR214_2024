@@ -86,6 +86,7 @@ class RrStage(p: FpuParams) extends Module {
   w_lock := ~m_reg.io.b_in.ready
   m_reg.io.b_in.valid := io.b_pipe.valid & ~w_wait_rs.asUInt.orR
   m_reg.io.b_in.ctrl.get.info.wb := io.b_pipe.ctrl.get.wb
+  m_reg.io.b_in.ctrl.get.info.int := w_decoder(3)
   m_reg.io.b_in.ctrl.get.ex := DontCare
   m_reg.io.b_in.ctrl.get.ex.uop := w_decoder(1)
   m_reg.io.b_in.ctrl.get.fpr.en := w_decoder(2)

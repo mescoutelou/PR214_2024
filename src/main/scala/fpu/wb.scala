@@ -84,8 +84,12 @@ class WbStage(p: FpuParams) extends Module {
   // ******************************
   io.b_in.ready := io.b_pipe.ready
 
-  io.b_pipe.valid := io.b_in.ctrl.get.info.wb
-  io.b_pipe.data.get := w_norm.toUInt()
+  io.b_pipe.valid := io.b_in.valid & io.b_in.ctrl.get.info.int
+  when (io.b_in.ctrl.get.info.int) {
+    io.b_pipe.data.get := io.b_in.data.get.res.toUInt()
+  }.otherwise {
+    io.b_pipe.data.get := w_norm.toUInt()
+  }
 
   // ******************************
   //           SIMULATION
