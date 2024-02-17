@@ -6,20 +6,20 @@ import _root_.circt.stage.{ChiselStage}
 
 
 // Module ALU
-class ALU (nBit: Int) extends Module {
+class ALU extends Module {
   // Définit les entrées/sorties du module
   val io = IO(new Bundle {
-    val i_rs1 = Input(UInt(nBit.W))    
-    val i_operande = Input(UInt(nBit.W))
+    val i_rs1 = Input(UInt(32.W))    
+    val i_operande = Input(UInt(32.W))
     val funct_sel = Input(UInt(5.W))
-    val o_rd = Output(UInt(nBit.W))
+    val o_rd = Output(UInt(32.W))
   })
 
 
 val rs1 = io.i_rs1
 val operande = io.i_operande
 val funct = io.funct_sel
-val res = WireDefault(0.U(nBit.W))
+val res = WireDefault(0.U(32.W))
 
  switch(funct){
   is(0.U) {res := rs1 + operande}
@@ -40,7 +40,7 @@ val res = WireDefault(0.U(nBit.W))
 // Passe la valeur 32 en paramètre
 object ALU extends App {
   _root_.circt.stage.ChiselStage.emitSystemVerilog(
-    new ALU(32),
+    new ALU,
     firtoolOpts = Array.concat(
       Array(
         "--disable-all-randomization",
