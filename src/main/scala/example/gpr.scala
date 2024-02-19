@@ -35,8 +35,7 @@ class GPR extends Module {
   registerFile(0) := 0.U                    //registre x0
 }
 
-  // Objet pour générer le SystemVerilog du module Example
-// Passe la valeur 4 en paramètre
+
 object GPR extends App {
   _root_.circt.stage.ChiselStage.emitSystemVerilog(
     new GPR,

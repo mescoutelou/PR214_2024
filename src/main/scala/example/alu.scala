@@ -24,7 +24,7 @@ val res = WireDefault(0.U(32.W))
  switch(funct){
   is(0.U) {res := rs1 + operande}
   is(1.U) {res := rs1 - operande}
-  is(2.U) {res := rs1 ^ operande }
+  is(2.U) {res := rs1 ^ operande}
   is(3.U) {res := rs1 | operande}
   is(4.U) {res := rs1 & operande}
   is(5.U) {res := rs1 << operande(4,0)}
@@ -36,8 +36,7 @@ val res = WireDefault(0.U(32.W))
 }
 
 
-// Objet pour générer le SystemVerilog du module ALU
-// Passe la valeur 32 en paramètre
+
 object ALU extends App {
   _root_.circt.stage.ChiselStage.emitSystemVerilog(
     new ALU,
