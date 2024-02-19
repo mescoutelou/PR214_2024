@@ -9,7 +9,7 @@ class ALUTest extends AnyFlatSpec with ChiselScalatestTester {
   // test class body here
   "ALU test" should "pass" in {
     // test case body here
-    test(new ALU(32)).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
+    test(new ALU).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
       // test body here
       dut.io.i_rs1.poke(499.U(32.W))
       dut.io.i_operande.poke(37.U(32.W))
