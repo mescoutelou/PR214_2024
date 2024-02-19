@@ -24,7 +24,6 @@ class GPR extends Module {
   
   
   val registerFile = Reg(Vec(32,UInt(32.W)))  //File de 32 registres de 32 bits
-  registerFile(0) := 0.U                        //registre x0
 
   when(io.i_write) {        //Ecriture
     registerFile(io.i_sel_reg) := io.i_data
@@ -32,5 +31,22 @@ class GPR extends Module {
 
   io.o_data_reg1 := registerFile(io.i_read_reg1)
   io.o_data_reg2 := registerFile(io.i_read_reg2)
-  
+
+  registerFile(0) := 0.U                    //registre x0
+}
+
+  // Objet pour générer le SystemVerilog du module Example
+// Passe la valeur 4 en paramètre
+object GPR extends App {
+  _root_.circt.stage.ChiselStage.emitSystemVerilog(
+    new GPR,
+    firtoolOpts = Array.concat(
+      Array(
+        "--disable-all-randomization",
+        "--strip-debug-info",
+        "--split-verilog"
+      ),
+      args
+    )      
+  )
 }
