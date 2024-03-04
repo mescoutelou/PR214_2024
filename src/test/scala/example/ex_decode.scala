@@ -11,7 +11,8 @@ class DecodeurTest extends AnyFlatSpec with ChiselScalatestTester {
     // test case body here
     test(new Decodeur).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
       // test body here
-      dut.io.i_instruct.poke("00000001101100001000001110110011")
+      dut.io.i_instruct.poke("b00100101101100101100001110010011".U)
       dut.clock.step(10)
     }
   }
+}

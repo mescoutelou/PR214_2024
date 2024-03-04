@@ -24,13 +24,13 @@ val w_decoder = ListLookup(io.i_instruct, TABLECODE.default, TABLECODE.table)
 }
 */
 
-when(w_decoder(0) === 0.U){
+when(w_decoder(0) === 0.U){           // 0 = type R
   io.o_imm := 0.U(12.W)
-} .elsewhen(w_decoder(0) === 1.U){
+} .elsewhen(w_decoder(0) === 1.U){    // 1 = type I
   io.o_imm := io.i_instruct(31,20)
-} .elsewhen(w_decoder(0) === 2.U){
+} .elsewhen(w_decoder(0) === 2.U){    // 2 = type S
   io.o_imm := Cat(io.i_instruct(31,25),io.i_instruct(11,7))
-} .elsewhen(w_decoder(0) === 3.U){
+} .elsewhen(w_decoder(0) === 3.U){    // 3 = type B
   io.o_imm :=Cat(io.i_instruct(31),io.i_instruct(7),io.i_instruct(30,25),io.i_instruct(11,8))
 } otherwise{
   io.o_imm = 0.U(12.W)
@@ -48,7 +48,12 @@ val imm_B = Cat(io.i_instruct(31),io.i_instruct(7),io.i_instruct(30,25),io.i_ins
 io.funct_sel := w_decoder(1)
 io.o_sel_operande := w_decoder(2)
 
+<<<<<<< HEAD
 // io.funct_sel    := w_decoder(0)
+=======
+
+// io.o_select_op    := w_decoder(0)
+>>>>>>> 7ee3d06be78f9a8146049b0dc3e9074612a91184
 // io.o_rs1          := w_decoder(1)
 // io.o_rs2      := w_decoder(2)
 // io.o_sel_operande := w_decoder(3)
@@ -76,21 +81,21 @@ object OPE {
 object TABLECODE{
     val default: List[UInt] = List[UInt]( 0.U, 0.U, 0.U)
     val table: Array[(BitPat, List[UInt])] = Array[(BitPat, List[UInt])] (
-        OPE.ADDI          -> List(  0.U, 0.U, 0.U),
-        OPE.XORI          -> List(  0.U, 2.U, 0.U),
-        OPE.ORI           -> List(  0.U, 3.U, 0.U),
-        OPE.ANDI          -> List(  0.U, 4.U, 0.U),
-        OPE.SLLI          -> List(  1.U, 5.U, 0.U),
-        OPE.SRLI          -> List(  1.U, 6.U, 0.U),
-        OPE.SRAI          -> List(  1.U, 7.U, 0.U),
-        OPE.ADD           -> List(  1.U, 0.U, 1.U),
-        OPE.SUB           -> List(  1.U, 1.U, 1.U),
-        OPE.XOR           -> List(  1.U, 2.U, 1.U),
-        OPE.OR            -> List(  1.U, 3.U, 1.U),
-        OPE.AND           -> List(  1.U, 4.U, 1.U),
-        OPE.SLL           -> List(  1.U, 5.U, 1.U),
-        OPE.SRL           -> List(  1.U, 6.U, 1.U),
-        OPE.SRA           -> List(  1.U, 7.U, 1.U)
+        OPE.ADDI          -> List(  1.U, 0.U, 0.U),
+        OPE.XORI          -> List(  1.U, 2.U, 0.U),
+        OPE.ORI           -> List(  1.U, 3.U, 0.U),
+        OPE.ANDI          -> List(  1.U, 4.U, 0.U),
+        OPE.SLLI          -> List(  0.U, 5.U, 0.U),
+        OPE.SRLI          -> List(  0.U, 6.U, 0.U),
+        OPE.SRAI          -> List(  0.U, 7.U, 0.U),
+        OPE.ADD           -> List(  0.U, 0.U, 1.U),
+        OPE.SUB           -> List(  0.U, 1.U, 1.U),
+        OPE.XOR           -> List(  0.U, 2.U, 1.U),
+        OPE.OR            -> List(  0.U, 3.U, 1.U),
+        OPE.AND           -> List(  0.U, 4.U, 1.U),
+        OPE.SLL           -> List(  0.U, 5.U, 1.U),
+        OPE.SRL           -> List(  0.U, 6.U, 1.U),
+        OPE.SRA           -> List(  0.U, 7.U, 1.U)
     )
 }
 
