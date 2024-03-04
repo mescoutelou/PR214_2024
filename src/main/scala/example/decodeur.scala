@@ -7,7 +7,7 @@ class Decodeur extends Module {
   val io = IO(new Bundle {
     val i_instruct = Input(UInt(32.W)) 
 
-    val o_select_op = Output(UInt(5.W))
+    val funct_sel = Output(UInt(5.W))
     val o_rs1 = Output(UInt(5.W))
     val o_rs2 = Output(UInt(5.W))
     val o_sel_operande = Output(UInt(1.W))
@@ -33,7 +33,7 @@ when(w_decoder(0) === 0.U){
 } .elsewhen(w_decoder(0) === 3.U){
   io.o_imm :=Cat(io.i_instruct(31),io.i_instruct(7),io.i_instruct(30,25),io.i_instruct(11,8))
 } otherwise{
-  io.o_imm := 0.U(12.W)
+  io.o_imm = 0.U(12.W)
 }
 io.o_rs1 := io.i_instruct(19, 15)
 io.o_rs2 := io.i_instruct(24, 20)
@@ -45,13 +45,10 @@ val imm_S = Cat(io.i_instruct(31,25),io.i_instruct(11,7))
 val imm_B = Cat(io.i_instruct(31),io.i_instruct(7),io.i_instruct(30,25),io.i_instruct(11,8))
 */
 
-io.o_select_op := w_decoder(1)
+io.funct_sel := w_decoder(1)
 io.o_sel_operande := w_decoder(2)
 
-io.o_rs1 := io.i_instruct(19,15)
-io.o_rs2 := io.i_instruct(24,20)
-
-// io.o_select_op    := w_decoder(0)
+// io.funct_sel    := w_decoder(0)
 // io.o_rs1          := w_decoder(1)
 // io.o_rs2      := w_decoder(2)
 // io.o_sel_operande := w_decoder(3)
