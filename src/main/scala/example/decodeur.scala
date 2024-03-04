@@ -48,12 +48,9 @@ val imm_B = Cat(io.i_instruct(31),io.i_instruct(7),io.i_instruct(30,25),io.i_ins
 io.funct_sel := w_decoder(1)
 io.o_sel_operande := w_decoder(2)
 
-<<<<<<< HEAD
-// io.funct_sel    := w_decoder(0)
-=======
 
+// io.funct_sel    := w_decoder(0)
 // io.o_select_op    := w_decoder(0)
->>>>>>> 7ee3d06be78f9a8146049b0dc3e9074612a91184
 // io.o_rs1          := w_decoder(1)
 // io.o_rs2      := w_decoder(2)
 // io.o_sel_operande := w_decoder(3)
