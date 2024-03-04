@@ -30,8 +30,8 @@ class LBusMBus (p: LBusMBusParams) extends Module {
     val b_mbus = new MBusIO(p.pMBus)
   })  
 
-  io.b_lbus := DontCare
-  io.b_mbus := DontCare
+//  io.b_lbus := DontCare
+//  io.b_mbus := DontCare
 
   // ******************************
   //             BUFFER
@@ -49,10 +49,10 @@ class LBusMBus (p: LBusMBusParams) extends Module {
 
     val w_false = Wire(Bool())
 
-    m_rdata.io.b_in(0) := DontCare
-    m_wdata.io.b_in(0) := DontCare
-    m_rdata.io.b_out(0) := DontCare
-    m_wdata.io.b_out(0) := DontCare
+//    m_rdata.io.b_in(0) := DontCare
+//    m_wdata.io.b_in(0) := DontCare
+//    m_rdata.io.b_out(0) := DontCare
+//    m_wdata.io.b_out(0) := DontCare
 
     m_rdata.io.i_flush := io.i_flush | w_false
     m_wdata.io.i_flush := io.i_flush
@@ -60,12 +60,17 @@ class LBusMBus (p: LBusMBusParams) extends Module {
     io.b_mbus.req.ctrl.rw := io.b_lbus.ctrl.rw
     io.b_mbus.req.ctrl.size := io.b_lbus.ctrl.size
     io.b_mbus.req.ctrl.addr := io.b_lbus.ctrl.addr
-    m_wdata.io.b_in(0).data.get := io.b_lbus.wdata
     io.b_lbus.rdata := m_rdata.io.b_out(0).data.get
 
+    m_rdata.io.b_in(0).valid := false.B
+    m_rdata.io.b_in(0).data.get := io.b_mbus.read.data
+    m_rdata.io.b_out(0).ready := false.B
+
+    m_wdata.io.b_in(0).valid := false.B
+    m_wdata.io.b_in(0).data.get := io.b_lbus.wdata
+    m_wdata.io.b_out(0).ready := io.b_mbus.write.ready
     io.b_mbus.write.valid := m_wdata.io.b_out(0).valid
     io.b_mbus.write.data := m_wdata.io.b_out(0).data.get
-
 
     when (io.b_lbus.ctrl.rw) {
       w_false := false.B
@@ -74,8 +79,12 @@ class LBusMBus (p: LBusMBusParams) extends Module {
       io.b_mbus.req.valid := io.b_lbus.valid & m_wdata.io.b_in(0).ready
       m_wdata.io.b_in(0).valid := io.b_lbus.valid & io.b_mbus.req.ready
     }.otherwise {
-      when (io.b_lbus.ctrl.addr(log2Ceil(p.nDataByte) - 1, 0) === r_addr_fifo(log2Ceil(p.nDataByte) - 1, 0)) {
+      when (m_rdata.io.b_out(0).valid & (io.b_lbus.ctrl.addr(log2Ceil(p.nDataByte) - 1, 0) === r_addr_fifo(log2Ceil(p.nDataByte) - 1, 0))) {
         w_false := false.B
+
+        io.b_lbus.ready := true.B
+        io.b_lbus.rdata := m_rdata.io.b_out(0).data.get
+        m_rdata.io.b_out(0).ready := true.B
       }.otherwise {
         w_false := true.B
 

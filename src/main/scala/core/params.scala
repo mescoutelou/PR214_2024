@@ -20,6 +20,7 @@ import chisel3._
 import chisel3.util._
 
 import prj.common.mbus._
+import prj.common.lbus._
 
 
 trait CoreParams {
@@ -29,13 +30,21 @@ trait CoreParams {
 	def nDataBit: Int = 32
 	def nDataByte: Int = (nDataBit / 8).toInt
 
-  def pIBus: MBusParams = new MBusConfig (
+  def pILBus: LBusParams = new LBusConfig (
     isSim = isSim,
 
     readOnly = true,
     nAddrBit = nAddrBit,
     nDataByte = nDataByte
   )
+
+  def pILBusMBus: LBusMBusParams = new LBusMBusConfig (
+    pLBus = pILBus,
+    nRBufferDepth = 0,
+    nWBufferDepth = 0
+  )
+
+  def pIBus: MBusParams = pILBusMBus.pMBus
 
   def pDBus: MBusParams = new MBusConfig (
     isSim = isSim,

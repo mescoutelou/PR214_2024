@@ -19,6 +19,7 @@ package prj.core
 import chisel3._
 import chisel3.util._
 
+import prj.common.lbus._
 import prj.common.mbus._
 
 
@@ -30,7 +31,12 @@ class Core(p: CoreParams) extends Module {
 	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
   })  
 
-  io.b_imem := DontCare
+  val m_l0i = Module(new LBusMBus(p.pILBusMBus))
+
+  m_l0i.io.i_flush := false.B 
+  m_l0i.io.b_lbus := DontCare
+
+  io.b_imem <> m_l0i.io.b_mbus
   io.b_dmem := DontCare
 
   // ******************************
