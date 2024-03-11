@@ -16,11 +16,18 @@ class top extends Module {
   val ALU = Module(new ALU)
   val Decodeur = Module(new Decodeur)
  
-  ALU.io.i_rs1 := GPR.o_data_reg1
-  ALU.io.operande := Mux(Decodeur.io.o_sel_operande,Decodeur.io.o_imm,GPR.io.o_data_reg2)
+  ALU.io.i_rs1 := GPR.io.o_data_reg1
+  ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,Decodeur.io.o_imm,GPR.io.o_data_reg2)
   ALU.io.funct_sel := Decodeur.io.funct_sel
-  ALU.io.o_rd := GPR.io.i_data
-  //mettre le registre de destination en sortie du décodeur
+
+
+  GPR.io.i_data := ALU.io.o_rd
+  GPR.io.i_write := true.B
+  GPR.io.i_sel_reg := Decodeur.io.o_rd
+  GPR.io.i_read_reg1 := Decodeur.io.o_rs1
+  GPR.io.i_read_reg2 := Decodeur.io.o_rs2
+
+  Decodeur.io.i_instruct := "b0000000_01101_01100_000_00101_0110011".U
 }
 
 
