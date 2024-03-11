@@ -26,8 +26,8 @@ class top extends Module {
   GPR.io.i_sel_reg := Decodeur.io.o_rd
   GPR.io.i_read_reg1 := Decodeur.io.o_rs1
   GPR.io.i_read_reg2 := Decodeur.io.o_rs2
-
-  Decodeur.io.i_instruct := "b0000000_01101_01100_000_00101_0110011".U
+  
+  io.i_instr := Decodeur.io.i_instruct
 }
 
 
