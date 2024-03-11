@@ -4,20 +4,22 @@ import chisel3.util._
 import prj.common.gen._
 
 
-class PC extend module {
+class PC extends Module {
     val io = IO(new Bundle{
         val i_PC_in = Input(UInt(32.W))
-        val i_enable = Input(UInt(1.W))
+        val i_enable = Input(Bool())
         val o_PC_out = Output(UInt(32.W))
 
     })
+
+    val count = 0.U(32.W)
+
+    count := Mux(io.i_enable, io.i_PC_in, count + 1.U)
+
+    io.o_PC_out := count 
 }
 
-val count = WireDefault(0.U(32.W))
 
-count = mux(io.i_enable, io.i_PC_in, count + 1)
-
-io.o_PC_out := count 
 
 
 
