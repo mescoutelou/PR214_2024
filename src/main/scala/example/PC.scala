@@ -13,9 +13,11 @@ class PC extends Module {
 
     })  
 
-    val count = RegInit(0.U(32.W))
-    val PC_in = RegInit(0.U(32.W))
-    val add_out = RegInit(0.U(32.W))
+    val PC_in = RegInit(0.U(32.W))    // Signal entre Mux et PC
+    val count = RegInit(0.U(32.W))    // Signal entre PC et +4
+    val add_out = RegInit(0.U(32.W))  // Signal entre +4 et Mux
+
+    //Partie Multiplexeur
     when (io.i_enable_mux === 0.U){
         PC_in := io.i_donnee
     }
@@ -27,6 +29,7 @@ class PC extends Module {
     }
 
 
+    //Partie PC
     when (io.i_enable_PC === 0.U){
         count := PC_in
     }
@@ -37,6 +40,7 @@ class PC extends Module {
         count := DontCare
     }
 
+    //Partie +4
     add_out := count + 4.U
 
     io.o_PC_out := count 

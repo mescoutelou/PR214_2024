@@ -13,9 +13,9 @@ class gprtest extends AnyFlatSpec with ChiselScalatestTester {
         // test body here
         dut.io.i_data.poke("hff000005".U(32.W))
         dut.io.i_write.poke(false.B)
-        dut.io.i_sel_reg(4.U(5.W))
-        dut.io.i_read_reg1(0.U(5.W))
-        dut.io.i_read_reg2(1.U(5.W))
+        dut.io.i_sel_reg.poke(4.U(5.W))
+        dut.io.i_read_reg1.poke(0.U(5.W))
+        dut.io.i_read_reg2.poke(1.U(5.W))
 
         dut.clock.step(5)
 
@@ -23,13 +23,13 @@ class gprtest extends AnyFlatSpec with ChiselScalatestTester {
         
         dut.clock.step(5)
         dut.io.i_write.poke(false.B)
-        dut.io.i_read_reg1(4.U(5.W))
+        dut.io.i_read_reg1.poke(4.U(5.W))
 
         dut.clock.step(5)
         dut.io.i_data.poke("h00003A00".U(32.W))
-        dut.io.i_sel_reg(5.U(5.W))
+        dut.io.i_sel_reg.poke(5.U(5.W))
         dut.clock.step(5)
-        dut.io.i_read_reg2(5.U(5.W))
+        dut.io.i_read_reg2.poke(5.U(5.W))
         
 
     }
