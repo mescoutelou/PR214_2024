@@ -33,6 +33,8 @@ class GPR extends Module {
   io.o_data_reg2 := registerFile(io.i_read_reg2)
 
   registerFile(0) := 0.U                    //registre x0
+
+  dontTouch(registerFile)
 }
 
 

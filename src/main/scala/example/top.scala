@@ -7,9 +7,6 @@ import _root_.circt.stage.{ChiselStage}
 class top extends Module {
   val io = IO(new Bundle {
     val i_instr = Input(UInt(32.W))
-
-    //Valeur registre de destination
-    val res = Output(UInt(32.W))
   })
 
   val GPR = Module(new GPR)
@@ -17,7 +14,7 @@ class top extends Module {
   val Decodeur = Module(new Decodeur)
  
   ALU.io.i_rs1 := GPR.io.o_data_reg1
-  ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,Decodeur.io.o_imm,GPR.io.o_data_reg2)
+  ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,GPR.io.o_data_reg2,Decodeur.io.o_imm)
   ALU.io.funct_sel := Decodeur.io.funct_sel
 
 
@@ -27,7 +24,7 @@ class top extends Module {
   GPR.io.i_read_reg1 := Decodeur.io.o_rs1
   GPR.io.i_read_reg2 := Decodeur.io.o_rs2
   
-  io.i_instr := Decodeur.io.i_instruct
+  Decodeur.io.i_instruct := io.i_instr
 }
 
 
