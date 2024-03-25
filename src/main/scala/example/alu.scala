@@ -16,9 +16,18 @@ class ALU extends Module {
   })
 
 
-val rs1 = io.i_rs1
-val operande = io.i_operande
-val funct = io.funct_sel
+//val rs1 = io.i_rs1
+//val operande = io.i_operande
+//val funct = io.funct_sel
+
+val rs1 = Reg(UInt(32.W))
+val operande = Reg(UInt(32.W))
+val funct = Reg(UInt(5.W))
+
+rs1 := io.i_rs1
+operande := io.i_operande
+funct := io.funct_sel
+
 val res = WireDefault(0.U(32.W))
 
  switch(funct){
@@ -50,6 +59,5 @@ object ALU extends App {
     )      
   )
 }
-
 
 

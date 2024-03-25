@@ -24,9 +24,12 @@ class GPR extends Module {
   
   
   val registerFile = Reg(Vec(32,UInt(32.W)))  //File de 32 registres de 32 bits
+  
+  val i_sel_reg = Reg(UInt(5.W))
+  i_sel_reg := io.i_sel_reg 
 
   when(io.i_write) {        //Ecriture
-    registerFile(io.i_sel_reg) := io.i_data
+    registerFile(i_sel_reg) := io.i_data
   }
 
   io.o_data_reg1 := registerFile(io.i_read_reg1)

@@ -25,7 +25,7 @@ class toptest extends AnyFlatSpec with ChiselScalatestTester {
         dut.io.i_instr.poke("b0100000_00001_00100_101_00101_0110011".U) //SRA X4 >> X1 VERS X5
         dut.clock.step(1)
         dut.io.i_instr.poke("b0000000_00001_00100_101_00110_0110011".U) //SRL X4 >> X1 VERS X6
-        dut.clock.step(1)
+        dut.clock.step(8)
     }
   }
 }

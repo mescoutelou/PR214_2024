@@ -10,9 +10,13 @@ class Decodeur extends Module {
     val funct_sel = Output(UInt(5.W))
     val o_rs1 = Output(UInt(5.W))
     val o_rs2 = Output(UInt(5.W))
+    // Selectionne immédiat ou registre
     val o_sel_operande = Output(Bool())
     val o_imm = Output(UInt(12.W))
     val o_rd = Output(UInt(5.W))
+
+    // Vérification de la validité de l'instruction
+    val o_isValid = Output(Bool())
   })  
 
   val w_decoder = ListLookup(io.i_instruct, TABLECODE.default, TABLECODE.table)
@@ -40,6 +44,25 @@ class Decodeur extends Module {
     is(0.U) {io.o_sel_operande := false.B}
     is(1.U) {io.o_sel_operande := true.B}
   }
+
+  // Vérification opcode
+  when(
+    io.i_instruct(6,0) === "b0110111".U ||
+    io.i_instruct(6,0) === "b0010111".U ||
+    io.i_instruct(6,0) === "b1101111".U ||
+    io.i_instruct(6,0) === "b1100111".U ||
+    io.i_instruct(6,0) === "b1100011".U ||
+    io.i_instruct(6,0) === "b0000011".U ||
+    io.i_instruct(6,0) === "b0100011".U ||
+    io.i_instruct(6,0) === "b0010011".U ||
+    io.i_instruct(6,0) === "b0110011".U ||
+    io.i_instruct(6,0) === "b0001111".U ||
+    io.i_instruct(6,0) === "b1110011".U
+  ){
+    io.o_isValid := true.B
+  } .otherwise{
+    io.o_isValid := false.B
+  }
 }
 
 object OPE {
@@ -56,7 +79,7 @@ object OPE {
     def OR     = BitPat("b?????????????????110?????0110011")
     def AND    = BitPat("b?????????????????111?????0110011")
     def SLL    = BitPat("b?????????????????001?????0110011")
-    def SRL    = BitPat("b?????????????????101?????0110011")
+    def SRL    = BitPat("b?0???????????????101?????0110011")
     def SRA    = BitPat("b?1???????????????101?????0110011")
 }
 
