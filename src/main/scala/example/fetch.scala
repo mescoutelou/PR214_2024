@@ -12,9 +12,6 @@ class fetch extends Module {
         // Activation du saut
         val i_jumpEnable = Input(Bool())
 
-        // Instruction renvoyée de la mémoire
-        val i_memInstr = Input(UInt(32.W))
-
         // Adresse de sortie du PC
         val o_instrAdr = Output(UInt(32.W))
     })  
@@ -34,7 +31,7 @@ class fetch extends Module {
     val currentAdr = Mux(io.i_jumpEnable, io.i_jumpAdr, addOut)
     
     PC_in := currentAdr
-    instrAdr := PC_in 
+    instrAdr := PC_in
 }
 
 
