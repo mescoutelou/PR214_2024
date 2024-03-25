@@ -15,14 +15,14 @@ class PCtest extends AnyFlatSpec with ChiselScalatestTester {
       dut.io.i_donnee.poke("b00000000000000000000000010001000".U) 
       dut.io.i_enable_mux.poke("b0".U)
       dut.io.i_enable_PC.poke("b0".U) 
-      dut.clock.step(10)
+      dut.clock.step(4)
       dut.io.i_enable_mux.poke("b1".U)
-      dut.clock.step(10)
+      dut.clock.step(4)
       dut.io.i_enable_mux.poke("b0".U)
       dut.io.i_enable_PC.poke("b1".U)
-      dut.clock.step(10)
+      dut.clock.step(4)
       dut.io.i_enable_mux.poke("b1".U)
-      dut.clock.step(100)
+      dut.clock.step(4)
     }
   }
 }

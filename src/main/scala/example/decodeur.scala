@@ -16,34 +16,13 @@ class Decodeur extends Module {
     val o_rd = Output(UInt(5.W))
 
     // Vérification de la validité de l'instruction
-    val o_isValid = Output(Bool())
+    //val o_isValid = Output(Bool())
   })  
 
   val w_decoder = ListLookup(io.i_instruct, TABLECODE.default, TABLECODE.table)
-
-  when(w_decoder(0) === 0.U){           // 0 = type R
-    io.o_imm := 0.U(12.W)
-  } .elsewhen(w_decoder(0) === 1.U){    // 1 = type I
-    io.o_imm := io.i_instruct(31,20)
-  } .elsewhen(w_decoder(0) === 2.U){    // 2 = type S
-    io.o_imm := Cat(io.i_instruct(31,25),io.i_instruct(11,7))
-  } .elsewhen(w_decoder(0) === 3.U){    // 3 = type B
-    io.o_imm :=Cat(io.i_instruct(31),io.i_instruct(7),io.i_instruct(30,25),io.i_instruct(11,8))
-  } otherwise{
-    io.o_imm := 0.U(12.W)
-  }
-  io.o_rs1 := io.i_instruct(19, 15)
-  io.o_rs2 := io.i_instruct(24, 20)
-  io.o_rd := io.i_instruct(11, 7)
+  val isValid = RegInit(0.B)
 
 
-
-  io.funct_sel := w_decoder(1)
-  io.o_sel_operande := DontCare
-  switch(w_decoder(2)){
-    is(0.U) {io.o_sel_operande := false.B}
-    is(1.U) {io.o_sel_operande := true.B}
-  }
 
   // Vérification opcode
   when(
@@ -59,11 +38,48 @@ class Decodeur extends Module {
     io.i_instruct(6,0) === "b0001111".U ||
     io.i_instruct(6,0) === "b1110011".U
   ){
-    io.o_isValid := true.B
+    isValid := true.B
   } .otherwise{
-    io.o_isValid := false.B
+    isValid := false.B
+  }
+
+
+when (isValid === true.B){
+                when(w_decoder(0) === 0.U){           // 0 = type R
+                  io.o_imm := 0.U(12.W)
+                } .elsewhen(w_decoder(0) === 1.U){    // 1 = type I
+                  io.o_imm := io.i_instruct(31,20)
+                } .elsewhen(w_decoder(0) === 2.U){    // 2 = type S
+                  io.o_imm := Cat(io.i_instruct(31,25),io.i_instruct(11,7))
+                } .elsewhen(w_decoder(0) === 3.U){    // 3 = type B
+                  io.o_imm :=Cat(io.i_instruct(31),io.i_instruct(7),io.i_instruct(30,25),io.i_instruct(11,8))
+                } otherwise{
+                  io.o_imm := 0.U(12.W)
+                }
+                io.o_rs1 := io.i_instruct(19, 15)
+                io.o_rs2 := io.i_instruct(24, 20)
+                io.o_rd := io.i_instruct(11, 7)
+
+
+
+                io.funct_sel := w_decoder(1)
+                io.o_sel_operande := DontCare
+                switch(w_decoder(2)){
+                  is(0.U) {io.o_sel_operande := false.B}
+                  is(1.U) {io.o_sel_operande := true.B}
+                }
+    }
+  .otherwise{io.funct_sel := "b00000".U
+              io.o_rs1 := "b00000".U
+              io.o_rs2 := DontCare
+              io.o_sel_operande := true.B
+              io.o_imm := "b000000000000".U
+              io.o_rd := "b00000".U
   }
 }
+
+
+
 
 object OPE {
     def ADDI   = BitPat("b?????????????????000?????0010011")
