@@ -12,18 +12,11 @@ class fetch extends Module {
         // Activation du saut
         val i_jumpEnable = Input(Bool())
 
-        // Vérification validité de l'instruction
-        val i_isValid = Input(Bool())
-
         // Instruction renvoyée de la mémoire
         val i_memInstr = Input(UInt(32.W))
 
-        // Instruction transmise au décodeur si valide
-        val o_memInstr = Input(UInt(32.W))
-
         // Adresse de sortie du PC
         val o_instrAdr = Output(UInt(32.W))
-
     })  
 
 
