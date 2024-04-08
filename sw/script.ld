@@ -1,0 +1,47 @@
+/*
+ * File: script.ld
+ * Created Date: 2023-02-26 09:08:32 pm
+ * Author: Mathieu Escouteloup
+ * -----
+ * Last Modified: 2024-04-08 02:44:27 pm
+ * Modified By: Mathieu Escouteloup
+ * -----
+ * License: See LICENSE.md
+ * Copyright (c) 2024 ENSEIRB-MATMECA
+ * -----
+ * Description: 
+ */
+
+
+MEMORY
+{
+  IMEM     (rx)  : ORIGIN = 0x04000000, LENGTH = 0x00040000
+  DMEM     (rwx) : ORIGIN = 0x0c000000, LENGTH = 0x00040000
+}
+
+STACK_SIZE  = 0x00000800;
+BOOT_PC     = 0x04000000;
+
+SECTIONS
+{
+  .text BOOT_PC : {
+    KEEP(*test.o(.text*));  
+    *(.text)
+  } > IMEM
+
+  .rodata : { 
+    *(.rodata) 
+  } > IMEM
+  
+  .data : { 
+    *(.data) 
+  } > DMEM
+  
+  .stack (NOLOAD):
+  {
+    . = ALIGN(8);
+    . = . + STACK_SIZE;
+    . = ALIGN(8);
+    _stack = . ;
+  } > DMEM
+}

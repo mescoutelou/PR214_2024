@@ -1,11 +1,10 @@
 /*
  * File: configs.scala                                                         *
- * Created Date: 2023-12-20 03:19:35 pm                                        *
+ * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:31:40 pm                                       *
+ * Last Modified: 2024-04-08 02:15:14 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
- * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
  * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
@@ -14,16 +13,17 @@
  */
 
 
-package prj.top
+package prj.betizu
 
 import chisel3._
 import chisel3.util._
+import scala.math._
 
 
-object TopConfigBase extends TopConfig (
-	isSim = true, 
+object BetizuConfigBase extends BetizuConfig (
+  isSim = true, 
 
-	pcBoot = "04000000",
+  pcBoot = "04000000",
 
-	nAddrBit = 32
+  useIfStage = true
 )

@@ -5,5 +5,9 @@ project/target/
 output/
 test_run_dir/
 sim/
+*elf/
+*hex/
+*lst/
+*obj/
 
 *.json

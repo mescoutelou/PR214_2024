@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:30:22 pm                                       *
+ * Last Modified: 2024-04-08 02:30:48 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -21,17 +21,20 @@ import chisel3.util._
 
 import prj.common.mbus._
 import prj.common.ram._
-import prj.core._
+import prj.betizu._
 import prj.fpu._
 
 trait TopParams {
 	def isSim: Boolean
 
+	def pcBoot: String
+
 	def nAddrBit: Int
 
-	def pCore: CoreParams = new CoreConfig (
+	def pBetizu: BetizuParams = new BetizuConfig (
 		isSim = isSim,
-		nAddrBit = nAddrBit
+  	pcBoot = pcBoot,
+		useIfStage = true
 	)
 
 	def pFpu: FpuParams = new FpuConfig (
@@ -44,9 +47,9 @@ trait TopParams {
   def pBPort: Array[MBusParams] = {
     var pb = Array[MBusParams]()
 
-    pb = pb :+ pCore.pDBus
-    pb = pb :+ pCore.pIBus
-    pb = pb :+ pFpu.pDBus
+    pb = pb :+ pBetizu.pL0DBus
+    pb = pb :+ pBetizu.pL0IBus
+//    pb = pb :+ pFpu.pDBus
 
     return pb
   }
@@ -98,6 +101,8 @@ trait TopParams {
 
 case class TopConfig (
 	isSim: Boolean, 
+
+	pcBoot: String,
 	
 	nAddrBit: Int
 ) extends TopParams

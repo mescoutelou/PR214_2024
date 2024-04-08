@@ -3,7 +3,7 @@
  * Created Date: 2023-02-26 09:45:59 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:22:18 pm
+ * Last Modified: 2024-04-08 02:51:46 pm
  * Modified By: Mathieu Escouteloup
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
 
   bool use_vcd = false;
   bool use_trigger = false;
+  bool use_dmem = false;
 
   for (int a = 1; a < argc; a++) {
     string cmd = argv[a];
@@ -50,6 +51,7 @@ int main(int argc, char **argv) {
       a++;
     }
     if (cmd == "--dmem") {
+      use_dmem = true;
       dmemfile = val;
       a++;
     }
@@ -105,10 +107,12 @@ int main(int argc, char **argv) {
   dut->ext_readmemh_byte(imemfile);
 
   // DMem
-  // Call task to initialize memory
-  svSetScope(svGetScopeFromName("TOP.Top.m_dmem.m_ram.m_ram"));
-  // Verilated::scopesDump();
-  dut->ext_readmemh_byte(dmemfile);
+  if (use_dmem) {
+    // Call task to initialize memory
+    svSetScope(svGetScopeFromName("TOP.Top.m_dmem.m_ram.m_ram"));
+    // Verilated::scopesDump();
+    dut->ext_readmemh_byte(dmemfile);
+  }
 
   // ******************************
   //             RESET
@@ -174,7 +178,9 @@ int main(int argc, char **argv) {
   // ******************************
   //cout << "\033[1;37m";
   cout << "IMem file: " << imemfile << endl;
-  cout << "DMem file: " << dmemfile << endl;
+  if (use_dmem) {
+    cout << "DMem file: " << dmemfile << endl;
+  }
   cout << "Simulation clock cycles: " << clock << endl;  
   //cout << "\033[0m"; 
   cout << endl;
