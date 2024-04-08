@@ -42,6 +42,7 @@ class IfStage(p: BetizuParams) extends Module {
   val m_fetch = if (p.useIfStage) Some(Module(new GenReg(p, new FetchBus(p), UInt(0.W), true))) else None
   val r_pc = RegInit(init_pc)
 
+  val w_wait = Wire(Bool())
   val w_lock = Wire(Bool())
   val w_flush = Wire(Bool())
 
@@ -59,7 +60,7 @@ class IfStage(p: BetizuParams) extends Module {
   // ******************************
   when (io.i_br_new.valid) {
     r_pc := io.i_br_new.addr
-  }.otherwise {
+  }.elsewhen(~(w_lock | w_wait)) {
     r_pc := r_pc + 4.U
   }
 
@@ -68,7 +69,9 @@ class IfStage(p: BetizuParams) extends Module {
   // ******************************
   m_l0i.io.i_flush := w_flush
 
-  m_l0i.io.b_lbus.valid := ~w_lock
+  w_wait := ~m_l0i.io.b_lbus.ready
+
+  m_l0i.io.b_lbus.valid := ~w_lock & ~w_flush
   m_l0i.io.b_lbus.ctrl.rw := false.B
   m_l0i.io.b_lbus.ctrl.size := SIZE.toByte(p.nInstrByte.U)
   m_l0i.io.b_lbus.ctrl.addr := r_pc
@@ -79,7 +82,7 @@ class IfStage(p: BetizuParams) extends Module {
   if (p.useIfStage) {
     w_lock := ~m_fetch.get.io.b_in.ready
 
-    m_fetch.get.io.b_in.valid := ~w_flush & m_l0i.io.b_lbus.ready
+    m_fetch.get.io.b_in.valid := ~w_flush & ~w_wait
     m_fetch.get.io.b_in.ctrl.get.pc := r_pc
     m_fetch.get.io.b_in.ctrl.get.instr := m_l0i.io.b_lbus.rdata
 
@@ -87,7 +90,7 @@ class IfStage(p: BetizuParams) extends Module {
   } else {
     w_lock := ~io.b_out.ready
 
-    io.b_out.valid := ~w_flush & m_l0i.io.b_lbus.ready
+    io.b_out.valid := ~w_flush & ~w_wait
     io.b_out.ctrl.get.pc := r_pc
     io.b_out.ctrl.get.instr := m_l0i.io.b_lbus.rdata
   }
