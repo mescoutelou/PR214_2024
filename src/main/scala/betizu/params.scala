@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:21:35 pm                                       *
+ * Last Modified: 2024-04-08 08:19:52 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -53,12 +53,13 @@ trait BetizuParams extends GenParams {
 
   def useIfStage: Boolean
   def useIdStage: Boolean = false
+  def nExBufferDepth: Int = 2
   def useGprBypass: Boolean = true
   def nGprBypass: Int = {
     if (useIdStage) {
-      return 1
+      return nExBufferDepth + 1
     } else {
-      return 0
+      return nExBufferDepth + 0
     }
   }
 

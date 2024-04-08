@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:23:00 pm                                       *
+ * Last Modified: 2024-04-08 08:24:02 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -71,7 +71,7 @@ class Betizu(p: BetizuParams) extends Module {
   // ******************************
   //              GPR
   // ******************************
-  if (p.useIdStage) m_gpr.io.i_byp(0) := m_ex.io.o_byp.get
+  m_gpr.io.i_byp := m_ex.io.o_byp
   m_gpr.io.b_write <> m_ex.io.b_rd
 
   // ******************************

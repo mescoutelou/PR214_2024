@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 11:03:12 am                                       *
+ * Last Modified: 2024-04-08 07:36:01 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -132,4 +132,14 @@ object EXT {
   def X     = 0.U(NBIT.W)
 
   def NONE  = 0.U(NBIT.W)
+}
+
+// ******************************
+//          MULTI-CYCLE
+// ******************************
+object MULTI {
+  def NBIT  = 2
+  def X     = 0.U(NBIT.W)
+
+  def MEM   = 1.U(NBIT.W)
 }

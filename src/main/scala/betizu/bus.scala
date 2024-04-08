@@ -3,12 +3,12 @@
  * Created Date: 2024-04-08 09:31:37 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 12:04:48 pm                                       *
+ * Last Modified: 2024-04-08 08:03:36 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -117,6 +117,14 @@ class ExCtrlBus(p: BetizuParams) extends Bundle {
   val gpr = new GprCtrlBus()
 
   val ext = new ExtCtrlBus()
+}
+
+class ExBufferBus(p: BetizuParams) extends Bundle {
+  val info = new InfoBus(p)
+
+  val multi = UInt(MULTI.NBIT.W)
+  val lsu = new LsuCtrlBus()
+  val gpr = new GprCtrlBus()
 }
 
 // ------------------------------
