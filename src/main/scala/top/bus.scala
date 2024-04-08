@@ -14,16 +14,16 @@
  */
 
 
-package prj.top
-
-import chisel3._
-import chisel3.util._
-
-
-// ******************************
-//           SIMULATION
-// ******************************
-class TopSimBus extends Bundle {
-	val gpr = Vec(32, UInt(32.W))
-//	val fpr = Vec(32, UInt(32.W))
-}
+// package prj.top
+// 
+// import chisel3._
+// import chisel3.util._
+// 
+// 
+// // ******************************
+// //           SIMULATION
+// // ******************************
+// class TopSimBus extends Bundle {
+// 	val gpr = Vec(32, UInt(32.W))
+// //	val fpr = Vec(32, UInt(32.W))
+// }

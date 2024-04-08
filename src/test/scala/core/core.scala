@@ -1,15 +1,15 @@
-package prj.example
+package prj.core
 
 import chisel3._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
 
-class top_endtest extends AnyFlatSpec with ChiselScalatestTester {
-  behavior of "top_end"
+class Coretest extends AnyFlatSpec with ChiselScalatestTester {
+  behavior of "Core"
   // test class body here
-  "top_end test" should "pass" in {
+  "Core test" should "pass" in {
     // test case body here
-    test(new top_end).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
+    test(new Core).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
       // test body here
       dut.io.i_mem.poke("b0000000_01000_00001_000_00001_1111111".U) 
       dut.clock.step(10)

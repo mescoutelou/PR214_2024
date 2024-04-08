@@ -1,4 +1,4 @@
-package prj.example
+package prj.core
 
 import chisel3._
 import chiseltest._
@@ -7,12 +7,12 @@ import _root_.circt.stage.{ChiselStage}
 
 
 
-class toptest extends AnyFlatSpec with ChiselScalatestTester {
-  behavior of "toptest"
+class Backtest extends AnyFlatSpec with ChiselScalatestTester {
+  behavior of "Backtest"
   // test class body here
-  "top test" should "pass" in {
+  "Back test" should "pass" in {
     // test case body here
-    test(new top).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
+    test(new Back).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
         // test body here
         dut.io.i_instr.poke("b0000000_01000_00001_000_00001_0010011".U) //ADDI X1+8 VERS X1 
         dut.clock.step(1)

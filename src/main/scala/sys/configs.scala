@@ -14,16 +14,16 @@
  */
 
 
-// package prj.top
-// 
-// import chisel3._
-// import chisel3.util._
-// 
-// 
-// object TopConfigBase extends TopConfig (
-// 	isSim = true, 
-// 
-// 	pcBoot = "04000000",
-// 
-// 	nAddrBit = 32
-// )
+package prj.sys
+
+import chisel3._
+import chisel3.util._
+
+
+object SysConfigBase extends SysConfig (
+	isSim = true, 
+
+	pcBoot = "04000000",
+
+	nAddrBit = 32
+)

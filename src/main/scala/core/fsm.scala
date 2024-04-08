@@ -14,7 +14,7 @@
  */
 
 
-package prj.example
+package prj.core
 
 import chisel3._
 import chisel3.util._
@@ -29,7 +29,7 @@ object FSM extends ChiselEnum {
 // Détecte un front montant sur l'entrée
 class ExampleFsm extends Module {
   // Importe les états de la FSM
-  import prj.example.FSM._
+  import prj.core.FSM._
 
   // Définit les entrées/sorties du module
   val io = IO(new Bundle {

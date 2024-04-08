@@ -1,56 +1,48 @@
-/*
- * File: core.scala                                                            *
- * Created Date: 2023-12-20 03:19:35 pm                                        *
- * Author: Mathieu Escouteloup                                                 *
- * -----                                                                       *
- * Last Modified: 2024-01-23 02:45:01 pm                                       *
- * Modified By: Mathieu Escouteloup                                            *
- * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
- * -----                                                                       *
- * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
- * -----                                                                       *
- * Description:                                                                *
- */
-
-
 package prj.core
 
 import chisel3._
 import chisel3.util._
+import _root_.circt.stage.{ChiselStage}
 
-import prj.common.lbus._
-import prj.common.mbus._
-
-
-class Core(p: CoreParams) extends Module {
+class Core extends Module {
   val io = IO(new Bundle {
-    val b_imem = new MBusIO(p.pIBus)
-    val b_dmem = new MBusIO(p.pDBus)
+    val i_mem = Input(UInt(32.W))
+    val o_mem = Output(UInt(32.W))
 
-	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
-  })  
+//    val b_imem = new MBusIO(p.pIBus)
+//    val b_dmem = new MBusIO(p.pDBus)
+//
+//	  val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(32.W)))) else None
+  })
 
-  val m_l0i = Module(new LBusMBus(p.pILBusMBus))
+  val back = Module(new Back)
+  val fetch = Module(new fetch)
 
-  m_l0i.io.i_flush := false.B 
-  m_l0i.io.b_lbus := DontCare
+  fetch.io.i_jumpAdr := DontCare
+  fetch.io.i_jumpEnable := DontCare
+  back.io.i_instr := io.i_mem
+  io.o_mem := fetch.io.o_instrAdr 
 
-  io.b_imem <> m_l0i.io.b_mbus
-  io.b_dmem := DontCare
+//  val m_l0i = Module(new LBusMBus(p.pILBusMBus))
+//
+//  m_l0i.io.i_flush := false.B 
+//  m_l0i.io.b_lbus := DontCare
+//
+//  io.b_imem <> m_l0i.io.b_mbus
+//  io.b_dmem := DontCare
 
   // ******************************
   //           SIMULATION
   // ******************************
-  if (p.isSim) {
-    io.o_sim.get := DontCare
-    dontTouch(io.o_sim.get)
-  }  
+//  if (p.isSim) {
+//    io.o_sim.get := DontCare
+//    dontTouch(io.o_sim.get)
+//  }  
 }
 
 object Core extends App {
   _root_.circt.stage.ChiselStage.emitSystemVerilog(
-    new Core(CoreConfigBase),
+    new Core,
     firtoolOpts = Array.concat(
       Array(
         "--disable-all-randomization",

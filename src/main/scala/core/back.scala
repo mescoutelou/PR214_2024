@@ -1,10 +1,10 @@
-package prj.example
+package prj.core
 
 import chisel3._
 import chisel3.util._
 import _root_.circt.stage.{ChiselStage}
 
-class top extends Module {
+class Back extends Module {
   val io = IO(new Bundle {
     val i_instr = Input(UInt(32.W))
   })
@@ -29,9 +29,9 @@ class top extends Module {
 
 
 
-object top extends App {
+object Back extends App {
   _root_.circt.stage.ChiselStage.emitSystemVerilog(
-    new top,
+    new Back,
     firtoolOpts = Array.concat(
       Array(
         "--disable-all-randomization",

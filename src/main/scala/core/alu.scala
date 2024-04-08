@@ -1,4 +1,4 @@
-package prj.example
+package prj.core
 
 import chisel3._
 import chisel3.util._
