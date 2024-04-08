@@ -32,8 +32,8 @@ class Top(p: TopParams) extends Module {
   val m_betizu = Module(new Betizu(p.pBetizu))
 //  val m_fpu = Module(new Fpu(p.pFpu))
   val m_cross = Module(new MBusCrossbar(p.pBusCross))
-  val m_imem = Module(new MBusRam(p.pIMem))
-  val m_dmem = Module(new MBusRam(p.pDMem))
+  val m_rom = Module(new MBusRam(p.pRom))
+  val m_ram = Module(new MBusRam(p.pRam))
 
 //  m_betizu.io := DontCare
 //  m_fpu.io := DontCare
@@ -41,8 +41,8 @@ class Top(p: TopParams) extends Module {
   m_cross.io.b_m(0) <> m_betizu.io.b_dmem
   m_cross.io.b_m(1) <> m_betizu.io.b_imem
 //  m_cross.io.b_m(2) <> m_fpu.io.b_mem
-  m_cross.io.b_s(0) <> m_imem.io.b_port(0)
-  m_cross.io.b_s(1) <> m_dmem.io.b_port(0)  
+  m_cross.io.b_s(0) <> m_rom.io.b_port(0)
+  m_cross.io.b_s(1) <> m_ram.io.b_port(0)  
 
   // ******************************
   //           SIMULATION

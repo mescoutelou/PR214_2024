@@ -15,8 +15,8 @@
 
 MEMORY
 {
-  IMEM     (rx)  : ORIGIN = 0x04000000, LENGTH = 0x00040000
-  DMEM     (rwx) : ORIGIN = 0x08000000, LENGTH = 0x00040000
+  ROM     (rx)  : ORIGIN = 0x04000000, LENGTH = 0x00040000
+  RAM     (rwx) : ORIGIN = 0x08000000, LENGTH = 0x00040000
 }
 
 STACK_SIZE  = 0x00000800;
@@ -27,15 +27,15 @@ SECTIONS
   .text BOOT_PC : {
     KEEP(*test.o(.text*));  
     *(.text)
-  } > IMEM
+  } > ROM
 
   .rodata : { 
     *(.rodata) 
-  } > IMEM
+  } > ROM
   
   .data : { 
     *(.data) 
-  } > DMEM
+  } > RAM
   
   .stack (NOLOAD):
   {
@@ -43,5 +43,5 @@ SECTIONS
     . = . + STACK_SIZE;
     . = ALIGN(8);
     _stack = . ;
-  } > DMEM
+  } > RAM
 }

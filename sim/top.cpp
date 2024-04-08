@@ -32,27 +32,27 @@ int main(int argc, char **argv) {
   // ******************************
   //           ARGUMENTS
   // ******************************
-  char* imemfile;   // .hex format
-  char* dmemfile;   // .hex format
+  char* romfile;   // .hex format
+  char* ramfile;   // .hex format
   char* vcdfile;    // .vcd format
 
   int ntrigger = 0;
 
   bool use_vcd = false;
   bool use_trigger = false;
-  bool use_dmem = false;
+  bool use_ram = false;
 
   for (int a = 1; a < argc; a++) {
     string cmd = argv[a];
     char* val = argv[a + 1];
 
-    if (cmd == "--imem") {
-      imemfile = val;
+    if (cmd == "--rom") {
+      romfile = val;
       a++;
     }
-    if (cmd == "--dmem") {
-      use_dmem = true;
-      dmemfile = val;
+    if (cmd == "--ram") {
+      use_ram = true;
+      ramfile = val;
       a++;
     }
     if (cmd == "--ntrigger") {
@@ -100,18 +100,18 @@ int main(int argc, char **argv) {
   // ------------------------------
   //            MEMORY
   // ------------------------------
-  // IMem
+  // ROM
   // Call task to initialize memory
-  svSetScope(svGetScopeFromName("TOP.Top.m_imem.m_ram.m_ram"));
+  svSetScope(svGetScopeFromName("TOP.Top.m_rom.m_ram.m_ram"));
   // Verilated::scopesDump();
-  dut->ext_readmemh_byte(imemfile);
+  dut->ext_readmemh_byte(romfile);
 
-  // DMem
-  if (use_dmem) {
+  // RAM
+  if (use_ram) {
     // Call task to initialize memory
-    svSetScope(svGetScopeFromName("TOP.Top.m_dmem.m_ram.m_ram"));
+    svSetScope(svGetScopeFromName("TOP.Top.m_ram.m_ram.m_ram"));
     // Verilated::scopesDump();
-    dut->ext_readmemh_byte(dmemfile);
+    dut->ext_readmemh_byte(ramfile);
   }
 
   // ******************************
@@ -177,9 +177,9 @@ int main(int argc, char **argv) {
   //             REPORT
   // ******************************
   //cout << "\033[1;37m";
-  cout << "IMem file: " << imemfile << endl;
-  if (use_dmem) {
-    cout << "DMem file: " << dmemfile << endl;
+  cout << "ROM file: " << romfile << endl;
+  if (use_ram) {
+    cout << "RAM file: " << ramfile << endl;
   }
   cout << "Simulation clock cycles: " << clock << endl;  
   //cout << "\033[0m"; 

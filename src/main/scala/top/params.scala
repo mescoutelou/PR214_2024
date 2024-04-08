@@ -56,7 +56,7 @@ trait TopParams {
   def nBPort: Int = pBPort.size
   def pBus: MBusParams = MBUS.node(pBPort)
 
-	def pIMem: MBusRamParams = new MBusRamConfig (
+	def pRom: MBusRamParams = new MBusRamConfig (
 		pPort = Array(pBus),
 
 		isSim = isSim,
@@ -68,7 +68,7 @@ trait TopParams {
 		useReqReg = false
 	)
 
-	def pDMem: MBusRamParams = new MBusRamConfig (
+	def pRam: MBusRamParams = new MBusRamConfig (
 		pPort = Array(pBus),
 
 		isSim = isSim,
@@ -85,8 +85,8 @@ trait TopParams {
     useMem = true                       ,
     pMem        = {
       var pmem = Array[MBusMemParams]()
-      pmem = pmem :+ pIMem
-      pmem = pmem :+ pDMem
+      pmem = pmem :+ pRom
+      pmem = pmem :+ pRam
       pmem
     }                                   ,
     nDefault = 0                        ,

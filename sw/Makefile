@@ -3,8 +3,8 @@ PRJ_DIR := ${dir ${MAKE_PATH}}
 HW_CFG = WAESP
 ISA = riscv
 TOOLCHAIN = riscv64-unknown-elf
-IMEM_SECTIONS = --only-section .rodata* --only-section .text*
-IMEM_OFFSET = 0x04000000
+ROM_SECTIONS = --only-section .rodata* --only-section .text*
+ROM_OFFSET = 0x04000000
 
 NAME = test
 CC = ${TOOLCHAIN}-gcc
@@ -18,8 +18,8 @@ test: build-dir
 	${CC} ${CFLAGS} -c src/test.S -o obj/test.o
 	${LD} ${CFLAGS} -T script.ld obj/test.o -o elf/test.elf
 	${TOOLCHAIN}-objdump -D elf/test.elf > lst/test.lst -M numeric
-	${TOOLCHAIN}-objcopy ${IMEM_SECTIONS} elf/test.elf elf/test.imem8.elf
-	python3 ${ELF2HEX} --input elf/test.imem8.elf --output hex/test.imem8.hex --offset ${IMEM_OFFSET} --wide 16 --word 1
+	${TOOLCHAIN}-objcopy ${ROM_SECTIONS} elf/test.elf elf/test.rom8.elf
+	python3 ${ELF2HEX} --input elf/test.rom8.elf --output hex/test.rom8.hex --offset ${ROM_OFFSET} --wide 16 --word 1
 
 build-dir:
 	mkdir -p obj
