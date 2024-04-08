@@ -8,17 +8,13 @@ import _root_.circt.stage.{ChiselStage}
 // Module ALU
 class ALU extends Module {
   // Définit les entrées/sorties du module
-  val io = IO(new Bundle {
+    val io = IO(new Bundle {
     val i_rs1 = Input(UInt(32.W))    
     val i_operande = Input(UInt(32.W))
     val funct_sel = Input(UInt(5.W))
     val o_rd = Output(UInt(32.W))
   })
 
-
-//val rs1 = io.i_rs1
-//val operande = io.i_operande
-//val funct = io.funct_sel
 
 val rs1 = Reg(UInt(32.W))
 val operande = Reg(UInt(32.W))
