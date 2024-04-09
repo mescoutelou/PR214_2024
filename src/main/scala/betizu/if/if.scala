@@ -3,7 +3,7 @@
  * Created Date: 2024-04-08 09:31:37 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:23:54 pm                                       *
+ * Last Modified: 2024-04-09 09:51:33 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -38,8 +38,10 @@ class IfStage(p: BetizuParams) extends Module {
 
   init_pc := BigInt(p.pcBoot, 16).U
 
-  val m_l0i = Module(new LBusMBus(p.pL0IBuffer))
+//  val m_l0i = Module(new LBusMBus(p.pL0IBuffer))
+  val m_l0i = Module(new IBuffer(p))
   val m_fetch = if (p.useIfStage) Some(Module(new GenReg(p, new FetchBus(p), UInt(0.W), true))) else None
+  val r_redirect = RegInit(true.B)
   val r_pc = RegInit(init_pc)
 
   val w_wait = Wire(Bool())
@@ -59,32 +61,44 @@ class IfStage(p: BetizuParams) extends Module {
   //               PC
   // ******************************
   when (io.i_br_new.valid) {
+    r_redirect := true.B
     r_pc := io.i_br_new.addr
-  }.elsewhen(~(w_lock | w_wait)) {
-    r_pc := r_pc + 4.U
-  }
+  }.otherwise{
+    r_redirect := false.B
+    when(~(w_lock | w_wait)) {
+      r_pc := r_pc + 4.U
+    }
+  }  
 
   // ******************************
   //             FETCH
   // ******************************
-  m_l0i.io.i_flush := w_flush
+  m_l0i.io.i_redirect := r_redirect
+  m_l0i.io.i_pc := r_pc
 
-  w_wait := ~m_l0i.io.b_lbus.ready
+  w_wait := ~m_l0i.io.b_out.valid
+  m_l0i.io.b_out.ready := ~w_lock
 
-  m_l0i.io.b_lbus.valid := ~w_lock & ~w_flush
-  m_l0i.io.b_lbus.ctrl.rw := false.B
-  m_l0i.io.b_lbus.ctrl.size := SIZE.toByte(p.nInstrByte.U)
-  m_l0i.io.b_lbus.ctrl.addr := r_pc
-  m_l0i.io.b_lbus.wdata := DontCare
+  m_l0i.io.b_imem <> io.b_imem
 
-  m_l0i.io.b_mbus <> io.b_imem
+//  m_l0i.io.i_flush := w_flush
+//
+//  w_wait := ~m_l0i.io.b_lbus.ready
+//
+//  m_l0i.io.b_lbus.valid := ~w_lock & ~w_flush
+//  m_l0i.io.b_lbus.ctrl.rw := false.B
+//  m_l0i.io.b_lbus.ctrl.size := SIZE.toByte(p.nInstrByte.U)
+//  m_l0i.io.b_lbus.ctrl.addr := r_pc
+//  m_l0i.io.b_lbus.wdata := DontCare
+//
+//  m_l0i.io.b_mbus <> io.b_imem
 
   if (p.useIfStage) {
     w_lock := ~m_fetch.get.io.b_in.ready
 
     m_fetch.get.io.b_in.valid := ~w_flush & ~w_wait
     m_fetch.get.io.b_in.ctrl.get.pc := r_pc
-    m_fetch.get.io.b_in.ctrl.get.instr := m_l0i.io.b_lbus.rdata
+    m_fetch.get.io.b_in.ctrl.get.instr := m_l0i.io.b_out.ctrl.get
 
     io.b_out <> m_fetch.get.io.b_out
   } else {
@@ -92,7 +106,7 @@ class IfStage(p: BetizuParams) extends Module {
 
     io.b_out.valid := ~w_flush & ~w_wait
     io.b_out.ctrl.get.pc := r_pc
-    io.b_out.ctrl.get.instr := m_l0i.io.b_lbus.rdata
+    io.b_out.ctrl.get.instr := m_l0i.io.b_out.ctrl.get
   }
 
   // ******************************

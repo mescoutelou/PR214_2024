@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 08:19:52 pm                                       *
+ * Last Modified: 2024-04-09 09:15:02 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 HerdWare                                                 *
+ * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -51,6 +51,8 @@ trait BetizuParams extends GenParams {
 
   def pL0IBus: MBusParams = pL0IBuffer.pMBus
 
+  def useL0IBuffer: Boolean = true
+  def nL0IBufferDepth: Int = 2
   def useIfStage: Boolean
   def useIdStage: Boolean = false
   def nExBufferDepth: Int = 2
