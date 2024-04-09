@@ -13,12 +13,12 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.isa.base.{INSTR => BASE}
+import emmk.common.isa.base.{INSTR => BASE}
 
 
 // ************************************************************

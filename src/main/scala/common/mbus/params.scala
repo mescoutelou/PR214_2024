@@ -13,13 +13,13 @@
  */
 
 
-package prj.common.mbus
+package emmk.common.mbus
 
 import chisel3._
 import chisel3.util._
 import scala.math._
 
-import prj.common.gen._
+import emmk.common.gen._
 
 
 // ******************************

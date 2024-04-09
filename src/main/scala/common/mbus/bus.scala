@@ -13,7 +13,7 @@
  */
 
 
-package prj.common.mbus
+package emmk.common.mbus
 
 import chisel3._
 import chisel3.util._

@@ -13,12 +13,12 @@
  */
 
 
-package prj.common.mbus
+package emmk.common.mbus
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.gen._
+import emmk.common.gen._
 
 
 class MBusCrossbarReq (p: MBusCrossbarParams) extends Module {

@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 11:14:04 am                                       *
+ * Last Modified: 2024-04-09 01:50:10 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -13,12 +13,12 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.isa.base.{INSTR => BASE}
+import emmk.common.isa.base.{INSTR => BASE}
 
 
 // ************************************************************
@@ -102,3 +102,27 @@ object TABLEINT32F extends TABLEINT {
     BASE.FADD         -> List(  1.B,  0.B,    1.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
     BASE.FMVWX        -> List(  1.B,  0.B,    1.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.X,     IMM.X,    IMM.X))
 }
+
+
+object TABLEINTCSR extends TABLEINT {
+  val table : Array[(BitPat, List[UInt])] =
+              Array[(BitPat, List[UInt])](
+
+    //                        is Valid ?                        Int Unit ?                       S1 Sign            S1 Type ?                    Imm1 Type ?
+    //                           |                                 |                               |   S2 Sign        |       S2 Type ?              |     Imm2 Type ?
+    //                           | is Serial ?      Gen Exc ?      |             Int Uop ?         |     |   S3 Sign  |         |       S3 Type ?    |         |
+    //                           |     |     WB ?      |           |                |              |     |     |      |         |         |          |         |
+    //                           |     |       |       |           |                |              |     |     |      |         |         |          |         |
+    BASE.CSRRW0       -> List(  1.B,  1.B,    0.B,    1.B,  INTUNIT.CSR,      CSRUOP.X,           0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.IMM2,  IMM.X,    IMM.isI),
+    BASE.CSRRW        -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RW,          0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.IMM2,  IMM.X,    IMM.isI),
+    BASE.CSRRS0       -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RS,          0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.IMM2,  IMM.X,    IMM.isI),
+    BASE.CSRRS        -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RX,          0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.IMM2,  IMM.X,    IMM.isI),
+    BASE.CSRRC0       -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RC,          0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.IMM2,  IMM.X,    IMM.isI),
+    BASE.CSRRC        -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RX,          0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.IMM2,  IMM.X,    IMM.isI),
+    BASE.CSRRWI0      -> List(  1.B,  1.B,    0.B,    1.B,  INTUNIT.CSR,      CSRUOP.X,           0.B,  0.B,  0.B,  OP.IMM1,  OP.X,     OP.IMM2,  IMM.isC,  IMM.isI),
+    BASE.CSRRWI       -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RW,          0.B,  0.B,  0.B,  OP.IMM1,  OP.X,     OP.IMM2,  IMM.isC,  IMM.isI),
+    BASE.CSRRSI0      -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RX,          0.B,  0.B,  0.B,  OP.IMM1,  OP.X,     OP.IMM2,  IMM.isC,  IMM.isI),
+    BASE.CSRRSI       -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RS,          0.B,  0.B,  0.B,  OP.IMM1,  OP.X,     OP.IMM2,  IMM.isC,  IMM.isI),
+    BASE.CSRRCI0      -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RX,          0.B,  0.B,  0.B,  OP.IMM1,  OP.X,     OP.IMM2,  IMM.isC,  IMM.isI),
+    BASE.CSRRCI       -> List(  1.B,  1.B,    1.B,    1.B,  INTUNIT.CSR,      CSRUOP.RC,          0.B,  0.B,  0.B,  OP.IMM1,  OP.X,     OP.IMM2,  IMM.isC,  IMM.isI))
+} 

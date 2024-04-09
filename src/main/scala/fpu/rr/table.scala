@@ -14,12 +14,12 @@
  */
 
 
-package prj.fpu
+package emmk.fpu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.gen._
+import emmk.common.gen._
 
 
 object TABLECODE {

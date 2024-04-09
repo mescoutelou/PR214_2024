@@ -14,7 +14,7 @@
  */
 
 
-package prj.fpu
+package emmk.fpu
 
 import chisel3._
 import chisel3.util._

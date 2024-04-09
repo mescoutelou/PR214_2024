@@ -14,7 +14,7 @@
  */
 
 
-package prj.common.gen
+package emmk.common.gen
 
 import chisel3._
 

@@ -14,7 +14,7 @@
  */
 
 
-package prj.sys
+package emmk.sys
 
 import chisel3._
 import chisel3.util._

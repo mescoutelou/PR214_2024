@@ -14,12 +14,12 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.isa.base._
+import emmk.common.isa.base._
 
 
 class Gpr(p: BetizuParams) extends Module {

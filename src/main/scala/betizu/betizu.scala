@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 10:38:52 am                                       *
+ * Last Modified: 2024-04-09 01:36:55 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -13,16 +13,16 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.gen._
-import prj.common.lbus._
-import prj.common.mbus._
-import prj.common.isa.base._
-import prj.fpu.{FpuIO}
+import emmk.common.gen._
+import emmk.common.lbus._
+import emmk.common.mbus._
+import emmk.common.isa.base._
+import emmk.fpu.{FpuIO}
 
 
 
@@ -40,6 +40,7 @@ class Betizu(p: BetizuParams) extends Module {
   val m_id = Module(new IdStage(p))
   val m_ex = Module(new ExStage(p))
   val m_gpr = Module(new Gpr(p))
+  val m_csr = Module(new Csr(p))
 
   // ******************************
   //            IF STAGE
@@ -74,10 +75,13 @@ class Betizu(p: BetizuParams) extends Module {
   m_ex.io.b_dmem <> io.b_dmem
 
   // ******************************
-  //              GPR
+  //           GPR / CSR
   // ******************************
   m_gpr.io.i_byp := m_ex.io.o_byp
   m_gpr.io.b_write <> m_ex.io.b_rd
+
+  m_csr.io.b_port <> m_ex.io.b_csr
+  m_csr.io.i_instret := m_ex.io.o_instret
 
   // ******************************
   //           SIMULATION

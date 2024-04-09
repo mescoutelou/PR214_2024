@@ -14,13 +14,13 @@
  */
 
 
-package prj.core
+package emmk.core
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.mbus._
-import prj.common.lbus._
+import emmk.common.mbus._
+import emmk.common.lbus._
 
 
 trait CoreParams {

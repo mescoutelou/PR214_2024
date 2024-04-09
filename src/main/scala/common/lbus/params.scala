@@ -13,14 +13,14 @@
  */
 
 
-package prj.common.lbus
+package emmk.common.lbus
 
 import chisel3._
 import chisel3.util._
 import scala.math._
 
-import prj.common.gen._
-import prj.common.mbus._
+import emmk.common.gen._
+import emmk.common.mbus._
 
 
 trait LBusParams  {

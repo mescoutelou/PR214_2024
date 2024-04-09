@@ -13,12 +13,12 @@
  */
 
 
-package prj.common.ram
+package emmk.common.ram
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.mbus.{SIZE}
+import emmk.common.mbus.{SIZE}
 
 
 // ******************************

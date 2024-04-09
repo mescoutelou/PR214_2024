@@ -13,12 +13,12 @@
  */
 
 
-package prj.common.ram
+package emmk.common.ram
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.mbus._
+import emmk.common.mbus._
 
 
 object RamCtrlConfigBase extends RamCtrlConfig (

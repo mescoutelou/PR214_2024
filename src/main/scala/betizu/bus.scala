@@ -3,7 +3,7 @@
  * Created Date: 2024-04-08 09:31:37 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 10:25:40 am                                       *
+ * Last Modified: 2024-04-09 01:25:52 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -14,12 +14,12 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.gen._
+import emmk.common.gen._
 
 
 // ******************************
@@ -161,4 +161,32 @@ class IntUnitReqDataBus(p: BetizuParams) extends Bundle {
 class IntUnitIO(p: BetizuParams) extends Bundle {
   val req = Flipped(new GenRVIO(p, new IntUnitReqCtrlBus(p), new IntUnitReqDataBus(p)))
   val ack = new GenRVIO(p, UInt(0.W), UInt(p.nDataBit.W))
+}
+
+// ******************************
+//              CSR
+// ******************************
+class CsrIO(p: BetizuParams) extends Bundle {
+  val valid = Input(Bool())
+  val uop = Input(UInt(CSRUOP.NBIT.W))
+  val addr = Input(UInt(12.W))
+  val wdata = Input(UInt(p.nDataBit.W))
+  val ready = Output(Bool())
+  val rdata = Output(UInt(p.nDataBit.W))
+
+  def read(): Bool = {
+    return (uop === CSRUOP.RX) | (uop === CSRUOP.RW) | (uop === CSRUOP.RS) | (uop === CSRUOP.RC)
+  }
+  def write(): Bool = {
+    return (uop === CSRUOP.W) | (uop === CSRUOP.RW)
+  }
+  def set(): Bool = {
+    return (uop === CSRUOP.S) | (uop === CSRUOP.RS)
+  }
+  def clear(): Bool = {
+    return (uop === CSRUOP.C) | (uop === CSRUOP.RC)
+  }
+  def modify: Bool = {
+    return write() | set() | clear()
+  }
 }

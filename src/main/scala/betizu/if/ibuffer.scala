@@ -13,13 +13,13 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.gen._
-import prj.common.mbus._
+import emmk.common.gen._
+import emmk.common.mbus._
 
 
 class IBuffer (p: BetizuParams) extends Module {

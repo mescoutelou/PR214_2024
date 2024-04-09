@@ -14,15 +14,15 @@
  */
 
 
-package prj.sys
+package emmk.sys
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.mbus._
-import prj.common.ram._
-import prj.betizu._
-import prj.fpu._
+import emmk.common.mbus._
+import emmk.common.ram._
+import emmk.betizu._
+import emmk.fpu._
 
 class Sys(p: SysParams) extends Module {
   val io = IO(new Bundle {

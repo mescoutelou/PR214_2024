@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 10:22:00 am                                       *
+ * Last Modified: 2024-04-09 01:33:35 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -13,7 +13,7 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 
@@ -63,6 +63,7 @@ object INTUNIT {
   def X       = 0.U(NBIT.W)
   def ALU     = 1.U(NBIT.W)
   def BRU     = 2.U(NBIT.W)
+  def CSR     = 3.U(NBIT.W)
 }
 
 object INTUOP {
@@ -144,4 +145,20 @@ object MULTI {
 
   def MEM   = 1.U(NBIT.W)
   def FPU   = 2.U(NBIT.W)
+}
+
+// ******************************
+//              CSR
+// ******************************
+object CSRUOP {
+  val NBIT  = 3
+
+  val X   = 0.U(NBIT.W)
+  val W   = 1.U(NBIT.W)
+  val S   = 2.U(NBIT.W)
+  val C   = 3.U(NBIT.W)
+  val RX  = 4.U(NBIT.W)
+  val RW  = 5.U(NBIT.W)
+  val RS  = 6.U(NBIT.W)
+  val RC  = 7.U(NBIT.W)
 }

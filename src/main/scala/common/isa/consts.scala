@@ -13,7 +13,7 @@
  */
 
 
-package prj.common.isa.base
+package emmk.common.isa.base
 
 import chisel3._
 import chisel3.util._

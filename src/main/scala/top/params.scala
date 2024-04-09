@@ -14,15 +14,15 @@
  */
 
 
-// package prj.top
+// package emmk.top
 // 
 // import chisel3._
 // import chisel3.util._
 // 
-// import prj.common.mbus._
-// import prj.common.ram._
-// import prj.core._
-// import prj.fpu._
+// import emmk.common.mbus._
+// import emmk.common.ram._
+// import emmk.core._
+// import emmk.fpu._
 // 
 // trait TopParams {
 // 	def isSim: Boolean

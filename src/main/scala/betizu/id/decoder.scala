@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 11:41:04 am                                       *
+ * Last Modified: 2024-04-09 01:50:34 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -13,12 +13,12 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.isa.base.{INSTR => BASE}
+import emmk.common.isa.base.{INSTR => BASE}
 
 
 class Decoder(p: BetizuParams) extends Module {
@@ -41,6 +41,7 @@ class Decoder(p: BetizuParams) extends Module {
   // ******************************
   // Integer table
   var t_int = TABLEINT32I.table
+                          t_int ++= TABLEINTCSR.table
   if (p.useFpu)           t_int ++= TABLEINT32F.table
 
   // LSU table

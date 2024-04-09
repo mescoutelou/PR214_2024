@@ -13,16 +13,16 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.gen._
+import emmk.common.gen._
 
 
 class Alu (p: BetizuParams) extends Module {
-  import prj.betizu.INTUOP._
+  import emmk.betizu.INTUOP._
 
   val io = IO(new Bundle {
     val b_in = Flipped(new GenRVIO(p, new IntUnitReqCtrlBus(p), new IntUnitReqDataBus(p)))

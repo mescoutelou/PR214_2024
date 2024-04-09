@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 11:53:18 am                                       *
+ * Last Modified: 2024-04-09 01:37:53 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -13,16 +13,16 @@
  */
 
 
-package prj.betizu
+package emmk.betizu
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.gen._
-import prj.common.lbus._
-import prj.common.mbus._
-import prj.common.isa.base._
-import prj.fpu.{FpuIO}
+import emmk.common.gen._
+import emmk.common.lbus._
+import emmk.common.mbus._
+import emmk.common.isa.base._
+import emmk.fpu.{FpuIO}
 
 
 class ExStage(p: BetizuParams) extends Module {
@@ -36,7 +36,9 @@ class ExStage(p: BetizuParams) extends Module {
     val b_fpu = if (p.useFpu) Some(Flipped(new FpuIO(p, p.nDataBit))) else None
     val b_dmem = new MBusIO(p.pL0DBus)
 
+    val b_csr = Flipped(new CsrIO(p))
     val b_rd = Flipped(new GprWriteIO(p))
+    val o_instret = Output(Bool())
   })  
 
   val m_alu = Module(new Alu(p))
@@ -160,6 +162,18 @@ class ExStage(p: BetizuParams) extends Module {
   }
 
   // ------------------------------
+  //              CSR
+  // ------------------------------
+  io.b_csr.valid := io.b_in.valid & (io.b_in.ctrl.get.int.unit === INTUNIT.CSR) & w_empty
+  io.b_csr.uop := io.b_in.ctrl.get.int.uop
+  io.b_csr.addr := io.b_in.data.get.s3
+  io.b_csr.wdata := io.b_in.data.get.s1
+
+  when (io.b_in.ctrl.get.int.unit === INTUNIT.CSR) {
+    w_wait_req := ~w_empty
+  }
+
+  // ------------------------------
   //             BUFFER
   // ------------------------------
   m_buf.io.i_flush := false.B
@@ -254,6 +268,13 @@ class ExStage(p: BetizuParams) extends Module {
   }
 
   // ------------------------------
+  //              CSR
+  // ------------------------------
+  when (io.b_in.ctrl.get.int.unit === INTUNIT.CSR) {
+    w_res_one := io.b_csr.rdata
+  }
+
+  // ------------------------------
   //             BUFFER
   // ------------------------------
   io.b_dmem.read.ready := m_buf.io.b_out(0).ctrl.get.lsu.ld
@@ -269,6 +290,11 @@ class ExStage(p: BetizuParams) extends Module {
       }     
     }
   }
+
+  // ******************************
+  //             LOCK
+  // ******************************
+  io.b_in.ready := ~(w_wait_req | w_wait_buf)
 
   // ******************************
   //              GPR
@@ -309,9 +335,9 @@ class ExStage(p: BetizuParams) extends Module {
   }
 
   // ******************************
-  //             LOCK
+  //              CSR
   // ******************************
-  io.b_in.ready := ~(w_wait_req | w_wait_buf)
+  io.o_instret := (m_buf.io.b_out(0).valid & ~w_wait_ack) | (io.b_in.valid & ~w_wait_req & ~w_multi)
 
   // ******************************
   //           SIMULATION

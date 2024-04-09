@@ -1,4 +1,4 @@
-package prj.core
+package emmk.core
 
 import chisel3._
 import chiseltest._

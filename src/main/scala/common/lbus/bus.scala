@@ -13,12 +13,12 @@
  */
 
 
-package prj.common.lbus
+package emmk.common.lbus
 
 import chisel3._
 import chisel3.util._
 
-import prj.common.mbus._
+import emmk.common.mbus._
 
 
 class LBusCtrlBus(p: LBusParams) extends Bundle {  

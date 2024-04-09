@@ -13,14 +13,14 @@
  */
 
 
-package prj.common.ram
+package emmk.common.ram
 
 import chisel3._
 import chisel3.util._
 import chisel3.experimental._
 
-import prj.common.gen._
-import prj.common.mbus._
+import emmk.common.gen._
+import emmk.common.mbus._
 
 
 class RamSv (INITFILE: String, NDATA: Int, NDATABYTE: Int)

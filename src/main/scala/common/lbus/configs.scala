@@ -13,7 +13,7 @@
  */
 
 
-package prj.common.lbus
+package emmk.common.lbus
 
 import chisel3._
 import chisel3.util._
