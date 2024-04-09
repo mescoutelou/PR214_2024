@@ -3,12 +3,12 @@
  * Created Date: 2024-04-08 09:31:37 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 08:03:36 pm                                       *
+ * Last Modified: 2024-04-09 10:25:40 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 HerdWare                                                 *
+ * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -101,11 +101,8 @@ class GprCtrlBus() extends Bundle {
 class ExtCtrlBus extends Bundle {
   val ext = UInt(EXT.NBIT.W)
   val code = UInt(8.W)
-  val op1 = UInt(3.W)
-  val op2 = UInt(3.W)
-  val op3 = UInt(3.W)
-  val rs1 = UInt(5.W)
-  val rs2 = UInt(5.W)
+  val op = Vec(3, UInt(3.W))
+  val rs = Vec(3, UInt(5.W))
   val rd = UInt(5.W)
 }
 

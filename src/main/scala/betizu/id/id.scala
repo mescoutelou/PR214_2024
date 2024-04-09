@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:13:37 pm                                       *
+ * Last Modified: 2024-04-09 11:34:19 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -190,7 +190,7 @@ class IdStage(p: BetizuParams) extends Module {
     // ------------------------------
     //            SIGNALS
     // ------------------------------
-
+    dontTouch(m_decoder.io)
   }
 }
 

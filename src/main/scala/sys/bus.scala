@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:31:10 pm                                       *
+ * Last Modified: 2024-04-09 11:01:39 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -23,7 +23,7 @@ import chisel3.util._
 // ******************************
 //           SIMULATION
 // ******************************
-class SysSimBus extends Bundle {
+class SysSimBus(p: SysParams) extends Bundle {
 	val gpr = Vec(32, UInt(32.W))
-//	val fpr = Vec(32, UInt(32.W))
+	val fpr = if (p.useFpu) Some(Vec(32, UInt(32.W))) else None
 }

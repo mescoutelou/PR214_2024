@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 08:24:02 pm                                       *
+ * Last Modified: 2024-04-09 10:38:52 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 HerdWare                                                 *
+ * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -22,11 +22,15 @@ import prj.common.gen._
 import prj.common.lbus._
 import prj.common.mbus._
 import prj.common.isa.base._
+import prj.fpu.{FpuIO}
+
 
 
 class Betizu(p: BetizuParams) extends Module {
   val io = IO(new Bundle {    
     val b_imem = new MBusIO(p.pL0IBus)
+
+    val b_fpu = if (p.useFpu) Some(Flipped(new FpuIO(p, p.nDataBit))) else None
     val b_dmem = new MBusIO(p.pL0DBus)
 
     val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(p.nDataBit.W)))) else None  
@@ -66,6 +70,7 @@ class Betizu(p: BetizuParams) extends Module {
     m_ex.io.i_br_next := DontCare
     m_ex.io.i_br_next.valid := false.B
   }
+  if (p.useFpu) m_ex.io.b_fpu.get <> io.b_fpu.get
   m_ex.io.b_dmem <> io.b_dmem
 
   // ******************************

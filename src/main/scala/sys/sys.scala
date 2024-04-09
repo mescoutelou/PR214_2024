@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 08:34:38 pm                                       *
+ * Last Modified: 2024-04-09 11:01:49 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 HerdWare                                                 *
+ * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -26,21 +26,20 @@ import prj.fpu._
 
 class Sys(p: SysParams) extends Module {
   val io = IO(new Bundle {
-    val o_sim = if (p.isSim) Some(Output(new SysSimBus())) else None
+    val o_sim = if (p.isSim) Some(Output(new SysSimBus(p))) else None
   })  
 
   val m_betizu = Module(new Betizu(p.pBetizu))
-//  val m_fpu = Module(new Fpu(p.pFpu))
+  val m_fpu = if (p.useFpu) Some(Module(new Fpu(p.pFpu))) else None
   val m_cross = Module(new MBusCrossbar(p.pBusCross))
   val m_rom = Module(new MBusRam(p.pRom))
   val m_ram = Module(new MBusRam(p.pRam))
 
-//  m_betizu.io := DontCare
-//  m_fpu.io := DontCare
+  if (p.useFpu) m_betizu.io.b_fpu.get <> m_fpu.get.io.b_pipe
 
   m_cross.io.b_m(0) <> m_betizu.io.b_dmem
   m_cross.io.b_m(1) <> m_betizu.io.b_imem
-//  m_cross.io.b_m(2) <> m_fpu.io.b_mem
+  if (p.useFpu) m_cross.io.b_m(2) <> m_fpu.get.io.b_mem
   m_cross.io.b_s(0) <> m_rom.io.b_port(0)
   m_cross.io.b_s(1) <> m_ram.io.b_port(0)  
 
@@ -49,7 +48,7 @@ class Sys(p: SysParams) extends Module {
   // ******************************
   if (p.isSim) {
     io.o_sim.get.gpr := m_betizu.io.o_sim.get
-//    io.o_sys.get.fpr := m_fpu.io.o_sys.get
+    if (p.useFpu) io.o_sim.get.fpr.get := m_fpu.get.io.o_sim.get
   }  
 }
 

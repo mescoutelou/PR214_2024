@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 09:15:02 am                                       *
+ * Last Modified: 2024-04-09 11:02:39 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -56,6 +56,7 @@ trait BetizuParams extends GenParams {
   def useIfStage: Boolean
   def useIdStage: Boolean = false
   def nExBufferDepth: Int = 2
+  def useFpu: Boolean
   def useGprBypass: Boolean = true
   def nGprBypass: Int = {
     if (useIdStage) {
@@ -87,5 +88,6 @@ case class BetizuConfig (
 
   pcBoot: String,
 
-  useIfStage: Boolean
+  useIfStage: Boolean,
+  useFpu: Boolean
 ) extends BetizuParams

@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:15:14 pm                                       *
+ * Last Modified: 2024-04-09 11:02:47 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -25,5 +25,6 @@ object BetizuConfigBase extends BetizuConfig (
 
   pcBoot = "04000000",
 
-  useIfStage = true
+  useIfStage = true,
+  useFpu = true
 )

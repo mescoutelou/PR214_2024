@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-02-06 03:35:24 pm                                       *
+ * Last Modified: 2024-04-09 11:45:09 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -32,8 +32,6 @@ class WbStage(p: FpuParams) extends Module {
     val b_pipe = new FpuAckIO(p, p.nDataBit)
     val b_rd = Flipped(new FprWriteIO(p))
   })  
-
-  io.b_pipe := DontCare
 
   // ******************************
   //           NORMALIZE
@@ -84,7 +82,7 @@ class WbStage(p: FpuParams) extends Module {
   // ******************************
   io.b_in.ready := io.b_pipe.ready
 
-  io.b_pipe.valid := io.b_in.valid & io.b_in.ctrl.get.info.int
+  io.b_pipe.valid := io.b_in.valid
   when (io.b_in.ctrl.get.info.int) {
     io.b_pipe.data.get := io.b_in.data.get.res.toUInt()
   }.otherwise {

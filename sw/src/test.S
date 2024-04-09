@@ -3,7 +3,7 @@
  * Created Date: 2023-02-26 09:08:32 pm
  * Author: Mathieu Escouteloup
  * -----
- * Last Modified: 2024-04-09 10:13:50 am
+ * Last Modified: 2024-04-09 11:20:17 am
  * Modified By: Mathieu Escouteloup
  * -----
  * License: See LICENSE.md
@@ -34,6 +34,8 @@ main:
   li x5, 0xff
   sw x5, 0(x6)
   lb x7, 0(x6)
+
+  fmv.w.x ft0, x4
 
 ## ******************************
 ##             END

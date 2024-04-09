@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 02:30:48 pm                                       *
+ * Last Modified: 2024-04-09 11:03:23 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -31,10 +31,13 @@ trait SysParams {
 
 	def nAddrBit: Int
 
+	def useFpu: Boolean
+
 	def pBetizu: BetizuParams = new BetizuConfig (
 		isSim = isSim,
   	pcBoot = pcBoot,
-		useIfStage = true
+		useIfStage = true,
+		useFpu = useFpu
 	)
 
 	def pFpu: FpuParams = new FpuConfig (
@@ -49,7 +52,7 @@ trait SysParams {
 
     pb = pb :+ pBetizu.pL0DBus
     pb = pb :+ pBetizu.pL0IBus
-//    pb = pb :+ pFpu.pDBus
+    if (useFpu) pb = pb :+ pFpu.pDBus
 
     return pb
   }
@@ -104,5 +107,7 @@ case class SysConfig (
 
 	pcBoot: String,
 	
-	nAddrBit: Int
+	nAddrBit: Int,
+
+	useFpu: Boolean
 ) extends SysParams

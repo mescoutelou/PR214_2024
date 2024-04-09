@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 07:36:01 pm                                       *
+ * Last Modified: 2024-04-09 10:22:00 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 HerdWare                                                 *
+ * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -132,6 +132,7 @@ object EXT {
   def X     = 0.U(NBIT.W)
 
   def NONE  = 0.U(NBIT.W)
+  def FPU   = 1.U(NBIT.W)
 }
 
 // ******************************
@@ -142,4 +143,5 @@ object MULTI {
   def X     = 0.U(NBIT.W)
 
   def MEM   = 1.U(NBIT.W)
+  def FPU   = 2.U(NBIT.W)
 }

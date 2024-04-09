@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 10:54:40 am                                       *
+ * Last Modified: 2024-04-09 11:28:28 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -19,6 +19,7 @@ import chisel3._
 import chisel3.util._
 
 import prj.common.isa.base.{INSTR => BASE}
+import prj.fpu.{CODE => FPUCODE, OP => FPUOP}
 
 trait TABLEEXT
 {
@@ -35,4 +36,13 @@ object TABLEEXT32I extends TABLEEXT {
   //                          Ext unit       Code             S1 ?          S2 ?          S3 ?
   //                             |             |               |             |             |
     BASE.ADD        -> List(  EXT.NONE,       0.U,            0.U,          0.U,          0.U))
+}
+
+object TABLEEXT32F extends TABLEEXT {
+  val table : Array[(BitPat, List[UInt])] =    
+              Array[(BitPat, List[UInt])](
+  //                          Ext unit       Code             S1 ?          S2 ?          S3 ?
+  //                             |             |               |             |             |
+    BASE.FMVWX      -> List(  EXT.FPU,        FPUCODE.MVWX,   FPUOP.INT,    0.U,          0.U),
+    BASE.FADD       -> List(  EXT.FPU,        FPUCODE.ADD,    FPUOP.FLOAT,  FPUOP.FLOAT,  0.U))
 }

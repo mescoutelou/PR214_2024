@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 11:28:58 am                                       *
+ * Last Modified: 2024-04-09 11:41:04 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -41,12 +41,14 @@ class Decoder(p: BetizuParams) extends Module {
   // ******************************
   // Integer table
   var t_int = TABLEINT32I.table
+  if (p.useFpu)           t_int ++= TABLEINT32F.table
 
   // LSU table
   var t_lsu = TABLELSU32I.table
 
   // External table
   var t_ext = TABLEEXT32I.table
+  if (p.useFpu)           t_ext ++= TABLEEXT32F.table
 
   // Decoded signals
   val w_dec_int = ListLookup(io.i_instr, TABLEINT32I.default, t_int)
@@ -96,16 +98,14 @@ class Decoder(p: BetizuParams) extends Module {
   // ******************************
   //            EXTERNAL
   // ******************************
-  // ------------------------------
-  //             COMMON
-  // ------------------------------
   io.o_ext.ext := w_dec_ext(0)
   io.o_ext.code := w_dec_ext(1)
-  io.o_ext.op1 := w_dec_ext(2)
-  io.o_ext.op2 := w_dec_ext(3)
-  io.o_ext.op3 := w_dec_ext(4)
-  io.o_ext.rs1 := io.i_instr(19,15)
-  io.o_ext.rs2 := io.i_instr(24,20)
+  io.o_ext.op(0) := w_dec_ext(2)
+  io.o_ext.op(1) := w_dec_ext(3)
+  io.o_ext.op(2) := w_dec_ext(4)
+  io.o_ext.rs(0) := io.i_instr(19,15)
+  io.o_ext.rs(1) := io.i_instr(24,20)
+  io.o_ext.rs(2) := io.i_instr(31,27)
   io.o_ext.rd := io.i_instr(11, 7)
 
   // ******************************

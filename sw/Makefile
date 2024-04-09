@@ -11,7 +11,7 @@ CC = ${TOOLCHAIN}-gcc
 LD = ${TOOLCHAIN}-gcc
 CFLAGS = -O1 -nostartfiles -fstrict-volatile-bitfields
 CFLAGS += -Woverflow 
-CFLAGS += -march=rv32i -mabi=ilp32 -DXLEN=32
+CFLAGS += -march=rv32if -mabi=ilp32 -DXLEN=32
 ELF2HEX = elf2hex.py
 
 test: build-dir

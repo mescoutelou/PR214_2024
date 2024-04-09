@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 10:23:05 am                                       *
+ * Last Modified: 2024-04-09 11:11:25 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -71,4 +71,6 @@ object INSTR {
   // ******************************
   //             RV32F
   // ******************************
+  def FADD      = BitPat("b0000000??????????????????1010011")
+  def FMVWX     = BitPat("b111100000000?????000?????1010011")
 }

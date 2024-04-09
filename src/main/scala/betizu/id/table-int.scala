@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 10:54:43 am                                       *
+ * Last Modified: 2024-04-09 11:14:04 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -90,14 +90,15 @@ object TABLEINT32I extends TABLEINT {
     BASE.FENCE        -> List(  1.B,  1.B,    0.B,    0.B,  INTUNIT.BRU,      INTUOP.FENCE,       0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X))
 }
 
-// object TABLEINT32F extends TABLEINT {
-//   val table : Array[(BitPat, List[UInt])] =
-//               Array[(BitPat, List[UInt])](
-// 
-//     //                        is Valid ?                        Int Unit ?                       S1 Sign            S1 Type ?                    Imm1 Type ?
-//     //                           |                                 |                               |   S2 Sign        |       S2 Type ?              |     Imm2 Type ?
-//     //                           | is Serial ?      Gen Exc ?      |             Int Uop ?         |     |   S3 Sign  |         |       S3 Type ?    |         |
-//     //                           |     |     WB ?      |           |                |              |     |     |      |         |         |          |         |
-//     //                           |     |       |       |           |                |              |     |     |      |         |         |          |         |
-//     
-// }
+object TABLEINT32F extends TABLEINT {
+  val table : Array[(BitPat, List[UInt])] =
+              Array[(BitPat, List[UInt])](
+
+    //                        is Valid ?                        Int Unit ?                       S1 Sign            S1 Type ?                    Imm1 Type ?
+    //                           |                                 |                               |   S2 Sign        |       S2 Type ?              |     Imm2 Type ?
+    //                           | is Serial ?      Gen Exc ?      |             Int Uop ?         |     |   S3 Sign  |         |       S3 Type ?    |         |
+    //                           |     |     WB ?      |           |                |              |     |     |      |         |         |          |         |
+    //                           |     |       |       |           |                |              |     |     |      |         |         |          |         |
+    BASE.FADD         -> List(  1.B,  0.B,    1.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
+    BASE.FMVWX        -> List(  1.B,  0.B,    1.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.X,     IMM.X,    IMM.X))
+}
