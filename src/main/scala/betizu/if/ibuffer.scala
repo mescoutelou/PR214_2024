@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 09:51:51 am                                       *
+ * Last Modified: 2024-04-09 09:57:24 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -36,7 +36,7 @@ class IBuffer (p: BetizuParams) extends Module {
   //             BUFFER
   // ******************************
   if (p.nL0IBufferDepth > 1) {
-    val m_instr = Module(new GenFifo(p, UInt(p.nInstrBit.W), UInt(0.W), 4, p.nL0IBufferDepth, 1, 1))
+    val m_instr = Module(new GenFifo(p, UInt(p.nInstrBit.W), UInt(0.W), 0, p.nL0IBufferDepth, 1, 1))
 
     val r_pc = Reg(UInt(p.nAddrBit.W))
     val r_imem = RegInit(VecInit(Seq.fill(2)(0.B)))

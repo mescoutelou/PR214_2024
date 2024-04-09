@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 08:30:21 pm                                       *
+ * Last Modified: 2024-04-09 10:12:59 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 HerdWare                                                 *
+ * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -186,7 +186,32 @@ class ExStage(p: BetizuParams) extends Module {
   // ------------------------------
   when (m_buf.io.b_out(0).ctrl.get.lsu.ld) {
     w_wait_ack := ~io.b_dmem.read.valid
-    w_res_multi := io.b_dmem.read.data
+
+    switch(m_buf.io.b_out(0).ctrl.get.lsu.size) {
+      is (LSUSIZE.B) {
+        when (m_buf.io.b_out(0).ctrl.get.lsu.sign === LSUSIGN.S) {
+          w_res_multi := Cat(Fill(p.nDataBit - 8, io.b_dmem.read.data(7)), io.b_dmem.read.data(7,0))
+        }.otherwise {
+          w_res_multi := Cat(Fill(p.nDataBit - 8, 0.B), io.b_dmem.read.data(7,0))
+        }
+      }
+      is (LSUSIZE.H) {
+        when (m_buf.io.b_out(0).ctrl.get.lsu.sign === LSUSIGN.S) {
+          w_res_multi := Cat(Fill(p.nDataBit - 16, io.b_dmem.read.data(15)), io.b_dmem.read.data(15,0))
+        }.otherwise {
+          w_res_multi := Cat(Fill(p.nDataBit - 16, 0.B), io.b_dmem.read.data(15,0))
+        }
+      }
+      is (LSUSIZE.W) {
+        if (p.nDataBit >= 64) {
+          when (m_buf.io.b_out(0).ctrl.get.lsu.sign === LSUSIGN.S) {
+            w_res_multi := Cat(Fill(p.nDataBit - 32, io.b_dmem.read.data(31)), io.b_dmem.read.data(31,0))
+          }.otherwise {
+            w_res_multi := Cat(Fill(p.nDataBit - 32, 0.B), io.b_dmem.read.data(31,0))
+          }
+        }
+      }
+    }
   }
 
   // ------------------------------
@@ -197,7 +222,7 @@ class ExStage(p: BetizuParams) extends Module {
   m_buf.io.b_out(0).ready := false.B
   switch (m_buf.io.b_out(0).ctrl.get.multi) {
     is (MULTI.MEM) {
-      m_buf.io.b_out(0).ready := io.b_dmem.read.valid
+      m_buf.io.b_out(0).ready := (m_buf.io.b_out(0).ctrl.get.lsu.ld & io.b_dmem.read.valid) | (m_buf.io.b_out(0).ctrl.get.lsu.st & io.b_dmem.write.ready)
     }
   }
 
