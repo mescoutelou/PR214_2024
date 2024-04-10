@@ -3,7 +3,7 @@
  * Created Date: 2024-04-08 09:31:37 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 01:25:52 pm                                       *
+ * Last Modified: 2024-04-10 10:43:30 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -34,6 +34,7 @@ class BranchBus(p: BetizuParams) extends Bundle {
 //             FRONT            
 // ******************************
 class FetchBus(p: BetizuParams) extends Bundle {
+  val en = Bool()
   val pc = UInt(p.nAddrBit.W)
   val instr = UInt(p.nInstrBit.W)
 }
@@ -71,6 +72,7 @@ class InfoBus(p: BetizuParams) extends Bundle {
   val pc = UInt(p.nAddrBit.W)
   val instr = UInt(p.nInstrBit.W)
   val ser = Bool()
+  val hang = Bool()
 }
 
 // ------------------------------
@@ -99,6 +101,7 @@ class GprCtrlBus() extends Bundle {
 }
 
 class ExtCtrlBus extends Bundle {
+  val pack = Bool()
   val ext = UInt(EXT.NBIT.W)
   val code = UInt(8.W)
   val op = Vec(3, UInt(3.W))

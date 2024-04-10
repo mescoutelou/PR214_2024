@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 01:50:34 pm                                       *
+ * Last Modified: 2024-04-10 10:43:16 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -71,15 +71,16 @@ class Decoder(p: BetizuParams) extends Module {
   io.o_info.pc := 0.U
   io.o_info.instr := io.i_instr
   io.o_info.ser := w_dec_int(1) | w_ser
+  io.o_info.hang := w_dec_int(4)
 
   // ******************************
   //            EX BUS
   // ******************************
-  io.o_int.unit := w_dec_int(4)
-  io.o_int.uop := w_dec_int(5)
-  io.o_int.ssign(0) := w_dec_int(6)
-  io.o_int.ssign(1) := w_dec_int(7)
-  io.o_int.ssign(2) := w_dec_int(8)
+  io.o_int.unit := w_dec_int(5)
+  io.o_int.uop := w_dec_int(6)
+  io.o_int.ssign(0) := w_dec_int(7)
+  io.o_int.ssign(1) := w_dec_int(8)
+  io.o_int.ssign(2) := w_dec_int(9)
 
   // ******************************
   //            LSU BUS
@@ -99,11 +100,12 @@ class Decoder(p: BetizuParams) extends Module {
   // ******************************
   //            EXTERNAL
   // ******************************
-  io.o_ext.ext := w_dec_ext(0)
-  io.o_ext.code := w_dec_ext(1)
-  io.o_ext.op(0) := w_dec_ext(2)
-  io.o_ext.op(1) := w_dec_ext(3)
-  io.o_ext.op(2) := w_dec_ext(4)
+  io.o_ext.pack := w_dec_ext(0)
+  io.o_ext.ext := w_dec_ext(1)
+  io.o_ext.code := w_dec_ext(2)
+  io.o_ext.op(0) := w_dec_ext(3)
+  io.o_ext.op(1) := w_dec_ext(4)
+  io.o_ext.op(2) := w_dec_ext(5)
   io.o_ext.rs(0) := io.i_instr(19,15)
   io.o_ext.rs(1) := io.i_instr(24,20)
   io.o_ext.rs(2) := io.i_instr(31,27)
@@ -114,11 +116,11 @@ class Decoder(p: BetizuParams) extends Module {
   // ******************************
   io.o_data.rs1 := io.i_instr(19,15)
   io.o_data.rs2 := io.i_instr(24,20)
-  io.o_data.s1type := w_dec_int(9)
-  io.o_data.s2type := w_dec_int(10)
-  io.o_data.s3type := w_dec_int(11)
-  io.o_data.imm1type := w_dec_int(12)
-  io.o_data.imm2type := w_dec_int(13)
+  io.o_data.s1type := w_dec_int(10)
+  io.o_data.s2type := w_dec_int(11)
+  io.o_data.s3type := w_dec_int(12)
+  io.o_data.imm1type := w_dec_int(13)
+  io.o_data.imm2type := w_dec_int(14)
 }
 
 

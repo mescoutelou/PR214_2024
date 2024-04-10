@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 09:57:24 am                                       *
+ * Last Modified: 2024-04-10 08:49:07 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -26,7 +26,7 @@ class IBuffer (p: BetizuParams) extends Module {
   val io = IO(new Bundle { 
     val i_redirect = Input(Bool())
     val i_pc = Input(UInt(p.nAddrBit.W))
-    val b_out = new GenRVIO(p, UInt(p.nInstrBit.W), UInt(0.W))
+    val b_out = new GenRVIO(p, UInt(p.nFetchBit.W), UInt(0.W))
 
     val b_imem = new MBusIO(p.pL0IBus)
   })  
@@ -36,7 +36,7 @@ class IBuffer (p: BetizuParams) extends Module {
   //             BUFFER
   // ******************************
   if (p.nL0IBufferDepth > 1) {
-    val m_instr = Module(new GenFifo(p, UInt(p.nInstrBit.W), UInt(0.W), 0, p.nL0IBufferDepth, 1, 1))
+    val m_instr = Module(new GenFifo(p, UInt(p.nFetchBit.W), UInt(0.W), 0, p.nL0IBufferDepth, 1, 1))
 
     val r_pc = Reg(UInt(p.nAddrBit.W))
     val r_imem = RegInit(VecInit(Seq.fill(2)(0.B)))
@@ -44,8 +44,8 @@ class IBuffer (p: BetizuParams) extends Module {
 
     io.b_imem.req.valid := ~r_imem(1)
     io.b_imem.req.ctrl.rw := false.B
-    io.b_imem.req.ctrl.size := SIZE.toByte(p.nInstrByte.U)
-    io.b_imem.req.ctrl.addr := Mux(io.i_redirect, io.i_pc, r_pc)
+    io.b_imem.req.ctrl.size := SIZE.toByte(p.nFetchByte.U)
+    io.b_imem.req.ctrl.addr := Mux(io.i_redirect, Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W)), r_pc)
 
     io.b_imem.write := DontCare
     io.b_imem.write.valid := false.B
@@ -60,12 +60,12 @@ class IBuffer (p: BetizuParams) extends Module {
 
     when (io.i_redirect) {
       when (io.b_imem.req.ready & ~r_imem(1)) {
-        r_pc := io.i_pc + 4.U
+        r_pc := Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W)) + p.nFetchByte.U
       }.otherwise {
-        r_pc := io.i_pc
+        r_pc := Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W))
       }
     }.elsewhen(io.b_imem.req.ready & ~r_imem(1)) {
-      r_pc := r_pc + 4.U
+      r_pc := r_pc + p.nFetchByte.U
     }
 
     when (r_imem(0)) {
@@ -95,8 +95,8 @@ class IBuffer (p: BetizuParams) extends Module {
 
     io.b_imem.req.valid := ~r_done
     io.b_imem.req.ctrl.rw := false.B
-    io.b_imem.req.ctrl.size := SIZE.toByte(p.nInstrByte.U)
-    io.b_imem.req.ctrl.addr := io.i_pc
+    io.b_imem.req.ctrl.size := SIZE.toByte(p.nFetchByte.U)
+    io.b_imem.req.ctrl.addr := Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W))
 
     io.b_imem.write := DontCare
     io.b_imem.write.valid := false.B

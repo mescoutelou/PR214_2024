@@ -3,7 +3,7 @@
  * Created Date: 2023-02-26 09:08:32 pm
  * Author: Mathieu Escouteloup
  * -----
- * Last Modified: 2024-04-09 01:54:13 pm
+ * Last Modified: 2024-04-10 09:50:26 am
  * Modified By: Mathieu Escouteloup
  * -----
  * License: See LICENSE.md
@@ -36,6 +36,11 @@ main:
   lb x7, 0(x6)
 
   fmv.w.x ft0, x4
+  fadd.s ft1, ft0, ft0
+  nop
+  nop
+  fadd.s ft2, ft1, ft0
+  nop
   rdcycle x10
   rdinstret x11
 

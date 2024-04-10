@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 01:37:53 pm                                       *
+ * Last Modified: 2024-04-10 10:43:13 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -52,13 +52,17 @@ class ExStage(p: BetizuParams) extends Module {
 
   val r_st = RegInit(init_st)
 
+  val w_pack = Wire(Bool())
   val w_multi = Wire(Bool())
   val w_empty = Wire(Bool())
+  val w_wait_rd = Wire(Bool())
   val w_wait_req = Wire(Bool())
   val w_wait_buf = Wire(Bool())
   val w_wait_ack = Wire(Bool())
   val w_res_one = Wire(UInt(p.nDataBit.W))
   val w_res_multi = Wire(UInt(p.nDataBit.W))
+
+  w_pack := io.b_in.ctrl.get.info.hang & io.b_in.ctrl.get.ext.pack
 
   // ******************************
   //            REQUEST
@@ -70,7 +74,7 @@ class ExStage(p: BetizuParams) extends Module {
   // ------------------------------
   //              ALU
   // ------------------------------
-  m_alu.io.b_in.valid := io.b_in.valid & (io.b_in.ctrl.get.int.unit === INTUNIT.ALU) & w_empty
+  m_alu.io.b_in.valid := io.b_in.valid & (io.b_in.ctrl.get.int.unit === INTUNIT.ALU) & ~w_wait_rd
   m_alu.io.b_in.ctrl.get.uop := io.b_in.ctrl.get.int.uop
   m_alu.io.b_in.ctrl.get.pc := io.b_in.ctrl.get.info.pc
   m_alu.io.b_in.ctrl.get.ssign := io.b_in.ctrl.get.int.ssign
@@ -79,13 +83,13 @@ class ExStage(p: BetizuParams) extends Module {
   m_alu.io.b_in.data.get.s3 := io.b_in.data.get.s3
 
   when (io.b_in.ctrl.get.int.unit === INTUNIT.ALU) {
-    w_wait_req := ~w_empty
+    w_wait_req := w_wait_rd
   }
 
   // ------------------------------
   //              BRU
   // ------------------------------
-  m_bru.io.b_in.valid := io.b_in.valid & (io.b_in.ctrl.get.int.unit === INTUNIT.BRU) & w_empty
+  m_bru.io.b_in.valid := io.b_in.valid & (io.b_in.ctrl.get.int.unit === INTUNIT.BRU) & ~w_wait_rd
   m_bru.io.b_in.ctrl.get.uop := io.b_in.ctrl.get.int.uop
   m_bru.io.b_in.ctrl.get.pc := io.b_in.ctrl.get.info.pc
   m_bru.io.b_in.ctrl.get.ssign := io.b_in.ctrl.get.int.ssign
@@ -96,7 +100,7 @@ class ExStage(p: BetizuParams) extends Module {
   m_bru.io.i_br_next := io.i_br_next
 
   when (io.b_in.ctrl.get.int.unit === INTUNIT.BRU) {
-    w_wait_req := ~m_bru.io.b_in.ready | ~w_empty
+    w_wait_req := ~m_bru.io.b_in.ready | w_wait_rd
   }
 
   // ------------------------------
@@ -180,6 +184,12 @@ class ExStage(p: BetizuParams) extends Module {
 
   w_wait_buf := ~m_buf.io.b_in(0).ready
   w_empty := ~m_buf.io.b_out(0).valid
+  w_wait_rd := false.B
+  for (eb <- 0 until p.nExBufferDepth) {
+    when (m_buf.io.o_val(eb).valid & m_buf.io.o_val(eb).ctrl.get.gpr.en) {
+      w_wait_rd := true.B
+    }
+  }
 
   m_buf.io.b_in(0).valid := io.b_in.valid & w_multi & ~w_wait_req
   m_buf.io.b_in(0).ctrl.get.info := io.b_in.ctrl.get.info
@@ -346,10 +356,12 @@ class ExStage(p: BetizuParams) extends Module {
     // ------------------------------
     //            SIGNALS
     // ------------------------------
+    dontTouch(w_pack)
     dontTouch(w_empty)
     dontTouch(w_wait_req)
     dontTouch(w_wait_buf)
     dontTouch(w_wait_ack)
+    dontTouch(io.b_in)
     dontTouch(m_buf.io.b_out)
     if (p.useFpu) {
       dontTouch(io.b_fpu.get)

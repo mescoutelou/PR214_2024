@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 11:02:39 am                                       *
+ * Last Modified: 2024-04-10 10:41:58 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -29,8 +29,24 @@ trait BetizuParams extends GenParams {
 
   def pcBoot: String
   
+  def usePack: Boolean = true
   def nInstrBit: Int = 32
   def nInstrByte: Int = (nInstrBit / 8).toInt
+  def nFetchBit: Int = {
+    if (usePack) {
+      return 32 * 2
+    } else {
+      return 32
+    }
+  }
+  def nFetchByte: Int = (nFetchBit / 8).toInt
+  def nFetchInstr: Int = {
+    if (usePack) {
+      return 2
+    } else {
+      return 1
+    }
+  }
   def nAddrBit: Int = 32
   def nDataBit: Int = 32
   def nDataByte: Int = (nDataBit / 8).toInt
@@ -40,7 +56,7 @@ trait BetizuParams extends GenParams {
 
     readOnly = true,
     nAddrBit = nAddrBit,
-    nDataByte = nInstrByte
+    nDataByte = nFetchByte
   )
 
   def pL0IBuffer: LBusMBusParams = new LBusMBusConfig (
