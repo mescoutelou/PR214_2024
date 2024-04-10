@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-02-06 12:09:39 pm                                       *
+ * Last Modified: 2024-04-10 11:46:36 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -155,4 +155,8 @@ object UOP {
 	def LT		= 7.U(NBIT.W)
 	def LE		= 8.U(NBIT.W)
 	def CLASS = 9.U(NBIT.W)
+
+	def MUL		= 10.U(NBIT.W)
+	def DIV		= 11.U(NBIT.W)
+	def SQRT	= 12.U(NBIT.W)
 }
