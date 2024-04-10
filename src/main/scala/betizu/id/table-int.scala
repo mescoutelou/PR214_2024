@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 01:50:10 pm                                       *
+ * Last Modified: 2024-04-10 02:09:39 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -99,8 +99,8 @@ object TABLEINT32F extends TABLEINT {
     //                           | is Serial ?      Gen Exc ?      |             Int Uop ?         |     |   S3 Sign  |         |       S3 Type ?    |         |
     //                           |     |     WB ?      |           |                |              |     |     |      |         |         |          |         |
     //                           |     |       |       |           |                |              |     |     |      |         |         |          |         |
-    BASE.FADD         -> List(  1.B,  0.B,    1.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
-    BASE.FMVWX        -> List(  1.B,  0.B,    1.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.X,     IMM.X,    IMM.X))
+    BASE.FADD         -> List(  1.B,  0.B,    0.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
+    BASE.FMVWX        -> List(  1.B,  0.B,    0.B,    0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.X,     IMM.X,    IMM.X))
 }
 
 

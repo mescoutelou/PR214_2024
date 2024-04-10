@@ -3,11 +3,11 @@
  * Created Date: 2023-02-26 09:45:59 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-08 06:51:12 pm
+ * Last Modified: 2024-04-10 01:23:50 pm
  * Modified By: Mathieu Escouteloup
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 HerdWare
+ * Copyright (c) 2024 ENSEIRB-MATMECA
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
     //             END
     // ------------------------------
     // SW Trigger
-    if (dut->io_o_sim_gpr_31 & 1) {
+    if ((dut->io_o_sim_gpr_31 >> 31) & 1) {
       end = true;
     }
 
@@ -176,6 +176,18 @@ int main(int argc, char **argv) {
   // ******************************
   //             REPORT
   // ******************************
+  cout << endl;
+  if ((dut->io_o_sim_gpr_31 >> 31) & 1) {
+    if (dut->io_o_sim_gpr_30 == 0) {
+      cout << "\033[1;32m";
+      cout << "TEST REPORT: SUCCESS.";
+      cout << "\033[0m" << endl;
+    } else {
+      cout << "\033[1;31m";
+      cout << "TEST REPORT: FAILED.";
+      cout << "\033[0m" << endl;
+    }
+  }
   //cout << "\033[1;37m";
   cout << "ROM file: " << romfile << endl;
   if (load_ram) {
