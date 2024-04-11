@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 11:03:23 am                                       *
+ * Last Modified: 2024-04-11 10:13:49 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -50,9 +50,9 @@ trait SysParams {
   def pBPort: Array[MBusParams] = {
     var pb = Array[MBusParams]()
 
+    if (useFpu) pb = pb :+ pFpu.pDBus
     pb = pb :+ pBetizu.pL0DBus
     pb = pb :+ pBetizu.pL0IBus
-    if (useFpu) pb = pb :+ pFpu.pDBus
 
     return pb
   }

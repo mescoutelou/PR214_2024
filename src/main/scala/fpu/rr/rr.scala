@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-02-06 02:53:59 pm                                       *
+ * Last Modified: 2024-04-11 09:37:52 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -44,7 +44,7 @@ class SlctOp(p: FpuParams) extends Module {
 
 class RrStage(p: FpuParams) extends Module {
   val io = IO(new Bundle {
-    val b_pipe = Flipped(new FpuReqIO(p, p.nDataBit))
+    val b_pipe = Flipped(new FpuReqIO(p, p.nAddrBit, p.nDataBit))
 
     val b_rs = Vec(3, Flipped(new FprReadIO(p)))
 
@@ -85,10 +85,11 @@ class RrStage(p: FpuParams) extends Module {
 
   w_lock := ~m_reg.io.b_in.ready
   m_reg.io.b_in.valid := io.b_pipe.valid & ~w_wait_rs.asUInt.orR
-  m_reg.io.b_in.ctrl.get.info.wb := io.b_pipe.ctrl.get.wb
+  m_reg.io.b_in.ctrl.get.info.pc := io.b_pipe.ctrl.get.pc
   m_reg.io.b_in.ctrl.get.info.int := w_decoder(3)
   m_reg.io.b_in.ctrl.get.ex := DontCare
   m_reg.io.b_in.ctrl.get.ex.uop := w_decoder(1)
+  m_reg.io.b_in.ctrl.get.mem := w_decoder(4)
   m_reg.io.b_in.ctrl.get.fpr.en := w_decoder(2)
   m_reg.io.b_in.ctrl.get.fpr.addr := io.b_pipe.ctrl.get.rd
   m_reg.io.b_in.data.get.src := w_src

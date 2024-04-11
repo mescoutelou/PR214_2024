@@ -3,7 +3,7 @@
  * Created Date: 2024-04-08 09:31:37 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 10:43:30 am                                       *
+ * Last Modified: 2024-04-10 04:45:28 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -125,6 +125,8 @@ class ExBufferBus(p: BetizuParams) extends Bundle {
   val multi = UInt(MULTI.NBIT.W)
   val lsu = new LsuCtrlBus()
   val gpr = new GprCtrlBus()
+
+  def int(): Bool = (multi === MULTI.MEM)
 }
 
 // ------------------------------

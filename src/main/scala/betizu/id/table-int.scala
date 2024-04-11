@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 02:37:27 pm                                       *
+ * Last Modified: 2024-04-11 11:14:32 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -99,7 +99,10 @@ object TABLEINT32F extends TABLEINT {
     //                           | is Serial ?      Gen Exc ?         |             Int Uop ?            |     |   S3 Sign  |         |       S3 Type ?    |         |
     //                           |     |     WB ?      |  Hang ?      |                |                 |     |     |      |         |         |          |         |
     //                           |     |       |       |     |        |                |                 |     |     |      |         |         |          |         |
-    BASE.FADD         -> List(  1.B,  0.B,    0.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
+    BASE.FLW          -> List(  1.B,  0.B,    0.B,    1.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  1.B,  0.B,  OP.XREG,  OP.X,     OP.IMM1,  IMM.isI,  IMM.X),
+    BASE.FSW          -> List(  1.B,  0.B,    0.B,    1.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  1.B,  0.B,  OP.XREG,  OP.X,     OP.IMM1,  IMM.isS,  IMM.X),
+    BASE.FADDS        -> List(  1.B,  0.B,    0.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
+    BASE.FSUBS        -> List(  1.B,  0.B,    0.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
     BASE.FMVWX        -> List(  1.B,  0.B,    0.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.X,     IMM.X,    IMM.X))
 }
 

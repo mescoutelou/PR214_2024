@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 10:43:24 am                                       *
+ * Last Modified: 2024-04-10 02:41:06 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -70,7 +70,11 @@ class IdStage(p: BetizuParams) extends Module {
     m_decoder(fi).io.i_instr := w_fetch(fi).instr
   }  
 
-  w_pack := io.b_in.ctrl.get(0).en & m_decoder(0).io.o_info.hang & io.b_in.ctrl.get(1).en & m_decoder(1).io.o_ext.pack
+  if (p.usePack) {
+    w_pack := io.b_in.ctrl.get(0).en & m_decoder(0).io.o_info.hang & io.b_in.ctrl.get(1).en & m_decoder(1).io.o_ext.pack
+  } else {
+    w_pack := false.B
+  }
 
   // ******************************
   //              GPR

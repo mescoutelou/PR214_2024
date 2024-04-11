@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 08:49:07 am                                       *
+ * Last Modified: 2024-04-11 01:18:19 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -31,6 +31,13 @@ class IBuffer (p: BetizuParams) extends Module {
     val b_imem = new MBusIO(p.pL0IBus)
   })  
 
+  // ******************************
+  //          DEAD REQUEST
+  // ******************************
+  val r_dead = RegInit(0.U(4.W))
+  val w_dead = Wire(Bool())
+
+  w_dead := (r_dead >= 7.U)
 
   // ******************************
   //             BUFFER
@@ -42,24 +49,36 @@ class IBuffer (p: BetizuParams) extends Module {
     val r_imem = RegInit(VecInit(Seq.fill(2)(0.B)))
     val r_abort = RegInit(false.B)
 
-    io.b_imem.req.valid := ~r_imem(1)
+    io.b_imem.req.valid := ~r_imem(1) & ~w_dead
     io.b_imem.req.ctrl.rw := false.B
     io.b_imem.req.ctrl.size := SIZE.toByte(p.nFetchByte.U)
     io.b_imem.req.ctrl.addr := Mux(io.i_redirect, Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W)), r_pc)
 
     io.b_imem.write := DontCare
     io.b_imem.write.valid := false.B
-    io.b_imem.read.ready := r_imem(0) & (m_instr.io.b_in(0).ready | io.i_redirect | r_abort)
+    io.b_imem.read.ready := r_imem(0) & (m_instr.io.b_in(0).ready | io.i_redirect | r_abort | w_dead)
 
-    m_instr.io.i_flush := io.i_redirect
-    m_instr.io.b_in(0).valid := r_imem(0) & ~io.i_redirect & ~r_abort
+    m_instr.io.i_flush := io.i_redirect | w_dead
+    m_instr.io.b_in(0).valid := r_imem(0) & ~io.i_redirect & ~r_abort & ~w_dead
     m_instr.io.b_in(0).ctrl.get := io.b_imem.read.data
 
     m_instr.io.b_out(0) <> io.b_out
-    io.b_out.valid := m_instr.io.b_out(0).valid & ~io.i_redirect
+    io.b_out.valid := m_instr.io.b_out(0).valid & ~io.i_redirect & ~w_dead
+    
+    when (w_dead) {
+      when (~r_imem(0)) {
+        r_dead := 0.U
+      }
+    }.otherwise {
+      when (m_instr.io.b_out(0).valid & ~io.b_out.ready & ~io.i_redirect) {
+        r_dead := r_dead + 1.U
+      }.otherwise {
+        r_dead := 0.U
+      }
+    }
 
-    when (io.i_redirect) {
-      when (io.b_imem.req.ready & ~r_imem(1)) {
+    when (io.i_redirect | w_dead) {
+      when (io.b_imem.req.ready & ~r_imem(1) & ~w_dead) {
         r_pc := Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W)) + p.nFetchByte.U
       }.otherwise {
         r_pc := Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W))
@@ -93,20 +112,26 @@ class IBuffer (p: BetizuParams) extends Module {
     val r_done = RegInit(false.B)
     val r_abort = RegInit(false.B)
 
-    io.b_imem.req.valid := ~r_done
+    io.b_imem.req.valid := ~r_done & ~w_dead
     io.b_imem.req.ctrl.rw := false.B
     io.b_imem.req.ctrl.size := SIZE.toByte(p.nFetchByte.U)
     io.b_imem.req.ctrl.addr := Cat(io.i_pc((p.nAddrBit - log2Ceil(p.nFetchByte)), log2Ceil(p.nFetchByte)), 0.U(log2Ceil(p.nFetchByte).W))
 
     io.b_imem.write := DontCare
     io.b_imem.write.valid := false.B
-    io.b_imem.read.ready := r_done & (io.b_out.ready | io.i_redirect | r_abort)
+    io.b_imem.read.ready := r_done & (io.b_out.ready | io.i_redirect | r_abort | w_dead)
 
-    io.b_out.valid := r_done & io.b_imem.read.valid & ~io.i_redirect & ~r_abort
+    when (r_done & io.b_imem.read.valid & ~io.b_out.ready & ~r_abort & ~io.i_redirect) {
+      r_dead := r_dead + 1.U
+    }.otherwise {
+      r_dead := 0.U
+    }
+
+    io.b_out.valid := r_done & io.b_imem.read.valid & ~io.i_redirect & ~r_abort & ~w_dead
     io.b_out.ctrl.get := io.b_imem.read.data
 
     when (r_done) {
-      r_done := ~(io.b_imem.read.valid & (io.b_out.ready | io.i_redirect | r_abort))
+      r_done := ~(io.b_imem.read.valid & (io.b_out.ready | io.i_redirect | r_abort | w_dead))
       r_abort := (~r_abort & io.i_redirect & ~io.b_imem.read.valid) | (r_abort & ~io.b_imem.read.valid)
     }.otherwise {
       r_done := io.b_imem.req.ready

@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-02-06 03:47:07 pm                                       *
+ * Last Modified: 2024-04-11 09:39:27 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -25,24 +25,24 @@ import emmk.common.gen._
 // ******************************
 //              PORT            
 // ******************************
-class FpuReqCtrlBus extends Bundle {
+class FpuReqCtrlBus(nAddrBit: Int) extends Bundle {
+	val pc = UInt(nAddrBit.W)
 	val code = UInt(CODE.NBIT.W)
 	val op = Vec(3, UInt(OP.NBIT.W))
 	val rs = Vec(3, UInt(5.W))
 	val rd = UInt(5.W)
-	val wb = Bool()
 }
 
 class FpuReqDataBus(nDataBit: Int) extends Bundle {
 	val src = Vec(3, UInt(nDataBit.W))
 }
 
-class FpuReqIO(p: GenParams, nDataBit: Int) extends GenRVIO(p, new FpuReqCtrlBus(), new FpuReqDataBus(nDataBit))
+class FpuReqIO(p: GenParams, nAddrBit: Int, nDataBit: Int) extends GenRVIO(p, new FpuReqCtrlBus(nAddrBit), new FpuReqDataBus(nDataBit))
 
 class FpuAckIO(p: GenParams, nDataBit: Int) extends GenRVIO(p, UInt(0.W), UInt(nDataBit.W))
 
-class FpuIO(p: GenParams, nDataBit: Int) extends Bundle {
-	val req = Flipped(new FpuReqIO(p, nDataBit))
+class FpuIO(p: GenParams, nAddrBit: Int, nDataBit: Int) extends Bundle {
+	val req = Flipped(new FpuReqIO(p, nAddrBit, nDataBit))
 	val ack = new FpuAckIO(p, nDataBit)
 }
 
@@ -92,7 +92,7 @@ class BypassBus(p: FpuParams) extends Bundle {
 //          CONTROL BUS            
 // ******************************
 class InfoBus(p: FpuParams) extends Bundle {
-	val wb = Bool()
+	val pc = UInt(p.nAddrBit.W)
 	val int = Bool()
 }
 
@@ -116,20 +116,32 @@ class ShiftCtrlBus(p: FpuParams) extends Bundle {
 	val info = new InfoBus(p)
 
 	val ex = new ExBus(p)
+	val mem = Bool()
 	val fpr = new FprBus(p)
+
+	def ld(): Bool = mem & fpr.en
+	def st(): Bool = mem & ~fpr.en
 }
 
 class ExCtrlBus(p: FpuParams) extends Bundle {
 	val info = new InfoBus(p)
 
 	val ex = new ExBus(p)
+	val mem = Bool()
 	val fpr = new FprBus(p)
+
+	def ld(): Bool = mem & fpr.en
+	def st(): Bool = mem & ~fpr.en
 }
 
 class WbCtrlBus(p: FpuParams) extends Bundle {
 	val info = new InfoBus(p)
 
+	val mem = Bool()
 	val fpr = new FprBus(p)
+
+	def ld(): Bool = mem & fpr.en
+	def st(): Bool = mem & ~fpr.en
 }
 
 // ******************************

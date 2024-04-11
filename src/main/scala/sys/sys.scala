@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 11:01:49 am                                       *
+ * Last Modified: 2024-04-11 10:15:05 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -37,9 +37,15 @@ class Sys(p: SysParams) extends Module {
 
   if (p.useFpu) m_betizu.io.b_fpu.get <> m_fpu.get.io.b_pipe
 
-  m_cross.io.b_m(0) <> m_betizu.io.b_dmem
-  m_cross.io.b_m(1) <> m_betizu.io.b_imem
-  if (p.useFpu) m_cross.io.b_m(2) <> m_fpu.get.io.b_mem
+  var v_m: Int = 0
+  if (p.useFpu) {
+    m_cross.io.b_m(v_m) <> m_fpu.get.io.b_mem
+    v_m = v_m + 1
+  }
+  m_cross.io.b_m(v_m + 0) <> m_betizu.io.b_dmem
+  m_cross.io.b_m(v_m + 1) <> m_betizu.io.b_imem
+  v_m = v_m + 2
+
   m_cross.io.b_s(0) <> m_rom.io.b_port(0)
   m_cross.io.b_s(1) <> m_ram.io.b_port(0)  
 
@@ -47,6 +53,8 @@ class Sys(p: SysParams) extends Module {
   //           SIMULATION
   // ******************************
   if (p.isSim) {
+    dontTouch(m_cross.io)
+    
     io.o_sim.get.gpr := m_betizu.io.o_sim.get
     if (p.useFpu) io.o_sim.get.fpr.get := m_fpu.get.io.o_sim.get
   }  

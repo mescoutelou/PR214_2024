@@ -3,7 +3,7 @@
  * Created Date: 2024-04-10 02:01:02 pm
  * Author: Mathieu Escouteloup
  * -----
- * Last Modified: 2024-04-10 02:29:43 pm
+ * Last Modified: 2024-04-11 10:47:42 am
  * Modified By: Mathieu Escouteloup
  * Email: mathieu.escouteloup@ims-bordeaux.com
  * -----
@@ -15,6 +15,7 @@
 
 //                      S   E               M
 //                      ||------||---------------------|
+#define V32_N0_5000   0b10111111000000000000000000000000
 #define V32_0_5000    0b00111111000000000000000000000000
 #define V32_1_0000    0b00111111100000000000000000000000
 #define V32_1_1250    0b00111111100100000000000000000000

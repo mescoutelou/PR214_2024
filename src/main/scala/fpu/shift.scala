@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-02-06 03:59:37 pm                                       *
+ * Last Modified: 2024-04-11 11:15:23 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -36,6 +36,7 @@ class ShiftStage(p: FpuParams) extends Module {
 
   val w_src = Wire(Vec(3, new FloatBus(p.nExponentBit, p.nMantissaBit + 1)))
   val w_uop = Wire(UInt(UOP.NBIT.W))
+  val w_addr = Wire(UInt(p.nAddrBit.W))
   val w_sign_same = Wire(Bool())
 	val w_equ = Wire(Vec(3, Bool()))
 	val w_agreat = Wire(Bool())
@@ -128,6 +129,14 @@ class ShiftStage(p: FpuParams) extends Module {
     }
   }
 
+  // ******************************
+  //            ADDRESS
+  // ******************************
+  w_addr := io.b_in.data.get.src(0).asUInt + io.b_in.data.get.src(2).asUInt
+  when (io.b_in.ctrl.get.mem) {
+    w_src(0) := w_addr.asTypeOf(w_src(0))
+  }
+  
   // ******************************
   //             BYPASS
   // ******************************

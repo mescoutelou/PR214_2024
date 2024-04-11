@@ -3,7 +3,7 @@
  * Created Date: 2023-02-26 09:08:32 pm
  * Author: Mathieu Escouteloup
  * -----
- * Last Modified: 2024-04-10 02:38:12 pm
+ * Last Modified: 2024-04-11 10:18:33 am
  * Modified By: Mathieu Escouteloup
  * -----
  * License: See LICENSE.md
@@ -40,6 +40,10 @@ main:
   fadd.s ft1, ft0, ft0
   nop
   nop
+  nop
+  nop
+  nop
+  nop
   fadd.s ft2, ft1, ft0
   nop
   rdcycle x10
@@ -63,11 +67,21 @@ main:
   li x10, V32_2_2500
   fmv.w.x f18, x10
 
+  la x10, rodata0
+  flw f19, 0(x10)
+
+  jal func
+
 ## ******************************
 ##             END
 ## ******************************
 .globl _end
 _end:
+  nop
+  nop
+  nop
+  nop
+  nop
   li x31, 0x80000000
 _end_loop:
   j _end
@@ -75,6 +89,9 @@ _end_loop:
 ## ******************************
 ##             DATA
 ## ******************************
+.section .rodata
+rodata0: .word 0b01000000011000000000000000000000
+
 .section .data
 data0: .word 0x00000000
 data1: .word 0x00000000

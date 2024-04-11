@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 10:42:52 am                                       *
+ * Last Modified: 2024-04-11 11:14:59 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -35,7 +35,7 @@ object TABLEEXT32I extends TABLEEXT {
               Array[(BitPat, List[UInt])](
   //                       is Pack ?  Ext unit       Code             S1 ?          S2 ?          S3 ?
   //                           |         |             |               |             |             |
-    BASE.ADD        -> List(  0.B,   EXT.NONE,       0.U,            0.U,          0.U,          0.U))
+    BASE.ADD        -> List(  0.B,   EXT.NONE,       0.U,             0.U,          0.U,          0.U))
 }
 
 object TABLEEXT32F extends TABLEEXT {
@@ -43,6 +43,9 @@ object TABLEEXT32F extends TABLEEXT {
               Array[(BitPat, List[UInt])](
   //                       is Pack ?  Ext unit       Code             S1 ?          S2 ?          S3 ?
   //                           |         |             |               |             |             |
-    BASE.FMVWX      -> List(  0.B,   EXT.FPU,        FPUCODE.MVWX,   FPUOP.INT,    0.U,          0.U),
-    BASE.FADD       -> List(  1.B,   EXT.FPU,        FPUCODE.ADD,    FPUOP.FLOAT,  FPUOP.FLOAT,  0.U))
+    BASE.FLW        -> List(  0.B,   EXT.FPU,        FPUCODE.FLW,     FPUOP.INT,    0.U,          FPUOP.INT),
+    BASE.FSW        -> List(  0.B,   EXT.FPU,        FPUCODE.FSW,     FPUOP.INT,    FPUOP.FLOAT,  FPUOP.INT),
+    BASE.FADDS      -> List(  1.B,   EXT.FPU,        FPUCODE.ADD,     FPUOP.FLOAT,  FPUOP.FLOAT,  0.U),
+    BASE.FSUBS      -> List(  1.B,   EXT.FPU,        FPUCODE.SUB,     FPUOP.FLOAT,  FPUOP.FLOAT,  0.U),
+    BASE.FMVWX      -> List(  0.B,   EXT.FPU,        FPUCODE.MVWX,    FPUOP.INT,    0.U,          0.U))
 }

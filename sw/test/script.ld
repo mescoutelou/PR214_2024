@@ -3,7 +3,7 @@
  * Created Date: 2023-02-26 09:08:32 pm
  * Author: Mathieu Escouteloup
  * -----
- * Last Modified: 2024-04-08 02:44:27 pm
+ * Last Modified: 2024-04-11 10:30:32 am
  * Modified By: Mathieu Escouteloup
  * -----
  * License: See LICENSE.md
@@ -30,11 +30,12 @@ SECTIONS
   } > ROM
 
   .rodata : { 
-    *(.rodata) 
+    *(.rodata*) 
+    *(.srodata*) 
   } > ROM
   
   .data : { 
-    *(.data) 
+    *(.data*) 
   } > RAM
   
   .stack (NOLOAD):

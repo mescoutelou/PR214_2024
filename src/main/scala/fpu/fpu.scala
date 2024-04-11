@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-01-23 02:44:45 pm                                       *
+ * Last Modified: 2024-04-11 10:11:30 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -25,7 +25,7 @@ import emmk.common.mbus._
 
 class Fpu(p: FpuParams) extends Module {
   val io = IO(new Bundle {
-    val b_pipe = new FpuIO(p, p.nDataBit)
+    val b_pipe = new FpuIO(p, p.nAddrBit, p.nDataBit)
 
     val b_mem = new MBusIO(p.pDBus)
 
@@ -44,8 +44,11 @@ class Fpu(p: FpuParams) extends Module {
   m_shift.io.b_in <> m_rr.io.b_out
 
   m_ex.io.b_in <> m_shift.io.b_out
+  m_ex.io.b_mem <> io.b_mem.req
 
   m_wb.io.b_in <> m_ex.io.b_out
+  m_wb.io.b_mem.read <> io.b_mem.read
+  m_wb.io.b_mem.write <> io.b_mem.write
   m_wb.io.b_pipe <> io.b_pipe.ack
 
   var v_nbyp: Int = 0
@@ -61,8 +64,6 @@ class Fpu(p: FpuParams) extends Module {
   }
   
   m_fpr.io.b_write <> m_wb.io.b_rd
-
-  io.b_mem := DontCare
 
   // ******************************
   //           SIMULATION

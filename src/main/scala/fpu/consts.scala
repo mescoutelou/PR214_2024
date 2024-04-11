@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 11:46:36 am                                       *
+ * Last Modified: 2024-04-11 09:26:51 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -38,6 +38,8 @@ object CODE {
 	def LE 			= 10.U(NBIT.W)
 	def CLASS 	= 11.U(NBIT.W)
 
+	def FLW			= 13.U(NBIT.W)
+	def FSW			= 14.U(NBIT.W)
 	def FCVTSW	= 15.U(NBIT.W)
 }
 

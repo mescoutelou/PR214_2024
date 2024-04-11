@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 10:41:58 am                                       *
+ * Last Modified: 2024-04-10 04:50:12 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -29,7 +29,7 @@ trait BetizuParams extends GenParams {
 
   def pcBoot: String
   
-  def usePack: Boolean = true
+  def usePack: Boolean = false
   def nInstrBit: Int = 32
   def nInstrByte: Int = (nInstrBit / 8).toInt
   def nFetchBit: Int = {

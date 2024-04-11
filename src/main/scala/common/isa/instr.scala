@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 01:45:32 pm                                       *
+ * Last Modified: 2024-04-11 10:40:17 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -71,7 +71,10 @@ object INSTR {
   // ******************************
   //             RV32F
   // ******************************
-  def FADD      = BitPat("b0000000??????????????????1010011")
+  def FLW       = BitPat("b?????????????????010?????0000111")
+  def FSW       = BitPat("b?????????????????010?????0100111")
+  def FADDS     = BitPat("b0000000??????????????????1010011")
+  def FSUBS     = BitPat("b0000100??????????????????1010011")
   def FMVWX     = BitPat("b111100000000?????000?????1010011")
 
   // ******************************

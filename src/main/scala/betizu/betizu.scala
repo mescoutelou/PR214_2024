@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 01:36:55 pm                                       *
+ * Last Modified: 2024-04-11 09:37:36 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -30,7 +30,7 @@ class Betizu(p: BetizuParams) extends Module {
   val io = IO(new Bundle {    
     val b_imem = new MBusIO(p.pL0IBus)
 
-    val b_fpu = if (p.useFpu) Some(Flipped(new FpuIO(p, p.nDataBit))) else None
+    val b_fpu = if (p.useFpu) Some(Flipped(new FpuIO(p, p.nAddrBit, p.nDataBit))) else None
     val b_dmem = new MBusIO(p.pL0DBus)
 
     val o_sim = if (p.isSim) Some(Output(Vec(32, UInt(p.nDataBit.W)))) else None  
