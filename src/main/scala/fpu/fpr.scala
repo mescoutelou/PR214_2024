@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-02-06 10:52:04 am                                       *
+ * Last Modified: 2024-04-15 11:36:49 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -61,7 +61,7 @@ class Fpr(p: FpuParams) extends Module {
   // ******************************
   if (p.isSim) {
     for (f <- 0 until 32) {
-      io.o_sim.get(f) := r_fpr(f).toUInt()
+      io.o_sim.get(f) := r_fpr(f).toUInt(p.nExponentBit, p.nMantissaBit)
     }
     dontTouch(io.o_sim.get)
   }  

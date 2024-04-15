@@ -46,6 +46,9 @@ BENCH_I_LIST = 	riscv32-i-lui \
 								riscv32-i-app-br-now \
 								riscv32-i-app-array
 
+BENCH_F_LIST = 	riscv32-f-fadds \
+								riscv32-f-fsubs
+
 BLACK=\033[1;30m
 RED=\033[1;31m
 GREEN=\033[1;32m
@@ -62,9 +65,14 @@ sys-build:
 ${BENCH_I_LIST}:
 	./sim/sys/sys-exe --rom sw/test/hex/$@.boot8.hex --vcd sim/sys/vcd/$@.vcd --ntrigger 2000 | tee -a ${PRJ_DIR}/sim/sys/test.log
 
+${BENCH_F_LIST}:
+	./sim/sys/sys-exe --rom sw/test/hex/$@.boot8.hex --vcd sim/sys/vcd/$@.vcd --ntrigger 2000 | tee -a ${PRJ_DIR}/sim/sys/test.log
+
 sys-test-int: ${BENCH_I_LIST}
 
-sys-test: sys-test-int
+sys-test-float: ${BENCH_F_LIST}
+
+sys-test: sys-build sys-test-int sys-test-float
 	@echo "${PURPLE}******************************${NOCOLOR}"
 	@echo "${NOCOLOR}Generated test reports: `grep -ir "TEST REPORT" --include="test.log" sim/* | wc -l` ${NOCOLOR}"
 	@echo "${RED}Failed: `grep -ir "TEST REPORT: FAILED" --include="test.log" sim/* | wc -l` ${NOCOLOR}"

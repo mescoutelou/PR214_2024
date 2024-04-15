@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 11:14:32 am                                       *
+ * Last Modified: 2024-04-15 11:14:12 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -103,6 +103,7 @@ object TABLEINT32F extends TABLEINT {
     BASE.FSW          -> List(  1.B,  0.B,    0.B,    1.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  1.B,  0.B,  OP.XREG,  OP.X,     OP.IMM1,  IMM.isS,  IMM.X),
     BASE.FADDS        -> List(  1.B,  0.B,    0.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
     BASE.FSUBS        -> List(  1.B,  0.B,    0.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
+    BASE.FMVXW        -> List(  1.B,  0.B,    1.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.X,     OP.X,     OP.X,     IMM.X,    IMM.X),
     BASE.FMVWX        -> List(  1.B,  0.B,    0.B,    0.B,  0.B,  INTUNIT.X,        INTUOP.X,           0.B,  0.B,  0.B,  OP.XREG,  OP.X,     OP.X,     IMM.X,    IMM.X))
 }
 

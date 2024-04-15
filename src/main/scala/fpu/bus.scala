@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 09:39:27 am                                       *
+ * Last Modified: 2024-04-15 11:59:41 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -54,14 +54,18 @@ class FloatBus(nExponentBit: Int, nMantissaBit: Int) extends Bundle {
 	val expo = UInt(nExponentBit.W)
 	val mant = UInt(nMantissaBit.W)
 
-	def toUInt(): UInt = {
-		return Cat(sign, expo, mant)
+	def toUInt(nExponentBit: Int, nMantissaBit: Int): UInt = {
+		return Cat(sign, expo(nExponentBit - 1, 0), mant(nMantissaBit - 1, 0))
 	}
 
 	def fromUInt(uint: UInt): Unit = {
 		sign := uint(nExponentBit + nMantissaBit)
 		expo := uint(nMantissaBit + nExponentBit - 1, nMantissaBit)
 		mant := uint(nMantissaBit - 1, 0)
+	}
+
+	def isZero(): Bool = {
+		return (expo === 0.U) & (mant === 0.U)
 	}
 }
 

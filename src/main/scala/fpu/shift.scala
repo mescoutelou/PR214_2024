@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 11:15:23 am                                       *
+ * Last Modified: 2024-04-15 12:07:11 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -99,7 +99,7 @@ class ShiftStage(p: FpuParams) extends Module {
   for (s <- 0 until 3) {
     w_src(s).sign := io.b_in.data.get.src(s).sign
     w_src(s).expo := (io.b_in.data.get.src(s).expo + w_expo_diff(s))
-    w_src(s).mant := (Cat(1.U(1.W), io.b_in.data.get.src(s).mant) >> w_expo_diff(s))   
+    w_src(s).mant := (Cat(1.U(1.W), io.b_in.data.get.src(s).mant) >> w_expo_diff(s))      
   }
 
   // Addition for negative number
@@ -126,6 +126,13 @@ class ShiftStage(p: FpuParams) extends Module {
           w_src(1).mant := (~(Cat(1.U(1.W), io.b_in.data.get.src(1).mant) >> w_expo_diff(1)) + 1.U)
         }
       }
+    }
+  }
+
+  // Zero
+  for (s <- 0 until 3) {
+    when (io.b_in.data.get.src(s).isZero()) {
+      w_src(s) := NAN.ZEROP(p.nExponentBit, p.nMantissaBit)
     }
   }
 

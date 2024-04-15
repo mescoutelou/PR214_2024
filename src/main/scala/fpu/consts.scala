@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 09:26:51 am                                       *
+ * Last Modified: 2024-04-15 11:59:29 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -31,7 +31,8 @@ object CODE {
 	def SUB			= 2.U(NBIT.W)
 	def MIN			= 3.U(NBIT.W)
 	def MAX			= 4.U(NBIT.W)
-	def MVWX		= 5.U(NBIT.W)
+	def MVXW		= 5.U(NBIT.W)
+	def MVWX		= 6.U(NBIT.W)
 
 	def EQ 			= 8.U(NBIT.W)
 	def LT 			= 9.U(NBIT.W)

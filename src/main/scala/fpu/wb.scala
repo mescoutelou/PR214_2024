@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 10:10:34 am                                       *
+ * Last Modified: 2024-04-15 11:58:30 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -57,12 +57,14 @@ class WbStage(p: FpuParams) extends Module {
   w_llone := PriorityEncoder(Reverse(w_low))
 
   w_res := io.b_in.data.get.res
-  when (~w_hzero) {
-    w_res.expo := io.b_in.data.get.res.expo + ((p.nMantissaBit - 1).U - w_hlone)
-    w_res.mant := (io.b_in.data.get.res.mant >> ((p.nMantissaBit - 1).U - w_hlone))
-  }.otherwise {
-    w_res.expo := io.b_in.data.get.res.expo - (w_llone + 1.U)
-    w_res.mant := (io.b_in.data.get.res.mant << (w_llone + 1.U))
+  when (~io.b_in.data.get.res.isZero()) {
+    when (~w_hzero) {
+      w_res.expo := io.b_in.data.get.res.expo + ((p.nMantissaBit - 1).U - w_hlone)
+      w_res.mant := (io.b_in.data.get.res.mant >> ((p.nMantissaBit - 1).U - w_hlone))
+    }.otherwise {
+      w_res.expo := io.b_in.data.get.res.expo - (w_llone + 1.U)
+      w_res.mant := (io.b_in.data.get.res.mant << (w_llone + 1.U))
+    }
   }
 
   // ******************************
@@ -101,9 +103,9 @@ class WbStage(p: FpuParams) extends Module {
 
   io.b_pipe.valid := io.b_in.valid & ~w_wait_mem
   when (io.b_in.ctrl.get.info.int) {
-    io.b_pipe.data.get := io.b_in.data.get.res.toUInt()
+    io.b_pipe.data.get := io.b_in.data.get.res.toUInt(p.nExponentBit, p.nMantissaBit)
   }.otherwise {
-    io.b_pipe.data.get := w_res.toUInt()
+    io.b_pipe.data.get := w_res.toUInt(p.nExponentBit, p.nMantissaBit)
   }
 
   // ******************************

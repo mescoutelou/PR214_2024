@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 10:13:49 am                                       *
+ * Last Modified: 2024-04-15 09:52:39 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -27,25 +27,9 @@ import emmk.fpu._
 trait SysParams {
 	def isSim: Boolean
 
-	def pcBoot: String
-
-	def nAddrBit: Int
-
+	def pBetizu: BetizuParams
 	def useFpu: Boolean
-
-	def pBetizu: BetizuParams = new BetizuConfig (
-		isSim = isSim,
-  	pcBoot = pcBoot,
-		useIfStage = true,
-		useFpu = useFpu
-	)
-
-	def pFpu: FpuParams = new FpuConfig (
-		isSim = isSim,
-		nAddrBit = nAddrBit,
-		useShiftStage = true,
-		useExStage = true
-	)
+	def pFpu: FpuParams
 
   def pBPort: Array[MBusParams] = {
     var pb = Array[MBusParams]()
@@ -105,9 +89,7 @@ trait SysParams {
 case class SysConfig (
 	isSim: Boolean, 
 
-	pcBoot: String,
-	
-	nAddrBit: Int,
-
-	useFpu: Boolean
+	pBetizu: BetizuParams,
+	useFpu: Boolean,
+	pFpu: FpuParams
 ) extends SysParams

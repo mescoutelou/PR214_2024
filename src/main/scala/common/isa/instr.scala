@@ -3,12 +3,12 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 10:40:17 am                                       *
+ * Last Modified: 2024-04-15 11:12:52 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -75,6 +75,7 @@ object INSTR {
   def FSW       = BitPat("b?????????????????010?????0100111")
   def FADDS     = BitPat("b0000000??????????????????1010011")
   def FSUBS     = BitPat("b0000100??????????????????1010011")
+  def FMVXW     = BitPat("b111000000000?????000?????1010011")
   def FMVWX     = BitPat("b111100000000?????000?????1010011")
 
   // ******************************

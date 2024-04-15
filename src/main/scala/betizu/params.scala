@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 02:04:04 pm                                       *
+ * Last Modified: 2024-04-15 09:56:44 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -29,7 +29,7 @@ trait BetizuParams extends GenParams {
 
   def pcBoot: String
   
-  def usePack: Boolean = false
+  def usePack: Boolean
   def nInstrBit: Int = 32
   def nInstrByte: Int = (nInstrBit / 8).toInt
   def nFetchBit: Int = {
@@ -67,13 +67,13 @@ trait BetizuParams extends GenParams {
 
   def pL0IBus: MBusParams = pL0IBuffer.pMBus
 
-  def useL0IBuffer: Boolean = true
-  def nL0IBufferDepth: Int = 2
+  def useL0IBuffer: Boolean
+  def nL0IBufferDepth: Int
   def useIfStage: Boolean
   def useIdStage: Boolean = false
-  def nExBufferDepth: Int = 2
+  def nExBufferDepth: Int
   def useFpu: Boolean
-  def useGprBypass: Boolean = true
+  def useGprBypass: Boolean
   def nGprBypass: Int = {
     if (useIdStage) {
       return nExBufferDepth + 1
@@ -104,6 +104,12 @@ case class BetizuConfig (
 
   pcBoot: String,
 
+  useL0IBuffer: Boolean,
+  nL0IBufferDepth: Int,
   useIfStage: Boolean,
-  useFpu: Boolean
+
+  usePack: Boolean,
+  nExBufferDepth: Int,
+  useFpu: Boolean,
+  useGprBypass: Boolean
 ) extends BetizuParams

@@ -17,7 +17,7 @@ export TOOLCHAIN ISA PRJ_DIR CC CFLAGS LD ELF2HEX HW_CFG BOOT_SECTIONS BOOT_OFFS
 
 all: all32
 
-all32: rv32i rv32m rv32a rv32c rv32b rv32zicond rv32zifencei
+all32: rv32i rv32m rv32a rv32c rv32f rv32b rv32zicond rv32zifencei
 
 rv32i: build-dir
 	@${MAKE} -C src/test/rv32i all
@@ -33,6 +33,9 @@ rv32c: build-dir
 
 rv32b: build-dir
 	@${MAKE} -C src/test/rv32b all
+
+rv32f: build-dir
+	@${MAKE} -C src/test/rv32f all
 
 rv32zicond:	build-dir
 	@${MAKE} -C src/test/rv32zicond all

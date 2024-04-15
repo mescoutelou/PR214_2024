@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 09:37:36 am                                       *
+ * Last Modified: 2024-04-15 11:01:50 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -51,11 +51,7 @@ class Betizu(p: BetizuParams) extends Module {
   // ******************************
   //            ID STAGE
   // ******************************
-  if (p.useIdStage) {
-    m_id.io.i_flush := m_ex.io.o_br_new.valid
-  } else {
-    m_id.io.i_flush := false.B
-  }
+  m_id.io.i_flush := m_ex.io.o_br_new.valid
   m_id.io.b_in <> m_if.io.b_out
   m_id.io.b_rs <> m_gpr.io.b_read
 
@@ -63,13 +59,27 @@ class Betizu(p: BetizuParams) extends Module {
   //            EX STAGE
   // ******************************
   m_ex.io.b_in <> m_id.io.b_out
-  if (p.useIdStage) {
-    m_ex.io.i_br_next := m_id.io.o_br_next
-  } else if (p.useIfStage) {
-    m_ex.io.i_br_next := m_if.io.o_br_next
+
+  if (p.usePack) {
+    when (m_id.io.o_br_next.valid) {
+      m_ex.io.i_br_next := m_id.io.o_br_next
+    }.otherwise {
+      if (p.useIfStage) {
+        m_ex.io.i_br_next := m_if.io.o_br_next
+      } else {
+        m_ex.io.i_br_next.valid := false.B
+        m_ex.io.i_br_next := DontCare
+      }
+    }
   } else {
-    m_ex.io.i_br_next := DontCare
-    m_ex.io.i_br_next.valid := false.B
+    if (p.useIdStage) {
+      m_ex.io.i_br_next := m_id.io.o_br_next
+    } else if (p.useIfStage) {
+      m_ex.io.i_br_next := m_if.io.o_br_next
+    } else {
+      m_ex.io.i_br_next.valid := false.B
+      m_ex.io.i_br_next := DontCare
+    }    
   }
   if (p.useFpu) m_ex.io.b_fpu.get <> io.b_fpu.get
   m_ex.io.b_dmem <> io.b_dmem

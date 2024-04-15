@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 02:41:06 pm                                       *
+ * Last Modified: 2024-04-15 10:58:03 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -50,7 +50,11 @@ class IdStage(p: BetizuParams) extends Module {
   // ******************************
   //             STATUS            
   // ******************************
-  w_flush := io.i_flush
+  if (p.useIdStage) {
+    w_flush := io.i_flush
+  } else {
+    w_flush := false.B
+  }  
 
   // ******************************
   //            DECODER
@@ -162,6 +166,10 @@ class IdStage(p: BetizuParams) extends Module {
         r_part := ~w_pack
       }
     }
+
+    when (io.i_flush) {
+      r_part := false.B
+    }
   } else {
     w_lock_part := false.B
   }
@@ -223,13 +231,18 @@ class IdStage(p: BetizuParams) extends Module {
   // ------------------------------
   //             LOCK
   // ------------------------------
-  io.b_in.ready := w_flush | ~(w_wait | w_lock_out | w_lock_part)
+  io.b_in.ready := io.i_flush | ~(w_wait | w_lock_out | w_lock_part)
 
   // ******************************
   //          NEXT BRANCH
   // ******************************
   io.o_br_next.valid := io.b_in.valid
   io.o_br_next.addr := w_fetch(0).pc
+  if (p.usePack) {
+    when (r_part) {
+      io.o_br_next.addr := w_fetch(1).pc
+    }
+  }
 
   // ******************************
   //           SIMULATION
