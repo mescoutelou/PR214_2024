@@ -15,6 +15,10 @@ class Decodeur extends Module {
     val o_imm = Output(UInt(12.W))
     val o_rd = Output(UInt(5.W))
 
+    val o_wEnable = Output(Bool())
+    val o_rEnable = Output(Bool())
+
+
     // Vérification de la validité de l'instruction
     //val o_isValid = Output(Bool())Gains
   })  

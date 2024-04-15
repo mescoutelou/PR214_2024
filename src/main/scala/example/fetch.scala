@@ -3,7 +3,13 @@ import chisel3._
 import chisel3.util._
 import prj.common.gen._
 
+/* signaux manquants bus mémoire:
+  memWenable memRenable
+  ready
+  is valid
+  size
 
+*/
 class fetch extends Module {
     val io = IO(new Bundle{
         // Adresse du saut
