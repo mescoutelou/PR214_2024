@@ -39,8 +39,8 @@ class ShiftStage(p: FpuParams) extends Module {
   val w_addr = Wire(UInt(p.nAddrBit.W))
   val w_sign_same = Wire(Bool())
 	val w_equ = Wire(Vec(3, Bool()))
-	val w_agreat = Wire(Bool())
-	val w_sgreat = Wire(Bool())
+	val w_agreat = Wire(Bool())       // Absolute greatest
+	val w_sgreat = Wire(Bool())       // Signed greatest
 	val w_neg = Wire(Vec(3, Bool()))
 
   // ******************************
@@ -50,14 +50,24 @@ class ShiftStage(p: FpuParams) extends Module {
   w_equ(1) := (io.b_in.data.get.src(0).expo === io.b_in.data.get.src(1).expo)
   w_equ(2) := (io.b_in.data.get.src(0).mant === io.b_in.data.get.src(1).mant)
 
+//  when (w_equ(1)) {
+//    when (w_equ(2)) {
+//      w_agreat := false.B
+//    }.otherwise {
+//      w_agreat := (~io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).mant > io.b_in.data.get.src(1).mant)) | (io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).mant < io.b_in.data.get.src(1).mant))
+//    }
+//  }.otherwise {
+//    w_agreat := (~io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).expo > io.b_in.data.get.src(1).expo)) | (io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).expo < io.b_in.data.get.src(1).expo))
+//  }
+
   when (w_equ(1)) {
     when (w_equ(2)) {
-      w_agreat := false.B
+      w_agreat := true.B
     }.otherwise {
-      w_agreat := (~io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).mant > io.b_in.data.get.src(1).mant)) | (io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).mant < io.b_in.data.get.src(1).mant))
+      w_agreat := (io.b_in.data.get.src(0).mant > io.b_in.data.get.src(1).mant)
     }
   }.otherwise {
-    w_agreat := (~io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).expo > io.b_in.data.get.src(1).expo)) | (io.b_in.data.get.src(0).sign & (io.b_in.data.get.src(0).expo < io.b_in.data.get.src(1).expo))
+    w_agreat := (io.b_in.data.get.src(0).expo > io.b_in.data.get.src(1).expo)
   }
 
   when (w_equ(0)) {
@@ -123,7 +133,22 @@ class ShiftStage(p: FpuParams) extends Module {
           w_src(0).mant := (~(Cat(1.U(1.W), io.b_in.data.get.src(0).mant) >> w_expo_diff(0)) + 1.U)
         }.otherwise {
           w_neg(1) := true.B
+          val w_tmp = Wire(UInt((p.nMantissaBit + 1).W))
+          val w_ntmp = Wire(UInt((p.nMantissaBit + 1).W))
+          val w_ntmp1 = Wire(UInt((p.nMantissaBit + 1).W))
+          val w_ntmpall = Wire(UInt((p.nMantissaBit + 1).W))
+
+          w_tmp := (Cat(1.U(1.W), io.b_in.data.get.src(1).mant) >> w_expo_diff(1))
+          w_ntmp := ~w_tmp
+          w_ntmp1 := w_ntmp + 1.U
+
           w_src(1).mant := (~(Cat(1.U(1.W), io.b_in.data.get.src(1).mant) >> w_expo_diff(1)) + 1.U)
+          w_ntmpall := (~(Cat(1.U(1.W), io.b_in.data.get.src(1).mant) >> w_expo_diff(1)) + 1.U)
+
+          dontTouch(w_tmp)
+          dontTouch(w_ntmp)
+          dontTouch(w_ntmp1)
+          dontTouch(w_ntmpall)
         }
       }
     }
@@ -131,8 +156,13 @@ class ShiftStage(p: FpuParams) extends Module {
 
   // Zero
   for (s <- 0 until 3) {
+    val w_szero = Wire(Bool())
+    
+    w_szero := io.b_in.data.get.src(s).isZero()
+    dontTouch(w_szero)
     when (io.b_in.data.get.src(s).isZero()) {
-      w_src(s) := NAN.ZEROP(p.nExponentBit, p.nMantissaBit)
+      w_src(s) := NAN.ZEROP(p.nExponentBit, p.nMantissaBit + 1)
+      w_neg(s) := false.B
     }
   }
 
@@ -180,7 +210,10 @@ class ShiftStage(p: FpuParams) extends Module {
   //           SIMULATION
   // ******************************
   if (p.isSim) {
-
+    dontTouch(w_agreat)
+    dontTouch(w_sgreat)
+    dontTouch(w_neg)
+    dontTouch(w_sign_same)
   }  
 }
 

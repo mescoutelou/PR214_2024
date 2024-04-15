@@ -36,13 +36,14 @@ class Alu(p: FpuParams) extends Module {
   for (s <- 0 until 3) {
     w_src(s).sign := io.b_req.data.get.src(s).sign
     w_src(s).expo := io.b_req.data.get.src(s).expo
+//    w_src(s).mant := io.b_req.data.get.src(s).mant
     w_src(s).mant := Cat(Fill(p.nMantissaBit - 1, io.b_req.ctrl.get.neg(s)), io.b_req.data.get.src(s).mant)
   }
 
   // ******************************
   //              ALU
   // ******************************
-  w_res := NAN.ZEROP(p.nExponentBit, p.nMantissaBit * 2)
+  w_res := DontCare
 
   switch (io.b_req.ctrl.get.uop) {
     is (UOP.MV) {
@@ -56,6 +57,9 @@ class Alu(p: FpuParams) extends Module {
       }
       w_res.expo := w_src(0).expo
       w_res.mant := w_src(0).mant + w_src(1).mant
+      when ((w_src(0).sign ^ w_src(1).sign) & (w_src(0).mant === w_src(1).mant)) {
+        w_res := NAN.ZEROP(p.nExponentBit, p.nMantissaBit * 2)
+      }
     }
     is (UOP.MIN) {
       when (io.b_req.ctrl.get.sgreat) {
