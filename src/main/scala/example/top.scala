@@ -29,7 +29,7 @@ class top extends Module {
 */
   ALU.io.i_rs1 := Mux(GPR.io.i_read_reg1 === Decodeur.io.o_rd, ALU.io.o_rd,GPR.io.o_data_reg1)
   ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,Mux(GPR.io.i_read_reg2 === Decodeur.io.o_rd, ALU.io.o_rd,GPR.io.o_data_reg2),Decodeur.io.o_imm)
-
+  
   //ALU.io.i_rs1 := GPR.io.o_data_reg1
   //ALU.io.i_operande := GPR.io.o_data_reg2
   ALU.io.funct_sel := Decodeur.io.funct_sel
@@ -42,8 +42,7 @@ class top extends Module {
   GPR.io.i_read_reg2 := Decodeur.io.o_rs2
   
   Decodeur.io.i_instruct := io.i_instr
-  Decodeur.io.o_rEnable := DontCare
-  Decodeur.io.o_wEnable := DontCare
+
 }
 
 
