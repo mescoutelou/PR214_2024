@@ -7,7 +7,7 @@ import prj.common.gen._
   memWenable memRenable
   ready
   is valid
-  size
+  size                      
 
 */
 class fetch extends Module {

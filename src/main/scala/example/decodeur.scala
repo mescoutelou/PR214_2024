@@ -10,11 +10,13 @@ class Decodeur extends Module {
     val funct_sel = Output(UInt(5.W))
     val o_rs1 = Output(UInt(5.W))
     val o_rs2 = Output(UInt(5.W))
+
     // Selectionne immédiat ou registre
     val o_sel_operande = Output(Bool())
     val o_imm = Output(UInt(12.W))
     val o_rd = Output(UInt(5.W))
 
+    val o_GPRwrite = Output(Bool())
     val o_wEnable = Output(Bool())
     val o_rEnable = Output(Bool())
 
@@ -68,14 +70,36 @@ when (isValid === true.B){
                 io.o_rs2 := io.i_instruct(24, 20)
                 io.o_rd := io.i_instruct(11, 7)
 
-
-
                 io.funct_sel := w_decoder(1)
                 io.o_sel_operande := DontCare
+
                 switch(w_decoder(2)){
                   is(0.U) {io.o_sel_operande := false.B}
                   is(1.U) {io.o_sel_operande := true.B}
                 }
+
+                //Signaux de contrôle selon op code
+
+                // Memory Write Enable (wEnable)
+                //OP code de SW, SH, SB
+                when(io.i_instruct(6,0) === "b0100011".U){
+                  io.o_wEnable := true.B
+                }.otherwise{io.o_wEnable := false.B}
+
+
+                // Memory Read Enable (rEnable)
+                //OP code de LW, LH, LB
+                when(io.i_instruct(6,0) === "b0000011".U){
+                io.o_rEnable := true.B
+                }.otherwise{io.o_rEnable := false.B}
+
+
+                // Activation écriture GPR
+                // Cas où pas besoin d'écrire
+                when( io.i_instruct(6,0) === "b1100011".U ||     //Branchement
+                      io.i_instruct(6,0) === "b0000011".U){      //SW, SH, SB
+                        io.o_GPRwrite := false.B
+                      } .otherwise(io.o_GPRwrite := true.B)   
     }
   .otherwise{io.funct_sel := "b00000".U
               io.o_rs1 := "b00000".U
@@ -83,6 +107,12 @@ when (isValid === true.B){
               io.o_sel_operande := true.B
               io.o_imm := "b000000000000".U
               io.o_rd := "b00000".U
+
+
+              io.o_GPRwrite := false.B
+              io.o_wEnable := false.B
+              io.o_rEnable := false.B
+
   }
 }
 
