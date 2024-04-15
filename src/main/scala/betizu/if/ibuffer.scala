@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 01:18:19 pm                                       *
+ * Last Modified: 2024-04-11 02:10:23 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -37,7 +37,7 @@ class IBuffer (p: BetizuParams) extends Module {
   val r_dead = RegInit(0.U(4.W))
   val w_dead = Wire(Bool())
 
-  w_dead := (r_dead >= 7.U)
+  w_dead := (r_dead >= 3.U)
 
   // ******************************
   //             BUFFER

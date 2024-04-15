@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 03:36:40 pm                                       *
+ * Last Modified: 2024-04-11 02:09:06 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -27,7 +27,7 @@ class Csr(p: BetizuParams) extends Module {
   val io = IO(new Bundle {
     val b_port = new CsrIO(p)
 
-    val i_instret = Input(Vec(p.nFetchInstr, Bool()))
+    val i_instret = Input(Vec(2, Bool()))
 
     val o_sim = if (p.isSim) Some(Output(new CsrBus())) else None
   })
@@ -104,6 +104,16 @@ class Csr(p: BetizuParams) extends Module {
   //           SIMULATION
   // ******************************
   if (p.isSim) {
+    val w_ninstret = PopCount(io.i_instret)
+    val r_n2instret = RegInit(0.U(32.W))
+
+    when (w_ninstret === 2.U) {
+      r_n2instret := r_n2instret + 1.U
+    }
+
+    dontTouch(w_ninstret)
+    dontTouch(r_n2instret)
+
     dontTouch(w_rdata)
     dontTouch(w_wdata)
     dontTouch(r_csr)

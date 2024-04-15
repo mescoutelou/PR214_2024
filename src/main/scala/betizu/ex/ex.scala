@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 10:04:44 am                                       *
+ * Last Modified: 2024-04-15 09:27:45 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -38,7 +38,7 @@ class ExStage(p: BetizuParams) extends Module {
 
     val b_csr = Flipped(new CsrIO(p))
     val b_rd = Flipped(new GprWriteIO(p))
-    val o_instret = Output(Vec(p.nFetchInstr, Bool()))
+    val o_instret = Output(Vec(2, Bool()))
   })  
 
   val m_alu = Module(new Alu(p))
@@ -215,6 +215,7 @@ class ExStage(p: BetizuParams) extends Module {
   m_buf.io.b_in(0).ctrl.get.gpr := io.b_in.ctrl.get.gpr
   if (p.usePack) {
     when (w_pack & w_ext_valid) {
+      m_buf.io.b_in(0).ctrl.get.info.pc := io.b_in.ctrl.get.info.pc + 4.U
       m_buf.io.b_in(0).ctrl.get.lsu.use := false.B
       m_buf.io.b_in(0).ctrl.get.gpr.en := false.B
     }
@@ -281,7 +282,7 @@ class ExStage(p: BetizuParams) extends Module {
   if (p.useFpu) {
     io.b_fpu.get.ack.ready := m_buf.io.b_out(0).valid & (m_buf.io.b_out(0).ctrl.get.multi === MULTI.FPU)
 
-    when (io.b_in.ctrl.get.ext.ext === EXT.FPU) {
+    when (m_buf.io.b_out(0).ctrl.get.multi === MULTI.FPU) {
       w_buf_wait_ack := ~io.b_fpu.get.ack.valid
       w_buf_res := io.b_fpu.get.ack.data.get
     }
@@ -293,6 +294,7 @@ class ExStage(p: BetizuParams) extends Module {
   when (m_buf.io.b_out(0).ctrl.get.lsu.ld) {
     w_buf_wait_ack := ~io.b_dmem.read.valid
 
+    w_buf_res := io.b_dmem.read.data
     switch(m_buf.io.b_out(0).ctrl.get.lsu.size) {
       is (LSUSIZE.B) {
         when (m_buf.io.b_out(0).ctrl.get.lsu.sign === LSUSIGN.S) {
@@ -318,6 +320,8 @@ class ExStage(p: BetizuParams) extends Module {
         }
       }
     }
+  }.elsewhen(m_buf.io.b_out(0).ctrl.get.lsu.st) {
+    w_buf_wait_ack := ~io.b_dmem.write.ready
   }
 
   // ------------------------------
@@ -390,10 +394,8 @@ class ExStage(p: BetizuParams) extends Module {
   // ******************************
   //              CSR
   // ******************************
-  io.o_instret(0) := (m_buf.io.b_out(0).valid & ~w_buf_wait_ack) | (w_int_valid & ~w_int_wait_req & ~w_int_multi)
-  if (p.usePack) {
-    io.o_instret(1) := m_buf.io.b_out(0).valid & ~w_buf_wait_ack & ~m_buf.io.b_out(0).ctrl.get.int() & w_int_valid & ~w_int_wait_req & ~w_int_multi
-  }
+  io.o_instret(0) := w_int_valid & ~w_int_wait_req & ~w_int_multi
+  io.o_instret(1) := m_buf.io.b_out(0).valid & ~w_buf_wait_ack
 
   // ******************************
   //           SIMULATION
@@ -404,6 +406,7 @@ class ExStage(p: BetizuParams) extends Module {
     // ------------------------------
     dontTouch(io.b_in)
     dontTouch(w_pack)
+    dontTouch(m_buf.io.b_out)
   }
 }
 

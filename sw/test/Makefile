@@ -1,26 +1,50 @@
+
 MAKE_PATH := ${abspath ${lastword ${MAKEFILE_LIST}}}
 PRJ_DIR := ${dir ${MAKE_PATH}}
-HW_CFG = WAESP
-ISA = riscv
-TOOLCHAIN = riscv64-unknown-elf
-ROM_SECTIONS = --only-section .rodata* --only-section .text*
-ROM_OFFSET = 0x04000000
 
-NAME = test
+HW_CFG = SYS
+include src/hw/${HW_CFG}/Makefile
+
+NAME = bench-isa
+TOOLCHAIN = riscv64-unknown-elf
 CC = ${TOOLCHAIN}-gcc
 LD = ${TOOLCHAIN}-gcc
-CFLAGS = -O2 -nostartfiles -fstrict-volatile-bitfields
+CFLAGS = -O1 -nostartfiles -fstrict-volatile-bitfields
 CFLAGS += -Woverflow 
-CFLAGS += -march=rv32if -mabi=ilp32 -DXLEN=32
-ELF2HEX = elf2hex.py
+ELF2HEX = ${PRJ_DIR}/../bare/elf2hex.py
 
-test: build-dir
-	${CC} ${CFLAGS} -c src/test.S -o obj/test.o
-	${CC} ${CFLAGS} -c src/func.c -o obj/func.o
-	${LD} ${CFLAGS} -T script.ld obj/test.o obj/func.o -o elf/test.elf
-	${TOOLCHAIN}-objdump -D elf/test.elf > lst/test.lst -M numeric
-	${TOOLCHAIN}-objcopy ${ROM_SECTIONS} elf/test.elf elf/test.rom8.elf
-	python3 ${ELF2HEX} --input elf/test.rom8.elf --output hex/test.rom8.hex --offset ${ROM_OFFSET} --wide 16 --word 1
+export TOOLCHAIN ISA PRJ_DIR CC CFLAGS LD ELF2HEX HW_CFG BOOT_SECTIONS BOOT_OFFSET
+
+all: all32
+
+all32: rv32i rv32m rv32a rv32c rv32b rv32zicond rv32zifencei
+
+rv32i: build-dir
+	@${MAKE} -C src/test/rv32i all
+
+rv32m: build-dir
+	@${MAKE} -C src/test/rv32m all
+
+rv32a: build-dir
+	@${MAKE} -C src/test/rv32a all
+
+rv32c: build-dir
+	@${MAKE} -C src/test/rv32c all
+
+rv32b: build-dir
+	@${MAKE} -C src/test/rv32b all
+
+rv32zicond:	build-dir
+	@${MAKE} -C src/test/rv32zicond all
+	
+rv32zifencei:	build-dir
+	@${MAKE} -C src/test/rv32zifencei all
+
+rv64i: build-dir
+	@${MAKE} -C src/test/rv64i all
+
+rv64m: build-dir
+	@${MAKE} -C src/test/rv64m all
 
 build-dir:
 	mkdir -p obj
