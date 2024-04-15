@@ -22,7 +22,7 @@ class top extends Module {
 
 
   GPR.io.i_data := ALU.io.o_rd
-  GPR.io.i_write := true.B
+  GPR.io.i_write := Decodeur.io.o_GPRwrite
   GPR.io.i_sel_reg := Decodeur.io.o_rd
   GPR.io.i_read_reg1 := Decodeur.io.o_rs1
   GPR.io.i_read_reg2 := Decodeur.io.o_rs2
