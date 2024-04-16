@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-15 11:59:29 am                                       *
+ * Last Modified: 2024-04-16 09:30:31 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -56,7 +56,7 @@ object OP {
 //            NUMBERS            
 // ******************************
 object NAN {
-	def ZEROP(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	def PZERO(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
@@ -65,7 +65,7 @@ object NAN {
 
 		return nan
 	}
-	def ZERON(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	def NZERO(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 1.B
@@ -75,7 +75,7 @@ object NAN {
 		return nan
 	}
 
-	def INFP(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	def PINF(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
@@ -84,7 +84,7 @@ object NAN {
 
 		return nan
 	}
-	def INFN(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	def NINF(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 1.B
@@ -93,7 +93,9 @@ object NAN {
 
 		return nan
 	}
-	def NANF(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	
+	// Signaling NaN
+	def SNAN(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
@@ -102,7 +104,9 @@ object NAN {
 
 		return nan
 	}
-	def NANQ(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
+	
+	// Quiet NaN
+	def QNAN(nExponentBit: Int, nMantissaBit: Int): FloatBus = {
 		val nan = Wire(new FloatBus(nExponentBit, nMantissaBit))
 
 		nan.sign := 0.B
@@ -111,13 +115,16 @@ object NAN {
 
 		return nan
 	}
-	def NANC(nExponentBit: Int, nMantissaBit: Int): FloatBus = NANQ(nExponentBit, nMantissaBit)
+
+	// Canonical NaN
+	def CNAN(nExponentBit: Int, nMantissaBit: Int): FloatBus = QNAN(nExponentBit, nMantissaBit)
 
 	def isInf(nExponentBit: Int, nMantissaBit: Int, value: FloatBus): Bool = {
 		val nan = Wire(Bool())
-		when (value === INFP(nExponentBit, nMantissaBit)) {
+		
+		when (value === PINF(nExponentBit, nMantissaBit)) {
 			nan := true.B
-		}.elsewhen (value === INFN(nExponentBit, nMantissaBit)) {
+		}.elsewhen (value === NINF(nExponentBit, nMantissaBit)) {
 			nan := true.B
 		}.otherwise {
 			nan := false.B
@@ -127,13 +134,10 @@ object NAN {
 
 	def isNaN(nExponentBit: Int, nMantissaBit: Int, value: FloatBus): Bool = {
 		val nan = Wire(Bool())
-		when (value === INFP(nExponentBit, nMantissaBit)) {
+
+		when (value === SNAN(nExponentBit, nMantissaBit)) {
 			nan := true.B
-		}.elsewhen (value === INFN(nExponentBit, nMantissaBit)) {
-			nan := true.B
-		}.elsewhen (value === NANF(nExponentBit, nMantissaBit)) {
-			nan := true.B
-		}.elsewhen (value === NANQ(nExponentBit, nMantissaBit)) {
+		}.elsewhen (value === CNAN(nExponentBit, nMantissaBit)) {
 			nan := true.B
 		}.otherwise {
 			nan := false.B

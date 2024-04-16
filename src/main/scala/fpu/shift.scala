@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-15 12:07:11 pm                                       *
+ * Last Modified: 2024-04-16 09:41:44 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -127,41 +127,35 @@ class ShiftStage(p: FpuParams) extends Module {
     }
 
     is (UOP.SUB) {
+      w_src(1).sign := ~io.b_in.data.get.src(1).sign
       when (w_sign_same) {
         when (~w_agreat) {
           w_neg(0) := true.B
           w_src(0).mant := (~(Cat(1.U(1.W), io.b_in.data.get.src(0).mant) >> w_expo_diff(0)) + 1.U)
         }.otherwise {
           w_neg(1) := true.B
-          val w_tmp = Wire(UInt((p.nMantissaBit + 1).W))
-          val w_ntmp = Wire(UInt((p.nMantissaBit + 1).W))
-          val w_ntmp1 = Wire(UInt((p.nMantissaBit + 1).W))
-          val w_ntmpall = Wire(UInt((p.nMantissaBit + 1).W))
-
-          w_tmp := (Cat(1.U(1.W), io.b_in.data.get.src(1).mant) >> w_expo_diff(1))
-          w_ntmp := ~w_tmp
-          w_ntmp1 := w_ntmp + 1.U
-
           w_src(1).mant := (~(Cat(1.U(1.W), io.b_in.data.get.src(1).mant) >> w_expo_diff(1)) + 1.U)
-          w_ntmpall := (~(Cat(1.U(1.W), io.b_in.data.get.src(1).mant) >> w_expo_diff(1)) + 1.U)
-
-          dontTouch(w_tmp)
-          dontTouch(w_ntmp)
-          dontTouch(w_ntmp1)
-          dontTouch(w_ntmpall)
         }
       }
     }
   }
 
-  // Zero
+  // Special values
   for (s <- 0 until 3) {
-    val w_szero = Wire(Bool())
-    
-    w_szero := io.b_in.data.get.src(s).isZero()
-    dontTouch(w_szero)
     when (io.b_in.data.get.src(s).isZero()) {
-      w_src(s) := NAN.ZEROP(p.nExponentBit, p.nMantissaBit + 1)
+      w_src(s) := NAN.PZERO(p.nExponentBit, p.nMantissaBit + 1)
+      w_neg(s) := false.B
+    }.elsewhen (io.b_in.data.get.src(s).iscNaN()) {
+      w_src(s) := NAN.CNAN(p.nExponentBit, p.nMantissaBit + 1)
+      w_neg(s) := false.B
+    }.elsewhen (io.b_in.data.get.src(s).issNaN()) {
+      w_src(s) := NAN.SNAN(p.nExponentBit, p.nMantissaBit + 1)
+      w_neg(s) := false.B
+    }.elsewhen (io.b_in.data.get.src(s).ispInf()) {
+      w_src(s) := NAN.PINF(p.nExponentBit, p.nMantissaBit + 1)
+      w_neg(s) := false.B
+    }.elsewhen (io.b_in.data.get.src(s).isnInf()) {
+      w_src(s) := NAN.NINF(p.nExponentBit, p.nMantissaBit + 1)
       w_neg(s) := false.B
     }
   }
@@ -191,11 +185,11 @@ class ShiftStage(p: FpuParams) extends Module {
     m_reg.get.io.b_in.valid := io.b_in.valid
     m_reg.get.io.b_in.ctrl.get := io.b_in.ctrl.get
     m_reg.get.io.b_in.ctrl.get.ex.uop := w_uop
-    m_reg.get.io.b_in.ctrl.get.ex.equ := w_equ
-    m_reg.get.io.b_in.ctrl.get.ex.agreat := w_agreat
-    m_reg.get.io.b_in.ctrl.get.ex.sgreat := w_sgreat
-    m_reg.get.io.b_in.ctrl.get.ex.neg := w_neg
     m_reg.get.io.b_in.data.get.src := w_src
+    m_reg.get.io.b_in.data.get.equ := w_equ
+    m_reg.get.io.b_in.data.get.agreat := w_agreat
+    m_reg.get.io.b_in.data.get.sgreat := w_sgreat
+    m_reg.get.io.b_in.data.get.neg := w_neg
 
     io.b_out <> m_reg.get.io.b_out 
   } else {
@@ -204,6 +198,10 @@ class ShiftStage(p: FpuParams) extends Module {
     io.b_out.valid := io.b_in.valid
     io.b_out.ctrl.get := io.b_in.ctrl.get
     io.b_out.data.get.src := w_src
+    io.b_out.data.get.equ := w_equ
+    io.b_out.data.get.agreat := w_agreat
+    io.b_out.data.get.sgreat := w_sgreat
+    io.b_out.data.get.neg := w_neg
   }
 
   // ******************************

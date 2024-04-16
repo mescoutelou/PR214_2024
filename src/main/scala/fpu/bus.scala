@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-15 11:59:41 am                                       *
+ * Last Modified: 2024-04-16 09:36:46 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -67,6 +67,21 @@ class FloatBus(nExponentBit: Int, nMantissaBit: Int) extends Bundle {
 	def isZero(): Bool = {
 		return (expo === 0.U) & (mant === 0.U)
 	}
+	def issNaN(): Bool = {
+		return (sign === 0.B) & (expo === Cat(Fill(nExponentBit, 1.B))) &	(mant === Cat(Fill(nMantissaBit - 1, 0.B), 1.B))
+	}
+	def iscNaN(): Bool = {
+		return (sign === 0.B) & (expo === Cat(Fill(nExponentBit, 1.B))) &	(mant === Cat(1.B, Fill(nMantissaBit - 1, 0.B)))
+	}
+	def isNaN(): Bool = {
+		return (issNaN() | iscNaN())
+	}
+	def ispInf(): Bool = {
+		return (sign === 0.B) & (expo === Cat(Fill(nExponentBit, 1.B))) &	(mant === Cat(Fill(nExponentBit, 0.B)))
+	}
+	def isnInf(): Bool = {
+		return (sign === 1.B) & (expo === Cat(Fill(nExponentBit, 1.B))) &	(mant === Cat(Fill(nExponentBit, 0.B)))
+	}
 }
 
 // ******************************
@@ -102,10 +117,6 @@ class InfoBus(p: FpuParams) extends Bundle {
 
 class ExBus(p: FpuParams) extends Bundle {
 	val uop = UInt(UOP.NBIT.W)
-	val equ = Vec(3, Bool())
-	val agreat = Bool()
-	val sgreat = Bool()
-	val neg = Vec(3, Bool())
 }
 
 class FprBus(p: FpuParams) extends Bundle {
@@ -156,6 +167,10 @@ class SourceBus(p: FpuParams) extends Bundle {
 }
 
 class OperandBus(p: FpuParams) extends Bundle {
+	val equ = Vec(3, Bool())
+	val agreat = Bool()
+	val sgreat = Bool()
+	val neg = Vec(3, Bool())
 	val src = Vec(3, new FloatBus(p.nExponentBit, p.nMantissaBit + 1))
 }
 
