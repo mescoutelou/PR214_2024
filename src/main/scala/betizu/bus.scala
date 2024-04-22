@@ -3,12 +3,12 @@
  * Created Date: 2024-04-08 09:31:37 am                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 04:45:28 pm                                       *
+ * Last Modified: 2024-04-16 02:09:32 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -100,8 +100,9 @@ class GprCtrlBus() extends Bundle {
   val byp = Bool()
 }
 
-class ExtCtrlBus extends Bundle {
+class ExtCtrlBus(p: BetizuParams) extends Bundle {
   val pack = Bool()
+  val instr = UInt(p.nInstrBit.W)
   val ext = UInt(EXT.NBIT.W)
   val code = UInt(8.W)
   val op = Vec(3, UInt(3.W))
@@ -116,7 +117,7 @@ class ExCtrlBus(p: BetizuParams) extends Bundle {
   val lsu = new LsuCtrlBus()
   val gpr = new GprCtrlBus()
 
-  val ext = new ExtCtrlBus()
+  val ext = new ExtCtrlBus(p)
 }
 
 class ExBufferBus(p: BetizuParams) extends Bundle {
@@ -182,7 +183,7 @@ class CsrIO(p: BetizuParams) extends Bundle {
   def read(): Bool = {
     return (uop === CSRUOP.RX) | (uop === CSRUOP.RW) | (uop === CSRUOP.RS) | (uop === CSRUOP.RC)
   }
-  def write(): Bool = {
+  def swap(): Bool = {
     return (uop === CSRUOP.W) | (uop === CSRUOP.RW)
   }
   def set(): Bool = {
@@ -191,7 +192,7 @@ class CsrIO(p: BetizuParams) extends Bundle {
   def clear(): Bool = {
     return (uop === CSRUOP.C) | (uop === CSRUOP.RC)
   }
-  def modify: Bool = {
-    return write() | set() | clear()
+  def write(): Bool = {
+    return swap() | set() | clear()
   }
 }

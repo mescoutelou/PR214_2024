@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-16 09:36:46 am                                       *
+ * Last Modified: 2024-04-16 02:04:01 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -28,6 +28,7 @@ import emmk.common.gen._
 class FpuReqCtrlBus(nAddrBit: Int) extends Bundle {
 	val pc = UInt(nAddrBit.W)
 	val code = UInt(CODE.NBIT.W)
+	val rm = UInt(ROUND.NBIT.W)
 	val op = Vec(3, UInt(OP.NBIT.W))
 	val rs = Vec(3, UInt(5.W))
 	val rd = UInt(5.W)
@@ -41,9 +42,19 @@ class FpuReqIO(p: GenParams, nAddrBit: Int, nDataBit: Int) extends GenRVIO(p, ne
 
 class FpuAckIO(p: GenParams, nDataBit: Int) extends GenRVIO(p, UInt(0.W), UInt(nDataBit.W))
 
+class FpuCsrIO extends Bundle {
+	val nx = Output(Bool())
+	val uf = Output(Bool())
+	val of = Output(Bool())
+	val dz = Output(Bool())
+	val nv = Output(Bool())
+	val rm = Input(UInt(ROUND.NBIT.W))
+}
+
 class FpuIO(p: GenParams, nAddrBit: Int, nDataBit: Int) extends Bundle {
 	val req = Flipped(new FpuReqIO(p, nAddrBit, nDataBit))
 	val ack = new FpuAckIO(p, nDataBit)
+	val csr = new FpuCsrIO()
 }
 
 // ******************************
@@ -82,6 +93,9 @@ class FloatBus(nExponentBit: Int, nMantissaBit: Int) extends Bundle {
 	def isnInf(): Bool = {
 		return (sign === 1.B) & (expo === Cat(Fill(nExponentBit, 1.B))) &	(mant === Cat(Fill(nExponentBit, 0.B)))
 	}
+	def isInf(): Bool = {
+		return (expo === Cat(Fill(nExponentBit, 1.B))) &	(mant === Cat(Fill(nExponentBit, 0.B)))
+	}
 }
 
 // ******************************
@@ -117,6 +131,7 @@ class InfoBus(p: FpuParams) extends Bundle {
 
 class ExBus(p: FpuParams) extends Bundle {
 	val uop = UInt(UOP.NBIT.W)
+	val rm = UInt(ROUND.NBIT.W)
 }
 
 class FprBus(p: FpuParams) extends Bundle {

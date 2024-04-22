@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 12:54:02 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-09 01:00:20 pm                                       *
+ * Last Modified: 2024-04-16 01:53:21 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -23,6 +23,10 @@ import chisel3.util._
 //            ADDRESS
 // ******************************
 object CSR {
+  def FFLAGS        = "h001"
+  def FRM           = "h002"
+  def FCSR          = "h003"
+
   def CYCLE         = "hc00"
   def TIME          = "hc01"
   def INSTRET       = "hc02"
@@ -93,7 +97,31 @@ object CSR {
 // ******************************
 //           REGISTERS
 // ******************************
+class CsrFcsrBus() extends Bundle {
+	val nx = Bool()
+	val uf = Bool()
+	val of = Bool()
+	val dz = Bool()
+	val nv = Bool()
+	val rm = UInt(3.W)
+
+  def toUInt(): UInt = {
+    return Cat(0.U(24.W), rm, nv, dz, of, uf, nx)
+  }
+
+  def fromUInt(data: UInt): Unit = {
+    nx := data(0)
+    uf := data(1)
+    of := data(2)
+    dz := data(3)
+    nv := data(4)
+    rm := data(7, 5)
+  }
+}
+
 class CsrBus extends Bundle {
+  val fcsr          = new CsrFcsrBus()
+
   val cycle         = UInt(64.W)
   val time          = UInt(64.W)
   val instret       = UInt(64.W)

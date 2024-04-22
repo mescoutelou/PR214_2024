@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-15 09:27:45 am                                       *
+ * Last Modified: 2024-04-16 02:07:38 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -130,6 +130,7 @@ class ExStage(p: BetizuParams) extends Module {
     io.b_fpu.get.req.ctrl.get.pc := io.b_in.ctrl.get.info.pc
     io.b_fpu.get.req.ctrl.get.code := io.b_in.ctrl.get.ext.code
 	  io.b_fpu.get.req.ctrl.get.op := io.b_in.ctrl.get.ext.op
+	  io.b_fpu.get.req.ctrl.get.rm := io.b_in.ctrl.get.ext.instr(14, 12)
 	  io.b_fpu.get.req.ctrl.get.rs := io.b_in.ctrl.get.ext.rs
 	  io.b_fpu.get.req.ctrl.get.rd := io.b_in.ctrl.get.ext.rd
 	  io.b_fpu.get.req.data.get.src(0) := io.b_in.data.get.s1
@@ -139,6 +140,8 @@ class ExStage(p: BetizuParams) extends Module {
     when (io.b_in.ctrl.get.ext.ext === EXT.FPU) {
       w_ext_wait_req := ~io.b_fpu.get.req.ready | w_buf_full
     }
+
+    io.b_fpu.get.csr := DontCare
   }  
 
   // ------------------------------

@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-16 09:41:44 am                                       *
+ * Last Modified: 2024-04-16 11:49:20 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -42,6 +42,7 @@ class ShiftStage(p: FpuParams) extends Module {
 	val w_agreat = Wire(Bool())       // Absolute greatest
 	val w_sgreat = Wire(Bool())       // Signed greatest
 	val w_neg = Wire(Vec(3, Bool()))
+	val w_inf = Wire(Vec(3, Bool()))
 
   // ******************************
   //            COMPARE
@@ -85,6 +86,7 @@ class ShiftStage(p: FpuParams) extends Module {
   for (s <- 0 until 3) {
     w_expo_diff(s) := 0.U
     w_neg(s) := false.B
+    w_inf(s) := io.b_in.data.get.src(s).isInf()
   }
   w_uop := io.b_in.ctrl.get.ex.uop
   when (io.b_in.ctrl.get.ex.uop === UOP.SUB) {
@@ -93,14 +95,16 @@ class ShiftStage(p: FpuParams) extends Module {
   w_sign_same := (io.b_in.data.get.src(0).sign === io.b_in.data.get.src(1).sign)
 
   // Exponent difference
-  switch (io.b_in.ctrl.get.ex.uop) {
-    is (UOP.ADD, UOP.SUB) {
-      when (io.b_in.data.get.src(1).expo > io.b_in.data.get.src(0).expo) {
-        w_expo_diff(0) := (io.b_in.data.get.src(1).expo - io.b_in.data.get.src(0).expo)
-        w_expo_diff(1) := 0.U
-      }.otherwise {
-        w_expo_diff(0) := 0.U
-        w_expo_diff(1) := (io.b_in.data.get.src(0).expo - io.b_in.data.get.src(1).expo)
+  when (~w_inf.asUInt.orR) {
+    switch (io.b_in.ctrl.get.ex.uop) {
+      is (UOP.ADD, UOP.SUB) {
+        when (io.b_in.data.get.src(1).expo > io.b_in.data.get.src(0).expo) {
+          w_expo_diff(0) := (io.b_in.data.get.src(1).expo - io.b_in.data.get.src(0).expo)
+          w_expo_diff(1) := 0.U
+        }.otherwise {
+          w_expo_diff(0) := 0.U
+          w_expo_diff(1) := (io.b_in.data.get.src(0).expo - io.b_in.data.get.src(1).expo)
+        }
       }
     }
   }
@@ -153,9 +157,11 @@ class ShiftStage(p: FpuParams) extends Module {
       w_neg(s) := false.B
     }.elsewhen (io.b_in.data.get.src(s).ispInf()) {
       w_src(s) := NAN.PINF(p.nExponentBit, p.nMantissaBit + 1)
+      if (s == 1) w_src(s).sign := (io.b_in.ctrl.get.ex.uop === UOP.SUB)
       w_neg(s) := false.B
     }.elsewhen (io.b_in.data.get.src(s).isnInf()) {
       w_src(s) := NAN.NINF(p.nExponentBit, p.nMantissaBit + 1)
+      if (s == 1) w_src(s).sign := (io.b_in.ctrl.get.ex.uop =/= UOP.SUB)
       w_neg(s) := false.B
     }
   }

@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 09:37:52 am                                       *
+ * Last Modified: 2024-04-16 02:04:27 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -47,6 +47,7 @@ class RrStage(p: FpuParams) extends Module {
     val b_pipe = Flipped(new FpuReqIO(p, p.nAddrBit, p.nDataBit))
 
     val b_rs = Vec(3, Flipped(new FprReadIO(p)))
+    val i_rm = Input(UInt(ROUND.NBIT.W))
 
     val b_out = new GenRVIO(p, new ShiftCtrlBus(p), new SourceBus(p))
   })  
@@ -89,6 +90,7 @@ class RrStage(p: FpuParams) extends Module {
   m_reg.io.b_in.ctrl.get.info.int := w_decoder(3)
   m_reg.io.b_in.ctrl.get.ex := DontCare
   m_reg.io.b_in.ctrl.get.ex.uop := w_decoder(1)
+  m_reg.io.b_in.ctrl.get.ex.rm := Mux((io.b_pipe.ctrl.get.rm === ROUND.DYN), io.i_rm, io.b_pipe.ctrl.get.rm)
   m_reg.io.b_in.ctrl.get.mem := w_decoder(4)
   m_reg.io.b_in.ctrl.get.fpr.en := w_decoder(2)
   m_reg.io.b_in.ctrl.get.fpr.addr := io.b_pipe.ctrl.get.rd

@@ -3,7 +3,7 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-15 11:01:50 am                                       *
+ * Last Modified: 2024-04-16 11:59:04 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
@@ -91,6 +91,7 @@ class Betizu(p: BetizuParams) extends Module {
   m_gpr.io.b_write <> m_ex.io.b_rd
 
   m_csr.io.b_port <> m_ex.io.b_csr
+  if (p.useFpu) m_csr.io.b_fpu.get <> io.b_fpu.get.csr
   m_csr.io.i_instret := m_ex.io.o_instret
 
   // ******************************

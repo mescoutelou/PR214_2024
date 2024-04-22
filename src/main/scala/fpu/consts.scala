@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-16 09:30:31 am                                       *
+ * Last Modified: 2024-04-16 01:51:11 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -166,4 +166,19 @@ object UOP {
 	def MUL		= 10.U(NBIT.W)
 	def DIV		= 11.U(NBIT.W)
 	def SQRT	= 12.U(NBIT.W)
+}
+
+// ******************************
+//          ROUNDING MODE            
+// ******************************
+object ROUND {
+	def NBIT 	= 3
+	def X			= 0.U(NBIT.W)
+
+	def RNE		= 0.U(NBIT.W)
+	def RTZ		= 1.U(NBIT.W)
+	def RDN		= 2.U(NBIT.W)
+	def RUP		= 3.U(NBIT.W)
+	def RMM		= 4.U(NBIT.W)
+	def DYN		= 7.U(NBIT.W)
 }

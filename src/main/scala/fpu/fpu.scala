@@ -3,12 +3,12 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-11 10:11:30 am                                       *
+ * Last Modified: 2024-04-16 02:01:07 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -39,6 +39,7 @@ class Fpu(p: FpuParams) extends Module {
   val m_fpr = Module(new Fpr(p))
 
   m_rr.io.b_pipe <> io.b_pipe.req
+  m_rr.io.i_rm := io.b_pipe.csr.rm
   m_rr.io.b_rs <> m_fpr.io.b_read
 
   m_shift.io.b_in <> m_rr.io.b_out
@@ -49,6 +50,7 @@ class Fpu(p: FpuParams) extends Module {
   m_wb.io.b_in <> m_ex.io.b_out
   m_wb.io.b_mem.read <> io.b_mem.read
   m_wb.io.b_mem.write <> io.b_mem.write
+  m_wb.io.b_csr <> io.b_pipe.csr
   m_wb.io.b_pipe <> io.b_pipe.ack
 
   var v_nbyp: Int = 0

@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-16 09:41:13 am                                       *
+ * Last Modified: 2024-04-16 11:36:07 am                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -148,7 +148,11 @@ class Alu(p: FpuParams) extends Module {
   //           SIMULATION
   // ******************************
   if (p.isSim) {
-
+    dontTouch(w_snan)
+    dontTouch(w_cnan)
+    dontTouch(w_nan)
+    dontTouch(w_pinf)
+    dontTouch(w_ninf)
   }  
 }
 

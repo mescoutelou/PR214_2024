@@ -3,11 +3,11 @@
  * Created Date: 2023-02-25 10:19:59 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-10 10:43:16 am                                       *
+ * Last Modified: 2024-04-16 02:09:25 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * -----                                                                       *
  * License: See LICENSE.md                                                     *
- * Copyright (c) 2024 ENSEIRB-MATMECA                                          *
+ * Copyright (c) 2024 HerdWare                                                 *
  * -----                                                                       *
  * Description:                                                                *
  */
@@ -31,7 +31,7 @@ class Decoder(p: BetizuParams) extends Module {
     val o_lsu = Output(new LsuCtrlBus())
     val o_gpr = Output(new GprCtrlBus())
 
-    val o_ext = Output(new ExtCtrlBus())
+    val o_ext = Output(new ExtCtrlBus(p))
 
     val o_data = Output(new DataSlctBus())
   })
@@ -101,6 +101,7 @@ class Decoder(p: BetizuParams) extends Module {
   //            EXTERNAL
   // ******************************
   io.o_ext.pack := w_dec_ext(0)
+  io.o_ext.instr := io.i_instr
   io.o_ext.ext := w_dec_ext(1)
   io.o_ext.code := w_dec_ext(2)
   io.o_ext.op(0) := w_dec_ext(3)

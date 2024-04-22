@@ -3,7 +3,7 @@
  * Created Date: 2023-12-20 03:19:35 pm                                        *
  * Author: Mathieu Escouteloup                                                 *
  * -----                                                                       *
- * Last Modified: 2024-04-16 10:00:00 am                                       *
+ * Last Modified: 2024-04-16 01:49:48 pm                                       *
  * Modified By: Mathieu Escouteloup                                            *
  * Email: mathieu.escouteloup@ims-bordeaux.com                                 *
  * -----                                                                       *
@@ -30,6 +30,7 @@ class WbStage(p: FpuParams) extends Module {
     val b_mem = new MBusAckIO(p.pDBus)
     val o_byp = Output(new BypassBus(p))
 
+    val b_csr = new FpuCsrIO()
     val b_pipe = new FpuAckIO(p, p.nDataBit)
     val b_rd = Flipped(new FprWriteIO(p))
   })  
@@ -120,6 +121,15 @@ class WbStage(p: FpuParams) extends Module {
   io.o_byp.ready := ~w_wait_mem
   io.o_byp.addr := io.b_in.ctrl.get.fpr.addr
   io.o_byp.data := w_res
+
+  // ******************************
+  //              CSR
+  // ******************************
+	io.b_csr.nx := 0.B
+	io.b_csr.uf := 0.B
+	io.b_csr.of := 0.B
+	io.b_csr.dz := 0.B
+	io.b_csr.nv := 0.B
 
   // ******************************
   //             OUTPUT
