@@ -51,6 +51,8 @@ class Decodeur extends Module {
 
 
 when (isValid === true.B){
+
+                //Calcul de tous les immédiats possibles
                 when(w_decoder(0) === 0.U){           // 0 = type R
                   io.o_imm := 0.U(12.W)
                 } .elsewhen(w_decoder(0) === 1.U){    // 1 = type I
@@ -66,6 +68,7 @@ when (isValid === true.B){
                 } otherwise{
                   io.o_imm := 0.U(12.W)
                 }
+
                 io.o_rs1 := io.i_instruct(19, 15)
                 io.o_rs2 := io.i_instruct(24, 20)
                 io.o_rd := io.i_instruct(11, 7)
