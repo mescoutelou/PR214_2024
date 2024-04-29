@@ -158,6 +158,31 @@ Une liste détaillées des différentes étapes du projet est disponible ci-dess
   9. Chaque nom de module (`Module()`) commence par le préfixe *m_*.
 - Commenter le code de manière pertinente (une phrase explicative pour plusieurs lignes réalisant une tâche précise, ou une ligne avec une fonction particulière *etc.*).
 
+## Simulation
+
+### Betizu
+
+*Betizu* est le nom d'un coeur configurable avec 1 à 3 étages de pipeline, et supportant l'ajout d'une FPU (encore incomplète).
+Après avoir ajouté les différents outils (ne pas oublier la toolchain RISC-V!), il est possible de simuler son fonctionnement.
+Pour exécuter en simulation les programmes de test, utilisez les commandes suivantes:
+```
+cd sw/test
+make rv32i
+make rv32f
+cd ../..
+make sys-test
+```
+
+Ensuite, il est également possible d'exécuter un programme en bare-metal librement modifiable dans *sw/bare/*:
+```
+cd sw/bare/
+make bare
+cd ../..
+./sim/sys/sys-exe --rom sw/bare/hex/bare.rom8.hex --vcd sim/sys/vcd/bare.vcd
+```
+
+Le chronogramme de simulation au format *.vcd* peut ensuite être visualisé normalement avec GtkWave.
+
 ## Documents
 
 Les documents de base pour la bonne réalisation de ce projet sont disponibles dans le répertoire *docs/*:
