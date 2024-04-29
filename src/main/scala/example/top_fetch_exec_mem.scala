@@ -19,16 +19,16 @@ class top_fetch_exec_mem extends Module {
     //MEMOIRE
     val Memoire = Module(new Memoire)
 
-    //C0NNECTION MODULES
+    //C0NNECTIONS MODULES
 
     fetch.io.i_jumpAdr := DontCare
     fetch.io.i_jumpEnable := DontCare
-    Memoire.io.i_rAdr := fetch.io.o_instrAdr
+    Memoire.io.i_Adr := fetch.io.o_instrAdr
 
     Memoire.io.i_wEnable := Decodeur.io.o_wEnable
     Memoire.io.i_rEnable := Decodeur.io.o_rEnable
     Memoire.io.i_data := ALU.io.o_rd
-    Memoire.io.i_wAdr := Decodeur.io.o_rd
+ //   Memoire.io.i_wAdr := Decodeur.io.o_rd
     Decodeur.io.i_instruct := Memoire.io.o_data
 
     ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,GPR.io.o_data_reg2,Decodeur.io.o_imm)
@@ -40,9 +40,6 @@ class top_fetch_exec_mem extends Module {
     GPR.io.i_sel_reg := Decodeur.io.o_rd
     GPR.io.i_read_reg1 := Decodeur.io.o_rs1
     GPR.io.i_read_reg2 := Decodeur.io.o_rs2
-    
-
-    Memoire.io.memoire(0) = "b0000000_00010_00001_000_00001_0010011".U
 }
 
 

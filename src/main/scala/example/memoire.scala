@@ -11,22 +11,20 @@ class Memoire extends Module {
     val i_wEnable = Input(Bool())           //Active l'écriture
     val i_rEnable = Input(Bool())           //Acrive la lecture
     val i_data = Input(UInt(32.W))          //Donnée à écrire
-    val i_rAdr = Input(UInt(6.W))           //Adresse de la donnée à écrire
+    val i_Adr = Input(UInt(6.W))           //Adresse de la donnée
     val o_data = Output(UInt(32.W))         //Donnée à lire
-    val i_wAdr = Input(UInt(6.W))           //Adresse de la donnée à lire
   })
 
     //Tableau mémoire
-    val memoire = Reg(Vec(64,UInt(32.W)))     // Vecteur de 64 registres 32 bit 
-
+    val memoire = SyncReadMem(1024, UInt(32.W))     // Memoire de 1024
     //Lecture
     when(io.i_rEnable){
-        io.o_data := memoire(io.i_rAdr)
+        io.o_data := memoire(io.i_Adr)
     }.otherwise{io.o_data := DontCare}
 
     //Ecriture
     when(io.i_wEnable){
-        memoire(io.i_wAdr) := io.i_data
+        memoire(io.i_Adr) := io.i_data
     }
 }
 
