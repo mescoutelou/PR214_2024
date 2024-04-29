@@ -10,7 +10,7 @@ class top_end extends Module {
 
 val top = Module(new top)
 val fetch = Module(new fetch)
-val memoire = Module(new Memoire)
+val memoire = Module(new InitMemInline("C:/Users/noahm/Documents/Projet RISC-V/PR214_2024/doc_memoire/mem.txt"))
 
 
 fetch.io.i_jumpAdr := DontCare

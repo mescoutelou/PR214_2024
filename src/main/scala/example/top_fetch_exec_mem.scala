@@ -17,7 +17,7 @@ class top_fetch_exec_mem extends Module {
     val Decodeur = Module(new Decodeur)
 
     //MEMOIRE
-    val Memoire = Module(new Memoire)
+    val Memoire = Module(new InitMemInline("doc_memoire/mem.txt"))
 
     //C0NNECTIONS MODULES
 
