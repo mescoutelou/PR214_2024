@@ -11,21 +11,18 @@ class top_endtest extends AnyFlatSpec with ChiselScalatestTester {
     // test case body here
     test(new top_end).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
       // test body here
-<<<<<<< HEAD
       //dut.io.i_mem.poke("b0000000_00010_00001_000_00001_0010011".U)     //ADDI X1+2 VERS X1
       //dut.clock.step(1)
       //dut.io.i_mem.poke("b1111000_01010_00010_000_00010_0010011".U)     //ADDI X2+F0A VERS X2
       //dut.clock.step(1)
       //dut.io.i_mem.poke("b0000000_01010_00010_000_00010_0010011".U)     //ADDI X2+10 VERS X2
       //dut.clock.step(3)
-=======
       dut.io.o_mem.poke("b0000000_00010_00001_000_00001_0010011".U)     //ADDI X1+2 VERS X1
       dut.clock.step(1)
       dut.io.o_mem.poke("b1111000_01010_00010_000_00010_0010011".U)     //ADDI X2+F0A VERS X2
       dut.clock.step(1)
       dut.io.o_mem.poke("b0000000_01010_00010_000_00010_0010011".U)     //ADDI X2+10 VERS X2
       dut.clock.step(3)
->>>>>>> 3018bc57d490325623a40c1bfbe9d0b4b9a5188e
     }
   }
 }
