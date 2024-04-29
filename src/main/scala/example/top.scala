@@ -3,21 +3,39 @@ package prj.example
 import chisel3._
 import chisel3.util._
 import _root_.circt.stage.{ChiselStage}
+import chisel3.util.PastState
 
 class top extends Module {
   val io = IO(new Bundle {
     val i_instr = Input(UInt(32.W))
-
-    val bypassEnable = Input(Bool())
   })
 
   val GPR = Module(new GPR)
   val ALU = Module(new ALU)
   val Decodeur = Module(new Decodeur)
  
+
+ /*
+  when(GPR.io.i_read_reg1 === Decodeur.io.o_rd){
+    ALU.io.i_rs1 := ALU.io.o_rd
+  } otherwise{
+    ALU.io.i_rs1 := GPR.io.o_data_reg1
+  }
+
+  when(GPR.io.i_read_reg2 === Decodeur.io.o_rd){
+    ALU.io.i_operande := ALU.io.o_rd
+  } otherwise{
+    ALU.io.i_operande := GPR.io.o_data_reg2
+  }
+*/
+
+  val past_state = PastState(1.W)
+  
+  ALU.io.i_rs1 := Mux(GPR.io.i_read_reg1 === Decodeur.io.o_rd, ALU.io.o_rd,GPR.io.o_data_reg1)
+  ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,Mux(GPR.io.i_read_reg2 === Decodeur.io.o_rd, ALU.io.o_rd,GPR.io.o_data_reg2),Decodeur.io.o_imm)
+  
   //ALU.io.i_rs1 := GPR.io.o_data_reg1
-  ALU.io.i_rs1 := Mux(io.bypassEnable,ALU.io.o_rd,GPR.io.o_data_reg1)
-  ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,GPR.io.o_data_reg2,Decodeur.io.o_imm)
+  //ALU.io.i_operande := GPR.io.o_data_reg2
   ALU.io.funct_sel := Decodeur.io.funct_sel
 
 
@@ -28,6 +46,7 @@ class top extends Module {
   GPR.io.i_read_reg2 := Decodeur.io.o_rs2
   
   Decodeur.io.i_instruct := io.i_instr
+
 }
 
 
