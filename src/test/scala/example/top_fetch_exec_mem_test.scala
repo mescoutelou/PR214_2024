@@ -10,7 +10,7 @@ class top_fetch_exec_mem_test extends AnyFlatSpec with ChiselScalatestTester {
     // test case body here
     test(new top_fetch_exec_mem).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
       // test body here
-      dut.io..poke("b0000000_00010_00001_000_00001_0010011".U)
+      //dut.io.poke("b0000000_00010_00001_000_00001_0010011".U)
     }
   }
 }
