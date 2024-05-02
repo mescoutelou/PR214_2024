@@ -43,6 +43,7 @@ class ShiftStage(p: FpuParams) extends Module {
 	val w_sgreat = Wire(Bool())       // Signed greatest
 	val w_neg = Wire(Vec(3, Bool()))
 	val w_inf = Wire(Vec(3, Bool()))
+  val w_extra = Wire(Vec(3, new ExtraBus()))
 
   // ******************************
   //            COMPARE
@@ -74,7 +75,7 @@ class ShiftStage(p: FpuParams) extends Module {
   when (w_equ(0)) {
     w_sgreat := (io.b_in.data.get.src(0).sign ^ w_agreat)
   }.otherwise {
-    w_sgreat := io.b_in.data.get.src(0).sign
+    w_sgreat := ~io.b_in.data.get.src(0).sign
   }
 
   // ******************************
@@ -114,6 +115,14 @@ class ShiftStage(p: FpuParams) extends Module {
     w_src(s).sign := io.b_in.data.get.src(s).sign
     w_src(s).expo := (io.b_in.data.get.src(s).expo + w_expo_diff(s))
     w_src(s).mant := (Cat(1.U(1.W), io.b_in.data.get.src(s).mant) >> w_expo_diff(s))      
+    w_extra(s) := 0.U.asTypeOf(w_extra(s))
+    for (mb <- 1 until p.nMantissaBit) {
+      when (mb.U === w_expo_diff(s)) {
+        w_extra(s).guard := w_src(s).mant(mb - 1)
+        if (mb > 1) w_extra(s).round := w_src(s).mant(mb - 2)
+        if (mb > 2) w_extra(s).sticky := w_src(s).mant(mb - 3, 0).orR
+      }
+    }
   }
 
   // Addition for negative number
@@ -196,6 +205,7 @@ class ShiftStage(p: FpuParams) extends Module {
     m_reg.get.io.b_in.data.get.agreat := w_agreat
     m_reg.get.io.b_in.data.get.sgreat := w_sgreat
     m_reg.get.io.b_in.data.get.neg := w_neg
+    m_reg.get.io.b_in.data.get.extra := w_extra
 
     io.b_out <> m_reg.get.io.b_out 
   } else {
@@ -208,6 +218,7 @@ class ShiftStage(p: FpuParams) extends Module {
     io.b_out.data.get.agreat := w_agreat
     io.b_out.data.get.sgreat := w_sgreat
     io.b_out.data.get.neg := w_neg
+    io.b_out.data.get.extra := w_extra
   }
 
   // ******************************
@@ -218,6 +229,7 @@ class ShiftStage(p: FpuParams) extends Module {
     dontTouch(w_sgreat)
     dontTouch(w_neg)
     dontTouch(w_sign_same)
+    dontTouch(w_extra)
   }  
 }
 

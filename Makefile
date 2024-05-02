@@ -47,7 +47,9 @@ BENCH_I_LIST = 	riscv32-i-lui \
 								riscv32-i-app-array
 
 BENCH_F_LIST = 	riscv32-f-fadds \
-								riscv32-f-fsubs
+								riscv32-f-fsubs \
+								riscv32-f-fmins \
+								riscv32-f-fmaxs
 
 BLACK=\033[1;30m
 RED=\033[1;31m

@@ -98,6 +98,12 @@ class FloatBus(nExponentBit: Int, nMantissaBit: Int) extends Bundle {
 	}
 }
 
+class ExtraBus extends Bundle {
+	val guard = Bool()
+	val round = Bool()
+	val sticky = Bool()
+}
+
 // ******************************
 //              FPR            
 // ******************************
@@ -187,6 +193,7 @@ class OperandBus(p: FpuParams) extends Bundle {
 	val sgreat = Bool()
 	val neg = Vec(3, Bool())
 	val src = Vec(3, new FloatBus(p.nExponentBit, p.nMantissaBit + 1))
+	val extra = Vec(3, new ExtraBus())
 }
 
 class ResultBus(p: FpuParams) extends Bundle {

@@ -47,6 +47,8 @@ object TABLEEXT32F extends TABLEEXT {
     BASE.FSW        -> List(  0.B,   EXT.FPU,        FPUCODE.FSW,     FPUOP.INT,    FPUOP.FLOAT,  FPUOP.INT),
     BASE.FADDS      -> List(  1.B,   EXT.FPU,        FPUCODE.ADD,     FPUOP.FLOAT,  FPUOP.FLOAT,  0.U),
     BASE.FSUBS      -> List(  1.B,   EXT.FPU,        FPUCODE.SUB,     FPUOP.FLOAT,  FPUOP.FLOAT,  0.U),
+    BASE.FMINS      -> List(  1.B,   EXT.FPU,        FPUCODE.MIN,     FPUOP.FLOAT,  FPUOP.FLOAT,  0.U),
+    BASE.FMAXS      -> List(  1.B,   EXT.FPU,        FPUCODE.MAX,     FPUOP.FLOAT,  FPUOP.FLOAT,  0.U),
     BASE.FMVXW      -> List(  0.B,   EXT.FPU,        FPUCODE.MVXW,    FPUOP.FLOAT,  0.U,          0.U),
     BASE.FMVWX      -> List(  0.B,   EXT.FPU,        FPUCODE.MVWX,    FPUOP.INT,    0.U,          0.U))
 }

@@ -2,7 +2,8 @@ BASE_RV32F_PRE = ${ISA}32-f-
 BASE_RV32F_PATH = ${PRJ_DIR}src/test/rv32f
 BASE_RV32F_CFLAGS = -march=rv32if -mabi=ilp32 -DXLEN=32
 BASE_RV32F_CFLAGS += ${CFLAGS}
-BASE_RV32F_ASM = 	fadds fsubs
+BASE_RV32F_ASM = 	fadds fsubs \
+									fmins fmaxs
 
 BASE_RV32F_C =	
 
