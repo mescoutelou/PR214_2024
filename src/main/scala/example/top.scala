@@ -3,7 +3,7 @@ package prj.example
 import chisel3._
 import chisel3.util._
 import _root_.circt.stage.{ChiselStage}
-import chisel3.util.PastState
+//import chisel3.util.PastState
 
 class top extends Module {
   val io = IO(new Bundle {
@@ -29,8 +29,12 @@ class top extends Module {
   }
 */
 
-  val past_state = PastState(1.W)
+ // val past_state = PastState(1.W)
   
+  // val old_rd = ALU.io.o_rd
+  //   when(old_rd =/= ALU.io.o_rd){
+  //     io.i_instr := "b00000000000000000000000000000000".U
+  //   } 
   ALU.io.i_rs1 := Mux(GPR.io.i_read_reg1 === Decodeur.io.o_rd, ALU.io.o_rd,GPR.io.o_data_reg1)
   ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,Mux(GPR.io.i_read_reg2 === Decodeur.io.o_rd, ALU.io.o_rd,GPR.io.o_data_reg2),Decodeur.io.o_imm)
   
