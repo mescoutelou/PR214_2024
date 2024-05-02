@@ -25,13 +25,14 @@ class InitMemInline(memoryFile: String = "doc_memoire/mem.txt") extends Module {
 
   //Lecture
   when(io.i_rEnable){
-        io.o_data := memoire(io.i_Adr)
+        io.o_data := memoire.read(io.i_Adr >> 2.U)
     }.otherwise{io.o_data := DontCare}
 
     //Ecriture
     when(io.i_wEnable){
-        memoire(io.i_Adr) := io.i_data
+        memoire.write(io.i_Adr >> 2.U, io.i_data)
     }
+    
 }
 
 

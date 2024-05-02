@@ -2,6 +2,8 @@ package prj.example
 import chisel3._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
+import _root_.circt.stage.{ChiselStage}
+
 
 class top_fetch_exec_mem_test extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "top_fetch_exec_mem"
@@ -10,11 +12,9 @@ class top_fetch_exec_mem_test extends AnyFlatSpec with ChiselScalatestTester {
     // test case body here
     test(new top_fetch_exec_mem).withAnnotations (Seq( /*VerilatorBackendAnnotation,*/ WriteVcdAnnotation )){ dut =>
       // test body here
-<<<<<<< HEAD
-      //dut.io..poke("b0000000_00010_00001_000_00001_0010011".U)
-=======
-      //dut.io.poke("b0000000_00010_00001_000_00001_0010011".U)
->>>>>>> 3018bc57d490325623a40c1bfbe9d0b4b9a5188e
+      dut.clock.step(10)
+
+
     }
   }
 }

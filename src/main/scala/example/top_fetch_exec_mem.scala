@@ -25,10 +25,10 @@ class top_fetch_exec_mem extends Module {
     fetch.io.i_jumpEnable := DontCare
     Memoire.io.i_Adr := fetch.io.o_instrAdr
 
-    Memoire.io.i_wEnable := Decodeur.io.o_wEnable
-    Memoire.io.i_rEnable := Decodeur.io.o_rEnable
+    Memoire.io.i_wEnable := DontCare //Decodeur.io.o_wEnable
+    Memoire.io.i_rEnable := true.B //Decodeur.io.o_rEnable
     Memoire.io.i_data := ALU.io.o_rd
- //   Memoire.io.i_wAdr := Decodeur.io.o_rd
+
     Decodeur.io.i_instruct := Memoire.io.o_data
 
     ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,GPR.io.o_data_reg2,Decodeur.io.o_imm)
