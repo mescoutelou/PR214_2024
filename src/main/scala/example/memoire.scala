@@ -7,12 +7,12 @@ import _root_.circt.stage.{ChiselStage}
 
 
 
-class InitMemInline(memoryFile: String = "doc_memoire/mem.txt") extends Module {
+class InitMemInline(memoryFile: String) extends Module {
   val width: Int = 32
   val io = IO(new Bundle {
     val i_rEnable = Input(Bool())
     val i_wEnable = Input(Bool())
-    val i_Adr = Input(UInt(6.W))
+    val i_Adr = Input(UInt(10.W))
     val i_data = Input(UInt(width.W))
     val o_data = Output(UInt(width.W))
   })
@@ -23,6 +23,8 @@ class InitMemInline(memoryFile: String = "doc_memoire/mem.txt") extends Module {
     loadMemoryFromFileInline(memoire, memoryFile)
   }
 
+
+  
   //Lecture
   when(io.i_rEnable){
         io.o_data := memoire.read(io.i_Adr >> 2.U)
@@ -32,8 +34,9 @@ class InitMemInline(memoryFile: String = "doc_memoire/mem.txt") extends Module {
     when(io.i_wEnable){
         memoire.write(io.i_Adr >> 2.U, io.i_data)
     }
-    
 }
+
+
 
 
 

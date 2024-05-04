@@ -11,18 +11,18 @@ class Decodeur extends Module {
     val o_rs1 = Output(UInt(5.W))
     val o_rs2 = Output(UInt(5.W))
 
+
     // Selectionne immédiat ou registre
     val o_sel_operande = Output(Bool())
     val o_imm = Output(UInt(12.W))
     val o_rd = Output(UInt(5.W))
 
     val o_GPRwrite = Output(Bool())
+
+    // Signaux mémoire de données
     val o_wEnable = Output(Bool())
     val o_rEnable = Output(Bool())
 
-
-    // Vérification de la validité de l'instruction
-    //val o_isValid = Output(Bool())Gains
   })  
 
   val w_decoder = ListLookup(io.i_instruct, TABLECODE.default, TABLECODE.table)
@@ -102,7 +102,7 @@ when (isValid === true.B){
                 when( io.i_instruct(6,0) === "b1100011".U ||     //Branchement
                       io.i_instruct(6,0) === "b0000011".U){      //SW, SH, SB
                         io.o_GPRwrite := false.B
-                      } .otherwise(io.o_GPRwrite := true.B)   
+                      } .otherwise(io.o_GPRwrite := true.B)             
     }
   .otherwise{io.funct_sel := "b00000".U
               io.o_rs1 := "b00000".U

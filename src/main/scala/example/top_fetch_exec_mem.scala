@@ -16,26 +16,33 @@ class top_fetch_exec_mem extends Module {
     val ALU = Module(new ALU)
     val Decodeur = Module(new Decodeur)
 
-    //MEMOIRE
-    val Memoire = Module(new InitMemInline("doc_memoire/mem.txt"))
+    //MEMOIRES
+    val i_mem = Module(new InitMemInline("doc_memoire/i_mem.txt"))
+    val d_mem = Module(new InitMemInline("doc_memoire/d_mem.txt"))
 
-    //C0NNECTIONS MODULES
+    //CONNECTIONS MODULES
 
     fetch.io.i_jumpAdr := DontCare
     fetch.io.i_jumpEnable := DontCare
-    Memoire.io.i_Adr := fetch.io.o_instrAdr
+    i_mem.io.i_Adr := fetch.io.o_instrAdr
 
-    Memoire.io.i_wEnable := DontCare //Decodeur.io.o_wEnable
-    Memoire.io.i_rEnable := true.B //Decodeur.io.o_rEnable
-    Memoire.io.i_data := ALU.io.o_rd
+    i_mem.io.i_wEnable := DontCare
+    i_mem.io.i_rEnable := true.B
+    i_mem.io.i_data := DontCare
 
-    Decodeur.io.i_instruct := Memoire.io.o_data
+    d_mem.io.i_wEnable := Decodeur.io.o_wEnable
+    d_mem.io.i_rEnable := Decodeur.io.o_rEnable
+    d_mem.io.i_Adr := ALU.io.o_rd
+    d_mem.io.i_data := GPR.io.o_data_reg2
+    
+
+    Decodeur.io.i_instruct := i_mem.io.o_data
 
     ALU.io.i_operande := Mux(Decodeur.io.o_sel_operande,GPR.io.o_data_reg2,Decodeur.io.o_imm)
     ALU.io.funct_sel := Decodeur.io.funct_sel
     ALU.io.i_rs1 := GPR.io.o_data_reg1
     
-    GPR.io.i_data := ALU.io.o_rd
+    GPR.io.i_data := Mux(Decodeur.io.o_rEnable, d_mem.io.o_data,ALU.io.o_rd)
     GPR.io.i_write := Decodeur.io.o_GPRwrite
     GPR.io.i_sel_reg := Decodeur.io.o_rd
     GPR.io.i_read_reg1 := Decodeur.io.o_rs1
