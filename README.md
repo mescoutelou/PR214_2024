@@ -169,9 +169,11 @@ Les documents de base pour la bonne réalisation de ce projet sont disponibles d
 
 Ce manuel explique l'architecture du processeur conçu et le fonctionnement de celui-ci.
 
+![CPU](docs/schema-cpu.png)
+
 ### Architecture globale
 
-L'arhitecture repose sur celle sur RISC-V et est consituée d'un pieline à 3 étages (FETCH/EXEC/WB). Elle utilise une architecture de Harvard où les mémoires d'instructions et de données sont séparées.
+L'arhitecture repose sur celle sur RISC-V et est consituée d'un pipeline à 3 étages (FETCH/EXEC/WB). Elle utilise une architecture de Harvard où les mémoires d'instructions et de données sont séparées.
 
 ### Composants de l'architecture
 
@@ -179,17 +181,17 @@ Cette section détaille le rôle et le fonctionnement de chaque composant dans s
 
 #### Etage Fetch
 
-Le premier étage du pipeline permet de récupérer les instructions depuis la mémoire d'instruction afin qu'elle soit décodée dans l'étage suivant. Le compteur d'adresse s'incrémente à chaque cycle d'horloge. Le comptage prend aussi en compte les sauts d'adresse. Lorsqu'un saut est appelé, le bit `jumpEnable` passe à 1 et le compteur incrémente en partant de cette valeur.
+Le premier étage du pipeline permet de récupérer les instructions depuis la mémoire d'instructions afin qu'elles soient décodées dans l'étage suivant. Le compteur d'adresse s'incrémente à chaque cycle d'horloge. Le comptage prend aussi en compte les sauts d'adresse. Lorsqu'un saut est appelé, le bit `jumpEnable` passe à 1 et le compteur incrémente en partant de cette valeur.
 
 La mémoire délivre l'instruction correspondant à l'adresse en entrée. Elle est initialisée à partir d'un fichier texte contenant les instructions en hexadécimal. Son écriture est toujours bloquée dans le cadre de la simulation.
 
 #### Etage Exec
 
 L'étage Exec se compose du décodeur et de l'ALU. Le décodeur reçoit l'instruction venant de la mémoire. Tout d'abord, l'op code de l'instruction est lue pour déterminer si elle est valide. Dans le cas où une instruction invalide est détectée, le décodeur va l'ignorer et passer à la suivante (exécution d'une addition de 0 sur le registre `x0`).
-Si l'instruction est valide, les paramètres tels que le numéro du registre source et la valeur immédiate sont déterminés à l'aide de la documentation RISC-V.
-Le décodeur gère aussi l'activation de l'écriture ou de la lecture de la mémoire de donnée (cas d'une instruction `load` ou `store`). Il permet aussi de distinguer si les opérations arithmétiques ou logiques utilisent des immédiats ou non, et de transmettre la bonne opérande à l'ALU.
+Si l'instruction est valide, les paramètres tels que le numéro du registre source et la valeur immédiate sont décodés à l'aide de la documentation RISC-V.
+Le décodeur gère aussi l'activation de l'écriture ou de la lecture de la mémoire données (cas d'une instruction `load` ou `store`). Il permet aussi de distinguer si les opérations arithmétiques et logiques utilisent des immédiats ou non, et de transmettre la bonne opérande à l'ALU.
 
-L'instruction décodée passe ensuite par une ALU capable de traiter les opérations suivantes:
+L'instruction décodée passe ensuite par une ALU capable d'exécuter les opérations suivantes:
 - addition
 - soustraction
 - OU
@@ -197,21 +199,28 @@ L'instruction décodée passe ensuite par une ALU capable de traiter les opérat
 - OU EXCLUSIF
 - décallages binaire non signé et signé
 
-Le choix de l'opération est réalisé grâce au mot binaire `funct_sel` déterminé par le décodeur.
+L'identification de l'opération est réalisée grâce au mot binaire `funct_sel` envoyé par le décodeur.
 
 
 #### Etage WriteBack
 
-Le dernier étage du pipeline est constitué de la mémoire de donnée et de la file de registre.
+Le dernier étage du pipeline est constitué de la mémoire données et de la file de registre.
 
-La file de registre (GPR) est consituée de 32 registres de 32 bits. Elle possède deux ports de lecture et d'un port d'écriture. Les requêtes de lecture des registres sont transmises par le décodeur qui fournit les numéros correspodants. Les données lues sont envoyées dans l'ALU.
-L'écriture de la file doit être activée par le décodeur pour fonctionner. La donnée à écrire peut provenir soit de l'ALU dans le cas où une opération arithmétique est exécutée, soit de la mémoire de donnée si c'est une instruction `load`.
+La file de registre (GPR) est consituée de 32 registres de 32 bits. Elle possède deux ports de lecture et un port d'écriture. Les requêtes de lecture des registres sont transmises par le décodeur qui fournit les numéros correspodants. Les données lues sont envoyées dans l'ALU.
+L'écriture de la file doit être activée par le décodeur pour fonctionner. La donnée à écrire peut provenir soit de l'ALU dans le cas où une opération arithmétique est exécutée, soit de la mémoire données si c'est une instruction `load`.
 
 Les modules de mémoires (instructions et données) sont générés par la structure `SyncReadMem` fournie par Chisel. Elles ont été paramétrées pour contenir 1024 cases mémoire de 32 bits.
-La mémoire de donnée contient celles stockées par le programme lors de son exécution. Le jeu d'instruction RISC-V lui permet de charger ses données dans le GPR avec la commande `load` et de les stocker dans le GPR avec la commande `store`. L'adresse d'écriture et de lecture doit être calculée par l'ALU et est égale à la somme d'une donnée de registre et d'un immédiat.
+
+La mémoire de données contient celles stockées par le programme lors de son exécution. Le jeu d'instruction RISC-V lui permet de charger ses données dans le GPR avec la commande `load` et de les stocker dans le GPR avec la commande `store`. L'adresse mémoire doit être calculée par l'ALU et est égale à la somme d'une donnée de registre et d'un immédiat.
 
 ### Mécanismes implantés
 
-
+Le pipeline est amené à créer des dépendances de données. Pour éviter cela, un pipeline peut être mis en place
 
 ### Simulation du processeur
+
+La simulation du processeur permet d'exécuter des programmes et de visualiser les données stockées dans les différentes mémoires en plus des signaux internes grâce à gtkwave.
+
+Un fichier *doc_memoire* contient deux fichiers texte *d_mem.txt* et *i_mem.txt*correspondant respectivement à la mémoire de données et d'instruction. Il est possible d'initialiser ces deux mémoires en écrivant les données sous forme hexadécimale et en séparant chaque donnée par un retour à la ligne.
+
+Pour observer les données, le module de test `top_fetch_exec_mem_test` doit être compilé et va générer le fichier *.vcd* contenant les chronogrammes. Ce testbench ne permet que de générer des périodes d'horloge étant donné que le processeur gère les autres signaux internes de manière autonome. Le nombre de cycles simulés peut être modifié à la ligne 15 du fichier.
