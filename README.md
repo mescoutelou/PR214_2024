@@ -173,7 +173,7 @@ Ce manuel explique l'architecture du processeur conçu et le fonctionnement de c
 
 ### Architecture globale
 
-L'arhitecture repose sur celle sur RISC-V et est consituée d'un pipeline à 3 étages (FETCH/EXEC/WB). Elle utilise une architecture de Harvard où les mémoires d'instructions et de données sont séparées.
+L'architecture repose sur celle sur RISC-V et est constituée d'un pipeline à 3 étages (FETCH/EXEC/WB). Elle utilise une architecture de Harvard où les mémoires d'instructions et de données sont séparées.
 
 ### Composants de l'architecture
 
@@ -181,7 +181,7 @@ Cette section détaille le rôle et le fonctionnement de chaque composant dans s
 
 #### Etage Fetch
 
-Le premier étage du pipeline permet de récupérer les instructions depuis la mémoire d'instructions afin qu'elles soient décodées dans l'étage suivant. Le compteur d'adresse s'incrémente à chaque cycle d'horloge. Le comptage prend aussi en compte les sauts d'adresse. Lorsqu'un saut est appelé, le bit `jumpEnable` passe à 1 et le compteur incrémente en partant de cette valeur.
+Le premier étage du pipeline permet de récupérer les instructions depuis la mémoire d'instructions afin qu'elles soient décodées dans l'étage suivant. Le compteur d'adresse s'incrémente à chaque cycle d'horloge. Le comptage prend aussi en compte les sauts d'adresse. Lorsqu'un saut est appelé, le bit `jumpEnable` passe à 1 et le compteur s'incrémente en partant de cette valeur.
 
 La mémoire délivre l'instruction correspondant à l'adresse en entrée. Elle est initialisée à partir d'un fichier texte contenant les instructions en hexadécimal. Son écriture est toujours bloquée dans le cadre de la simulation.
 
@@ -197,17 +197,17 @@ L'instruction décodée passe ensuite par une ALU capable d'exécuter les opéra
 - OU
 - ET
 - OU EXCLUSIF
-- décallages binaire non signé et signé
+- décalages binaires non signé et signé
 
 L'identification de l'opération est réalisée grâce au mot binaire `funct_sel` envoyé par le décodeur.
 
 
 #### Etage WriteBack
 
-Le dernier étage du pipeline est constitué de la mémoire données et de la file de registre.
+Le dernier étage du pipeline est constitué de la mémoire de données et de la file de registre.
 
-La file de registre (GPR) est consituée de 32 registres de 32 bits. Elle possède deux ports de lecture et un port d'écriture. Les requêtes de lecture des registres sont transmises par le décodeur qui fournit les numéros correspodants. Les données lues sont envoyées dans l'ALU.
-L'écriture de la file doit être activée par le décodeur pour fonctionner. La donnée à écrire peut provenir soit de l'ALU dans le cas où une opération arithmétique est exécutée, soit de la mémoire données si c'est une instruction `load`.
+La file de registre (GPR) est consituée de 32 registres de 32 bits. Elle possède deux ports de lecture et un port d'écriture. Les requêtes de lecture des registres sont transmises par le décodeur qui fournit les numéros correspondants. Les données lues sont envoyées dans l'ALU.
+L'écriture de la file doit être activée par le décodeur pour fonctionner. La donnée à écrire peut provenir soit de l'ALU dans le cas où une opération arithmétique est exécutée, soit de la mémoire de données si c'est une instruction `load`.
 
 Les modules de mémoires (instructions et données) sont générés par la structure `SyncReadMem` fournie par Chisel. Elles ont été paramétrées pour contenir 1024 cases mémoire de 32 bits.
 
@@ -221,6 +221,6 @@ Le pipeline est amené à créer des dépendances de données. Pour éviter cela
 
 La simulation du processeur permet d'exécuter des programmes et de visualiser les données stockées dans les différentes mémoires en plus des signaux internes grâce à gtkwave.
 
-Un fichier *doc_memoire* contient deux fichiers texte *d_mem.txt* et *i_mem.txt*correspondant respectivement à la mémoire de données et d'instruction. Il est possible d'initialiser ces deux mémoires en écrivant les données sous forme hexadécimale et en séparant chaque donnée par un retour à la ligne.
+Un fichier *doc_memoire* contient deux fichiers texte *d_mem.txt* et *i_mem.txt* correspondant respectivement à la mémoire de données et d'instruction. Il est possible d'initialiser ces deux mémoires en écrivant les données sous forme hexadécimale et en séparant chaque donnée par un retour à la ligne.
 
 Pour observer les données, le module de test `top_fetch_exec_mem_test` doit être compilé et va générer le fichier *.vcd* contenant les chronogrammes. Ce testbench ne permet que de générer des périodes d'horloge étant donné que le processeur gère les autres signaux internes de manière autonome. Le nombre de cycles simulés peut être modifié à la ligne 15 du fichier.
